@@ -1029,9 +1029,14 @@ braces@^3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-"brpix-api-node@link:../brpix-api-node":
-  version "0.0.0"
-  uid ""
+"brpix-api-node@https://github.com/leguass7/brpix-api-node#release/0.1.6-alpha.0":
+  version "0.1.6-alpha.0"
+  resolved "https://github.com/leguass7/brpix-api-node#2bb2784bb30955658d8214e325eea8d31781d3f3"
+  dependencies:
+    axios "^0.21.1"
+    camelcase-keys "^6.2.2"
+    qrcode "^1.4.4"
+    uuid "^8.3.2"
 
 buffer-from@^1.0.0:
   version "1.1.2"
