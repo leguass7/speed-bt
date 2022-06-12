@@ -1029,9 +1029,10 @@ braces@^3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-"brpix-api-node@https://github.com/leguass7/brpix-api-node#release/0.1.6-alpha.0":
-  version "0.1.6-alpha.0"
-  resolved "https://github.com/leguass7/brpix-api-node#2bb2784bb30955658d8214e325eea8d31781d3f3"
+brpix-api-node@0.1.6-alpha.2:
+  version "0.1.6-alpha.2"
+  resolved "https://registry.yarnpkg.com/brpix-api-node/-/brpix-api-node-0.1.6-alpha.2.tgz#28964ff1383af267f1302f05010c154c0e1bc501"
+  integrity sha512-tJlNLmzHrR6qwwD8NSLQ3cIJoTChDAtQdbpskn1V8O0tyXEVvP+k50pcL7Xmlcye4dC9CjnUcai9rhakqEnJdg==
   dependencies:
     axios "^0.21.1"
     camelcase-keys "^6.2.2"
