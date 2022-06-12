@@ -2,9 +2,11 @@ import { IResponseApi } from '../api.interface'
 
 export type ICategory = {
   id: number
-  name: string
-  label: string
-  price: number
+  tournamentId: number
+  title: string
+  description?: string
+  price?: number
+  published?: boolean
 }
 
 export interface IResponseCategory extends IResponseApi {

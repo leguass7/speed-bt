@@ -9,10 +9,11 @@ import { TextProps } from '~/components/styled'
 import { PageTitleContainer } from './styles'
 
 type Props = TextProps & {
-  title: string
+  title?: string
   onBack?: () => void
+  children?: React.ReactNode
 }
-export const PageTitle: React.FC<Props> = ({ title, textColor, weight = 'bold', onBack }) => {
+export const PageTitle: React.FC<Props> = ({ title, textColor, weight = 'bold', onBack, children }) => {
   const { theme } = useAppTheme()
   return (
     <PageTitleContainer textColor={textColor || theme.colors.text} weight={weight}>
@@ -21,7 +22,7 @@ export const PageTitle: React.FC<Props> = ({ title, textColor, weight = 'bold', 
           <MdOutlineArrowBackIosNew size={20} />
         </IconButton>
       ) : null}
-      <h1>{title}</h1>
+      {children ? children : <h1>{title}</h1>}
     </PageTitleContainer>
   )
 }

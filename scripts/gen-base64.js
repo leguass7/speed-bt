@@ -20,15 +20,18 @@ function loadCert(filename = '') {
 
 function saveFile(filename, base64) {
   try {
-    fs.writeFileSync(path.resolve(outDir, `${filename}.json`), JSON.stringify({ base64 }, null, 2), { encoding: 'utf-8' })
+    const outJson = path.resolve(outDir, `${filename}.json`)
+
+    fs.writeFileSync(outJson, JSON.stringify({ base64 }, null, 2), { encoding: 'utf-8' })
     fs.writeFileSync(path.resolve(outDir, filename), base64, { encoding: 'utf-8' })
+
     return true
   } catch {
     return false
   }
 }
 
-function start() {
+async function start() {
   const base64 = loadCert('homologacao-290881-h-speed-bt.p12')
   saveFile('cert-base64', base64)
 }

@@ -78,6 +78,16 @@ model VerificationToken {
   @@map("verification_token")
 }
 
+model AppConfig {
+  id    Int       @id @default(autoincrement())
+  key   ConfigKey
+  value String    @db.LongText
+
+
+  @@unique([id, key])
+  @@map("config")
+}
+
 model Profile {
   id     Int    @id @default(autoincrement())
   userId String
@@ -161,4 +171,10 @@ enum UserGender {
 enum PaymentMethod {
   PIX
   CASH
+}
+
+enum ConfigKey {
+  CERT
+  PIX
+  OTHER
 }

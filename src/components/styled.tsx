@@ -10,22 +10,26 @@ export type TextProps = {
   textSize?: number
 }
 
-export type FlexProps = {
+export type SpacingProps = {
+  horizontalPad?: number
+  verticalPad?: number
+}
+
+export type FlexProps = SpacingProps & {
   align?: FlexAlign
   justify?: FlexJustify
   grow?: number
-  horizontalPad?: number
-  verticalPad?: number
   width?: string
   gap?: number
 }
 
-export const PageContainer = styled.div`
+export const PageContainer = styled.div<SpacingProps>`
   display: block;
   width: 900px;
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
+  padding: ${({ horizontalPad = 0, verticalPad = 0 }) => `${verticalPad}px ${horizontalPad}px`};
 `
 
 export const SuperHeader = styled.h1<{ textColor?: string; align?: AlignType }>`
