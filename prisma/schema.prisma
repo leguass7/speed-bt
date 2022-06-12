@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  name          String?
+  email         String?     @unique
+  emailVerified DateTime?
+  image         String?
+  actived       Boolean?    @default(true)
+  password      String?
+  cpf           String?     @db.VarChar(20)
+  category      String?
+  gender        UserGender?
+  phone         String?
+  birday        DateTime?   @db.Date
+  completed     Boolean?    @default(false)
+  shirtSize     String?
+
+
+  accounts Account[]
+  sessions Session[]
+
+  profiles         Profile[]
+  subscribes       Subscribe[]
+  subscribeCreated Subscribe[] @relation(name: "subscribeCreatedUser")
+  subscribeUpdated Subscribe[] @relation(name: "subscribeUpdatedUser")
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+
+  @@unique([identifier, token])
+  @@map("verification_token")
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Tournament {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?    @db.LongText
+  expires     DateTime
+  published   Boolean    @default(true)
+  categories  Category[]
+
+  @@map("tournaments")
+}
+
+model Category {
+  id           Int      @id @default(autoincrement())
+  tournamentId Int
+  title        String
+  description  String?  @db.LongText
+  published    Boolean? @default(true)
+  price        Float?   @default(0)
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id])
+
+  @@map("categories")
+}
+
+model Subscribe {
+  id         Int       @id @default(autoincrement())
+  value      Float     @default(0)
+  userId     String
+  categoryId Int?
+  createdBy  String?
+  updatedBy  String?
+  actived    Boolean?  @default(true)
+  paid       Boolean?  @default(false)
+  createdAt  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime? @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id])
+  createdUser User?     @relation(name: "subscribeCreatedUser", fields: [createdBy], references: [id])
+  updatedUser User?     @relation(name: "subscribeUpdatedUser", fields: [updatedBy], references: [id])
+  payments    Payment[]
+
+
+  @@map(name: "subscribes")
+}
+
+model Payment {
+  id          Int           @id @default(autoincrement())
+  uuid        String?       @unique(map: "uuid") @db.VarChar(64)
+  subscribeId Int           @default(0)
+  method      PaymentMethod
+  value       Float         @default(0.00)
+  paid        Boolean       @default(false)
+  payday      DateTime?     @db.DateTime(0)
+  txid        String?       @unique(map: "txid") @db.VarChar(35)
+  overdue     DateTime?     @db.Date
+  createdBy   String?
+  createdAt   DateTime?     @default(now()) @db.Timestamp(0)
+  updatedBy   String?
+  updatedAt   DateTime?     @db.DateTime(0)
+  meta        String?       @db.LongText
+  actived     Boolean       @default(true)
+
+  subscribe Subscribe @relation(fields: [subscribeId], references: [id])
+
+  @@index([method], map: "method")
+  @@index([paid], map: "paid")
+  @@map("payments")
+}
+
+enum UserGender {
+  F
+  M
+}
+
+enum PaymentMethod {
+  PIX
+  CASH
+}

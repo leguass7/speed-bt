@@ -1,0 +1,33 @@
+import { celebrate, Joi, Segments } from 'celebrate'
+
+export const updateMeSchema = celebrate(
+  {
+    [Segments.BODY]: {
+      name: Joi.string(),
+      email: Joi.string().email(),
+      birday: Joi.date().allow(''),
+      gender: Joi.valid('F', 'M').allow(''),
+      phone: Joi.string().allow(''),
+      category: Joi.string().allow(''),
+      cpf: Joi.string().allow(''),
+      shirtSize: Joi.valid('PP', 'P', 'M', 'G', 'GG').allow('')
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)
+
+export const createUserSchema = celebrate(
+  {
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      birday: Joi.date().allow(''),
+      gender: Joi.valid('F', 'M').allow(''),
+      phone: Joi.string().allow(''),
+      category: Joi.string().allow(''),
+      cpf: Joi.string().allow(''),
+      shirtSize: Joi.valid('PP', 'P', 'M', 'G', 'GG').allow('')
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)
