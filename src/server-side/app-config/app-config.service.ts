@@ -1,4 +1,4 @@
-import { AppConfig } from '.prisma/client'
+import { AppConfig } from '@prisma/client'
 
 import { prisma } from '~/server-side/database'
 
