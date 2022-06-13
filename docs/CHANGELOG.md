@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.3-alpha.0 (2022-06-13)
+
+
+### Features
+
+* add dep ([93eabe9](https://github.com/leguass7/speed-bt/commit/93eabe9dd114cb1517c72a73dee56d5ca0f0ee4c))
+* inscrição ([f1608dc](https://github.com/leguass7/speed-bt/commit/f1608dc8d5c562f0578f45edb0506edccf786e63))
+
+
+### Bug Fixes
+
+* ajuste de dependencia ([664913e](https://github.com/leguass7/speed-bt/commit/664913e302499eaa9521abc6afa114c724530b79))
+* brpix-node ([629c82e](https://github.com/leguass7/speed-bt/commit/629c82eb9ad8772b20e992b2cc56cef5a1357dad))
+
 ### 0.1.2 (2022-06-08)
 
 
