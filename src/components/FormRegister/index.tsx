@@ -14,7 +14,7 @@ import { InputSelects } from '~/components/forms/InputSelects'
 import { InputMask, InputText } from '~/components/forms/InputText'
 import { RegisterSuccess } from '~/components/PreRegistration/RegisterSuccess'
 import { useUserAuth } from '~/components/UserProvider'
-import { categories, genders, shirtSizes } from '~/config/constants'
+import { genders, shirtSizes } from '~/config/constants'
 import { validateFormData } from '~/helpers/validation'
 import type { IUser } from '~/server-side/users'
 import { createUser, saveUser } from '~/service/api/user'
@@ -80,7 +80,7 @@ export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
               <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} />
               <InputMask name="phone" label="Telefone" mask={'(99) 9 9999-9999'} alwaysShowMask={false} />
               <InputDate name="birday" label="Nascimento" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />
-              <InputSelects name="category" label="Categoria" options={categories} defaultSelected={userData?.category || 'C'} />
+              {/* <InputSelects name="category" label="Categoria" options={categories} defaultSelected={userData?.category || 'C'} /> */}
               <InputSelects name="shirtSize" label="Tamanho da camisa" options={shirtSizes} defaultSelected={userData?.shirtSize || 'M'} />
               <InputSelects name="gender" label="Gênero" options={genders} defaultSelected={userData?.gender || 'M'} />
               <Stack direction={'row'} justifyContent="center" spacing={1} sx={{ marginTop: 3 }}>
@@ -106,7 +106,7 @@ const formSchema = object().shape({
   email: string().required('e-mail é requirido'),
   phone: string().required('telefone é requirido'),
   birday: string().required('data de nascimento é requirido'),
-  category: string().required('Categoria é requirido'),
+  // category: string().required('Categoria é requirido'),
   shirtSize: string().required('Tamanho da camisa é requirido')
   // gender: string().required('gênero é requirido'),
   // cpf: string().required('CPF é requirido')
