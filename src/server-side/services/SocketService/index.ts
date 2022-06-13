@@ -7,11 +7,13 @@ export type CustomServer = HttpServer & { io: Server }
 
 const cors = { origin: '*' }
 
+export class SocketRoute {}
+
 export class SocketService {
   private io: ServerIo | undefined
   public clients: ISocketClient[]
 
-  constructor() {
+  constructor(private routes?: SocketRoute[]) {
     this.io = undefined
     this.clients = []
   }
@@ -50,6 +52,10 @@ export class SocketService {
 
   init() {
     if (this.io) {
+      this.routes.forEach(() => {
+        //
+      })
+
       this.io.on('connection', socket => {
         const id = `${socket?.id}`
         this.addClient({ id, socket, latence: 1000 })

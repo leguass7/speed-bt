@@ -83,7 +83,7 @@ export const ProfilePopover: React.FC = () => {
                 {registerNotify ? (
                   <NotificationImportantIcon fontSize="small" sx={{ color: theme.colors.errors }} />
                 ) : (
-                  <ManageAccountsIcon fontSize="small" sx={{ color: theme.colors.textDark }} />
+                  <ManageAccountsIcon fontSize="small" />
                 )}
               </ListItemIcon>
               <ListItemText primary={userData?.name} secondary={renderSecondaryText()} />
@@ -92,7 +92,7 @@ export const ProfilePopover: React.FC = () => {
           <ListItem disablePadding>
             <ListItemButton dense onClick={handleLogout}>
               <ListItemIcon>
-                <LogoutIcon fontSize="small" sx={{ color: theme.colors.textDark }} />
+                <LogoutIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Sair" secondary="Realizar logoff" />
             </ListItemButton>

@@ -8,12 +8,14 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import { useSession } from 'next-auth/react'
 
+import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { ProfilePopover } from './ProfilePopover'
 
 type Props = {
   onLayout?: (headerHeigh?: number) => void
 }
 export const HeaderBar: React.FC<Props> = ({ onLayout }) => {
+  const { theme } = useAppTheme()
   const { status } = useSession()
   const headerHeightRef = useRef(-1)
   const { height, ref } = useResizeDetector()
@@ -28,7 +30,7 @@ export const HeaderBar: React.FC<Props> = ({ onLayout }) => {
   }, [height, emitLayout])
 
   return status === 'authenticated' ? (
-    <AppBar ref={ref}>
+    <AppBar ref={ref} sx={{ backgroundColor: theme.colors.primary }}>
       <Toolbar>
         {/* <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
           <MenuIcon />

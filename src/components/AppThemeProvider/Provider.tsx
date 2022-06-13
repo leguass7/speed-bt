@@ -11,6 +11,7 @@ import type { IAppTheme, MatchingRules, ThemeProviderProps } from './types'
 const createMuiTheme = (theme: IAppTheme) => {
   return createTheme({
     palette: {
+      mode: 'dark',
       primary: { main: theme.colors.primary },
       secondary: { main: theme.colors.secondary },
       success: { main: theme.colors.success },

@@ -60,10 +60,10 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  profiles         Profile[]
-  subscribes       Subscribe[]
-  subscribeCreated Subscribe[] @relation(name: "subscribeCreatedUser")
-  subscribeUpdated Subscribe[] @relation(name: "subscribeUpdatedUser")
+  profiles            Profile[]
+  subscriptions       Subscription[]
+  subscriptionCreated Subscription[] @relation(name: "subscriptionCreatedUser")
+  subscriptionUpdated Subscription[] @relation(name: "subscriptionUpdatedUser")
 
   @@map("users")
 }
@@ -118,7 +118,7 @@ model Category {
   @@map("categories")
 }
 
-model Subscribe {
+model Subscription {
   id         Int       @id @default(autoincrement())
   value      Float     @default(0)
   userId     String
@@ -127,36 +127,37 @@ model Subscribe {
   updatedBy  String?
   actived    Boolean?  @default(true)
   paid       Boolean?  @default(false)
+  paymentId  Int?
   createdAt  DateTime? @default(now()) @db.Timestamp(0)
   updatedAt  DateTime? @updatedAt
 
-  user        User      @relation(fields: [userId], references: [id])
-  createdUser User?     @relation(name: "subscribeCreatedUser", fields: [createdBy], references: [id])
-  updatedUser User?     @relation(name: "subscribeUpdatedUser", fields: [updatedBy], references: [id])
-  payments    Payment[]
+  user        User     @relation(fields: [userId], references: [id])
+  createdUser User?    @relation(name: "subscriptionCreatedUser", fields: [createdBy], references: [id])
+  updatedUser User?    @relation(name: "subscriptionUpdatedUser", fields: [updatedBy], references: [id])
+  payments    Payment? @relation(fields: [paymentId], references: [id])
 
 
-  @@map(name: "subscribes")
+  @@map(name: "subscriptions")
 }
 
 model Payment {
-  id          Int           @id @default(autoincrement())
-  uuid        String?       @unique(map: "uuid") @db.VarChar(64)
-  subscribeId Int           @default(0)
-  method      PaymentMethod
-  value       Float         @default(0.00)
-  paid        Boolean       @default(false)
-  payday      DateTime?     @db.DateTime(0)
-  txid        String?       @unique(map: "txid") @db.VarChar(35)
-  overdue     DateTime?     @db.Date
-  createdBy   String?
-  createdAt   DateTime?     @default(now()) @db.Timestamp(0)
-  updatedBy   String?
-  updatedAt   DateTime?     @db.DateTime(0)
-  meta        String?       @db.LongText
-  actived     Boolean       @default(true)
+  id             Int           @id @default(autoincrement())
+  uuid           String?       @unique(map: "uuid") @db.VarChar(64)
+  subscriptionId Int           @default(0)
+  method         PaymentMethod
+  value          Float         @default(0.00)
+  paid           Boolean       @default(false)
+  payday         DateTime?     @db.DateTime(0)
+  txid           String?       @unique(map: "txid") @db.VarChar(35)
+  overdue        DateTime?     @db.Date
+  createdBy      String?
+  createdAt      DateTime?     @default(now()) @db.Timestamp(0)
+  updatedBy      String?
+  updatedAt      DateTime?     @db.DateTime(0)
+  meta           String?       @db.LongText
+  actived        Boolean       @default(true)
 
-  subscribe Subscribe @relation(fields: [subscribeId], references: [id])
+  subscriptions Subscription[]
 
   @@index([method], map: "method")
   @@index([paid], map: "paid")

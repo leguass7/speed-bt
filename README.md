@@ -8,7 +8,7 @@ Pequena aplicação para insrcrições em torneio de **beach tennis**
 
 ## Destaque
 
-Implmentação escalável de conexão socket sob servidor http do next
+Implementação escalável de conexão socket sob servidor http do next
 
 **referências**
 
