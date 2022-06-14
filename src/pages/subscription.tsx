@@ -37,7 +37,7 @@ const SubscriptionPage: NextPage<SubscriptionPageProps> = ({ categories = [] }) 
 
 export default SubscriptionPage
 
-export const getServerSideProps: GetServerSideProps<SubscriptionPageProps> = async ({}) => {
+export const getServerSideProps: GetServerSideProps<SubscriptionPageProps> = async _context => {
   const categories = await CategoryService.list()
   return {
     props: { categories }

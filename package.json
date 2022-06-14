@@ -41,6 +41,7 @@
     "react-input-mask": "^2.0.4",
     "react-resize-detector": "^7.1.1",
     "react-toastify": "^9.0.3",
+    "sharp": "^0.30.6",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",
