@@ -6,11 +6,12 @@ import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { Layout } from '~/components/Layout'
 import { PageTitle } from '~/components/PageTitle'
 import { PageContainer } from '~/components/styled'
+import { SaveSubscription } from '~/components/subscription/SaveSubscription'
 import { SelectSubscriptionCategory } from '~/components/subscription/SelectSubscriptionCategory'
 import { SubscriptionProvider } from '~/components/subscription/SubscriptionProvider'
 import { UserSubscriptions } from '~/components/subscription/UserSubscriptions'
 import type { ICategory } from '~/server-side/category/category.dto'
-import { CategoryService } from '~/server-side/category/category.service'
+import { list } from '~/server-side/category/category.service'
 
 export type SubscriptionPageProps = {
   categories?: ICategory[]
@@ -29,6 +30,10 @@ const SubscriptionPage: NextPage<SubscriptionPageProps> = ({ categories = [] }) 
           <br />
           <Divider />
           <UserSubscriptions categories={categories} />
+          <br />
+          <Divider />
+          <SaveSubscription />
+          <br />
         </PageContainer>
       </Layout>
     </SubscriptionProvider>
@@ -37,8 +42,8 @@ const SubscriptionPage: NextPage<SubscriptionPageProps> = ({ categories = [] }) 
 
 export default SubscriptionPage
 
-export const getServerSideProps: GetServerSideProps<SubscriptionPageProps> = async _context => {
-  const categories = await CategoryService.list()
+export const getServerSideProps: GetServerSideProps<SubscriptionPageProps> = async ({}) => {
+  const categories = await list()
   return {
     props: { categories }
   }

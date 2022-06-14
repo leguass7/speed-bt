@@ -3,7 +3,7 @@ import { User, Prisma as PrismaTypes } from '.prisma/client'
 import { ApiError } from 'next/dist/server/api-utils'
 
 import { removeInvalidValues } from '~/helpers/object'
-import { prisma } from '~/server-side/database'
+import prisma from '~/server-side/database'
 
 import { checkCompleteData } from './user.helpers'
 

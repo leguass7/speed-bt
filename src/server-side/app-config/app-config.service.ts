@@ -1,6 +1,6 @@
 import { AppConfig } from '@prisma/client'
 
-import { prisma } from '~/server-side/database'
+import prisma from '~/server-side/database'
 
 async function findOne(key: AppConfig['key']): Promise<AppConfig | null> {
   const value = await prisma.appConfig.findFirst({ where: { key } })

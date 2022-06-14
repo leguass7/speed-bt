@@ -20,11 +20,11 @@ import {
   ListItemText
 } from '@mui/material'
 import Fade from '@mui/material/Fade'
-import styled from 'styled-components'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { PageTitle } from '~/components/PageTitle'
 import { SearchUserDrawer } from '~/components/SearchUserDrawer'
+import { FlexContainer } from '~/components/styled'
 import { useUserAuth } from '~/components/UserProvider'
 import { formatPrice } from '~/helpers'
 import { normalizeImageSrc } from '~/helpers/string'
@@ -32,11 +32,7 @@ import type { ICategory } from '~/server-side/category/category.dto'
 import type { IUser } from '~/server-side/users'
 
 import { useSubscription } from '../SubscriptionProvider'
-
-const Span = styled.span<{ line?: boolean }>`
-  text-decoration: ${({ line }) => (line ? 'line-through' : 'none')};
-  font-size: ${({ line }) => (line ? 14 : 16)}px;
-`
+import { SelectMessenger, SpanPrice } from './styles'
 
 export type Props = {
   categories?: ICategory[]
@@ -89,14 +85,17 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
   }, [selectedList, categories])
 
   const renderPrice = (value: number, discount: boolean) => {
-    if (discount) {
-      return (
-        <Span className="flex">
-          <Span line>{formatPrice(value)}</Span> por <Span>{formatPrice(50)}</Span>
-        </Span>
-      )
-    }
-    return <Span>{formatPrice(value)}</Span>
+    return (
+      <SpanPrice>
+        {discount ? (
+          <>
+            <SpanPrice line>{formatPrice(value)}</SpanPrice> por <SpanPrice>{formatPrice(50)}</SpanPrice>
+          </>
+        ) : (
+          formatPrice(value)
+        )}
+      </SpanPrice>
+    )
   }
 
   return (
@@ -108,7 +107,9 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
           </PageTitle>
         </>
       ) : (
-        <p>Selecione uma categoria para se inscrever</p>
+        <FlexContainer verticalPad={20} horizontalPad={10}>
+          <SelectMessenger>Selecione uma categoria para se inscrever</SelectMessenger>
+        </FlexContainer>
       )}
 
       <br />
@@ -118,11 +119,12 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
               return (
                 <Grid key={`subscription-${id}`} item xs={12} md={6} sm={6}>
                   <Fade in={true}>
-                    <Card>
+                    <Card sx={{ minHeight: 216 }}>
                       <CardHeader
                         title={`Categoria ${category?.title || '--'}`}
                         subheader={userData?.name}
                         avatar={<Avatar aria-label={userData?.name} alt={userData?.name} src={normalizeImageSrc(userData?.image)} />}
+                        titleTypographyProps={{ fontWeight: 'bold' }}
                       />
                       <CardContent>
                         {partner ? (
@@ -144,7 +146,7 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
                         ) : (
                           <List disablePadding>
                             <ListItemButton onClick={handleClickAddPartner(id)}>
-                              <ListItemText primary="Clique aqui para selecionar um parceiro(a)" sx={{ color: theme.colors.contrast }} />
+                              <ListItemText primary="Clique aqui para selecionar um parceiro(a)" sx={{ color: theme.colors.primary }} />
                             </ListItemButton>
                           </List>
                         )}

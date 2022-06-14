@@ -1,4 +1,4 @@
-import { prisma } from '~/server-side/database'
+import prisma from '~/server-side/database'
 
 import { ICategory } from './category.dto'
 
@@ -11,7 +11,7 @@ import { ICategory } from './category.dto'
 //   //
 // ]
 
-async function list(): Promise<ICategory[]> {
+export async function list(): Promise<ICategory[]> {
   const result = await prisma.category.findMany({ where: { tournamentId: 1, published: true } })
   return result as ICategory[]
 }

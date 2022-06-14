@@ -2,7 +2,7 @@ import { Prisma } from '.prisma/client'
 
 import camelcase from 'camelcase'
 
-import { prisma } from '~/server-side/database'
+import prisma from '~/server-side/database'
 
 import { PaginationDto, PaginationQueryDto } from './pagination.dto'
 
