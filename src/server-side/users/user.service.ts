@@ -7,6 +7,24 @@ import { prisma } from '~/server-side/database'
 
 import { checkCompleteData } from './user.helpers'
 
+async function search(text: string, notIds: string[] = []): Promise<User[]> {
+  if (text) {
+    const textWhere = {
+      OR: [
+        { name: { contains: `%${text}%` } },
+        { email: { contains: `%${text}%` } },
+        { phone: { contains: `%${text}%` } },
+        { cpf: { contains: `%${text}%` } }
+      ]
+    }
+    const notWhere = { id: { notIn: notIds } }
+
+    const users = await prisma.user.findMany({ where: { ...notWhere, ...textWhere } })
+    return users
+  }
+  return []
+}
+
 async function create(data: PrismaTypes.UserCreateInput): Promise<string> {
   const user = await prisma.user.create({ data })
   return user && user.id
@@ -51,7 +69,8 @@ export const UserService = {
   update,
   findOne,
   deleteUser,
-  findUserComplete
+  findUserComplete,
+  search
 }
 
 export type IUserService = typeof UserService

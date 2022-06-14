@@ -41,16 +41,17 @@ const ItemCheck = styled.div`
 type Props = ICategory & {
   selected?: boolean
   onSelect?: (id: number, checked: boolean) => void
+  disabled?: boolean
 }
-export const SelectItem: React.FC<Props> = ({ id, title, price, onSelect, selected }) => {
+export const SelectItem: React.FC<Props> = ({ id, title, price, onSelect, selected, disabled }) => {
   const handleSelect = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     if (onSelect) onSelect(id, checked)
   }
 
   return (
-    <ItemContainer>
+    <ItemContainer disabled={disabled}>
       <ItemCheck>
-        <Checkbox onChange={handleSelect} checked={!!selected} />
+        <Checkbox onChange={handleSelect} checked={!!selected} disabled={disabled} />
       </ItemCheck>
       <ItemText>
         <h4>{title}</h4>

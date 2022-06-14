@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const ItemContainer = styled.div`
+export const ItemContainer = styled.div<{ disabled?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,8 +9,9 @@ export const ItemContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.m}px;
   padding-left: 0;
   background-color: ${({ theme }) => theme.colors.text};
-  border-radius: ${({ theme }) => theme.spacing.m}px;
+  border-radius: ${({ theme }) => theme.spacing.s}px;
   font-weight: bold;
+  opacity: ${({ disabled }) => (disabled ? 0.3 : 1)};
 `
 
 export const ItemsList = styled.div`
