@@ -1,5 +1,5 @@
 import { Divider } from '@mui/material'
-import { GetServerSideProps, NextPage } from 'next'
+import type { NextPage, GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
@@ -13,10 +13,10 @@ import type { ICategory } from '~/server-side/category/category.dto'
 import { CategoryService } from '~/server-side/category/category.service'
 
 export type SubscriptionPageProps = {
-  categories: ICategory[]
+  categories?: ICategory[]
 }
 
-const SubscriptionPage: NextPage<SubscriptionPageProps> = ({ categories }) => {
+const SubscriptionPage: NextPage<SubscriptionPageProps> = ({ categories = [] }) => {
   const { theme } = useAppTheme()
   const { push } = useRouter()
   return (

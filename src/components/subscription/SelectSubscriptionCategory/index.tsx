@@ -44,9 +44,9 @@ function getAllowed(ids: number[]): number[] {
 }
 
 export type Props = {
-  categories: ICategory[]
+  categories?: ICategory[]
 }
-export const SelectSubscriptionCategory: React.FC<Props> = ({ categories }) => {
+export const SelectSubscriptionCategory: React.FC<Props> = ({ categories = [] }) => {
   const { selectedList, setSelectedList } = useSubscription()
 
   const handleToogleSelect = useCallback(
