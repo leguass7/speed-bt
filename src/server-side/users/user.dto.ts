@@ -15,3 +15,7 @@ export interface IResponseUserStore extends IResponseApi {
 export interface IResponseUser extends IResponseApi {
   user?: IUser
 }
+
+export interface IResponseUsers extends IResponseApi {
+  users?: IUser[]
+}

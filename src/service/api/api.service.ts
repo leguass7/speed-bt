@@ -1,7 +1,20 @@
+import { querystring } from '~/helpers/string'
+
 type ApiOptions = {
   baseUrl?: string
 }
 type METHOD = 'POST' | 'GET' | 'PATCH' | 'DELETE'
+
+type RequestParams = {
+  params?: Record<string, any>
+}
+
+export function normalizeUrl(path?: string, queryParams: any = {}): string {
+  const [base = '', query = ''] = `${path}`.split('?')
+  const params: any = querystring(query)
+  return [base.replace(/^(.*)\/$/, '$1'), querystring({ ...params, ...queryParams })].join('?')
+}
+
 export class ApiService {
   constructor(private readonly options: ApiOptions) {}
 
@@ -18,16 +31,16 @@ export class ApiService {
     }
   }
 
-  async get(url: string) {
-    return this.fetcher('GET', url)
+  async get(url: string, { params }: RequestParams = {}) {
+    return this.fetcher('GET', normalizeUrl(url, params))
   }
 
-  async patch(url: string, data: any) {
-    return this.fetcher('PATCH', url, data)
+  async patch(url: string, data: any, { params }: RequestParams = {}) {
+    return this.fetcher('PATCH', normalizeUrl(url, params), data)
   }
 
-  async post(url: string, data: any) {
-    return this.fetcher('POST', url, data)
+  async post(url: string, data: any, { params }: RequestParams = {}) {
+    return this.fetcher('POST', normalizeUrl(url, params), data)
   }
 }
 
