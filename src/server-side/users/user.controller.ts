@@ -4,7 +4,7 @@ import { ApiError } from 'next/dist/server/api-utils'
 
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
 
-import type { IResponseUser, IResponseUserStore, IUser } from './user.dto'
+import type { IResponseUser, IResponseUsers, IResponseUserStore, IUser } from './user.dto'
 import type { IUserService } from './user.service'
 
 function create(userService: IUserService) {
@@ -43,10 +43,19 @@ function me(userService: IUserService): RequestHandler<NextApiRequest, NextApiRe
   }
 }
 
+function find(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUsers>> {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUsers>) => {
+    const { query, auth } = req
+    const users = await userService.search(`${query?.search}`, [auth.userId])
+    return res.status(200).json({ success: true, users })
+  }
+}
+
 export function factoryUserController(userService: IUserService) {
   return {
     create: create(userService),
     updateMe: updateMe(userService),
-    me: me(userService)
+    me: me(userService),
+    find: find(userService)
   }
 }

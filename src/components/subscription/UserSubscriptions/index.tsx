@@ -1,8 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { toast } from 'react-toastify'
+
+// import { toast } from 'react-toastify'
 
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import CloseIcon from '@mui/icons-material/Close'
+// import CloseIcon from '@mui/icons-material/Close'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Avatar,
   Card,
@@ -18,6 +20,7 @@ import {
   ListItemText
 } from '@mui/material'
 import Fade from '@mui/material/Fade'
+import styled from 'styled-components'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { PageTitle } from '~/components/PageTitle'
@@ -30,11 +33,10 @@ import type { IUser } from '~/server-side/users'
 
 import { useSubscription } from '../SubscriptionProvider'
 
-// type SubscriptionItem = {
-//   categoryId: number | string
-//   category: Partial<ICategory>
-//   partner?: Partial<IUser>
-// }
+const Span = styled.span<{ line?: boolean }>`
+  text-decoration: ${({ line }) => (line ? 'line-through' : 'none')};
+  font-size: ${({ line }) => (line ? 14 : 16)}px;
+`
 
 export type Props = {
   categories: ICategory[]
@@ -54,6 +56,15 @@ export const UserSubscriptions: React.FC<Props> = ({ categories, onModifyList })
       setSearchOpen(true)
     }
   }, [])
+
+  const handleClickDelPartner = useCallback(
+    (id: number) => {
+      return () => {
+        updateSelected(id, { partner: null })
+      }
+    },
+    [updateSelected]
+  )
 
   const handleSelectImport = useCallback(
     async (userId: IUser['id'], data?: IUser) => {
@@ -77,6 +88,17 @@ export const UserSubscriptions: React.FC<Props> = ({ categories, onModifyList })
       })
   }, [selectedList, categories])
 
+  const renderPrice = (value: number, discount: boolean) => {
+    if (discount) {
+      return (
+        <Span className="flex">
+          <Span line>{formatPrice(value)}</Span> por <Span>{formatPrice(50)}</Span>
+        </Span>
+      )
+    }
+    return <Span>{formatPrice(value)}</Span>
+  }
+
   return (
     <div>
       {subscriptionList?.length ? (
@@ -92,7 +114,7 @@ export const UserSubscriptions: React.FC<Props> = ({ categories, onModifyList })
       <br />
       <Grid container spacing={1}>
         {subscriptionList?.length
-          ? subscriptionList.map(({ category, partner, id }) => {
+          ? subscriptionList.map(({ category, partner, id }, i) => {
               return (
                 <Grid key={`subscription-${id}`} item xs={12} md={6} sm={6}>
                   <Fade in={true}>
@@ -105,11 +127,18 @@ export const UserSubscriptions: React.FC<Props> = ({ categories, onModifyList })
                       <CardContent>
                         {partner ? (
                           <List disablePadding>
-                            <ListItem disablePadding>
+                            <ListItem
+                              disablePadding
+                              secondaryAction={
+                                <IconButton edge="end" aria-label="delete" onClick={handleClickDelPartner(id)}>
+                                  <DeleteIcon />
+                                </IconButton>
+                              }
+                            >
                               <ListItemAvatar>
                                 <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)} />
                               </ListItemAvatar>
-                              <ListItemText primary={partner?.name} />
+                              <ListItemText primary={partner?.name} secondary={partner?.email} />
                             </ListItem>
                           </List>
                         ) : (
@@ -124,7 +153,9 @@ export const UserSubscriptions: React.FC<Props> = ({ categories, onModifyList })
                         <IconButton aria-label="add to favorites">
                           <AttachMoneyIcon />
                         </IconButton>
-                        <span>{formatPrice(80)}</span> <CloseIcon />
+                        {renderPrice(category?.price || 100, !!(i > 0))}
+
+                        {/* <CloseIcon /> */}
                       </CardActions>
                     </Card>
                   </Fade>

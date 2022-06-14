@@ -9,7 +9,7 @@ export const ItemContainer = styled.div<{ disabled?: boolean }>`
   padding: ${({ theme }) => theme.spacing.m}px;
   padding-left: 0;
   background-color: ${({ theme }) => theme.colors.text};
-  border-radius: ${({ theme }) => theme.spacing.m}px;
+  border-radius: ${({ theme }) => theme.spacing.s}px;
   font-weight: bold;
   opacity: ${({ disabled }) => (disabled ? 0.3 : 1)};
 `
