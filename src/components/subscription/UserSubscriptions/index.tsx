@@ -39,10 +39,10 @@ const Span = styled.span<{ line?: boolean }>`
 `
 
 export type Props = {
-  categories: ICategory[]
+  categories?: ICategory[]
   onModifyList?: (a?: any) => void
 }
-export const UserSubscriptions: React.FC<Props> = ({ categories, onModifyList }) => {
+export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyList }) => {
   const { theme } = useAppTheme()
   const [searchOpen, setSearchOpen] = useState(false)
   const [importCatId, setImportCatId] = useState(0)
