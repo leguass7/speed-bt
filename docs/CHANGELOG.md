@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.3-alpha.1 (2022-06-14)
+
+
+### Features
+
+* add dep ([93eabe9](https://github.com/leguass7/speed-bt/commit/93eabe9dd114cb1517c72a73dee56d5ca0f0ee4c))
+* adicionado busca no db ([3fb8ead](https://github.com/leguass7/speed-bt/commit/3fb8ead310932a0a75717ccf1457ed8b322d486c))
+* busca de usuarios ([670db7f](https://github.com/leguass7/speed-bt/commit/670db7fa540d697fa38d4eb3be4a41b455066800))
+* estrutura reunião ([32aa531](https://github.com/leguass7/speed-bt/commit/32aa531817e811557a29abd21dbf41f1c8d96240))
+* inscrição ([f1608dc](https://github.com/leguass7/speed-bt/commit/f1608dc8d5c562f0578f45edb0506edccf786e63))
+
+
+### Bug Fixes
+
+* ajuste de dependencia ([664913e](https://github.com/leguass7/speed-bt/commit/664913e302499eaa9521abc6afa114c724530b79))
+* brpix-node ([629c82e](https://github.com/leguass7/speed-bt/commit/629c82eb9ad8772b20e992b2cc56cef5a1357dad))
+* removido categoria do cadastro ([d99e26c](https://github.com/leguass7/speed-bt/commit/d99e26c50210480806d98211ea9296fb5faad51f))
+
 ### 0.1.3-alpha.0 (2022-06-13)
 
 
