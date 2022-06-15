@@ -1,9 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
-// import { toast } from 'react-toastify'
-
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-// import CloseIcon from '@mui/icons-material/Close'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Avatar,
@@ -31,7 +28,7 @@ import { normalizeImageSrc } from '~/helpers/string'
 import type { ICategory } from '~/server-side/category/category.dto'
 import type { IUser } from '~/server-side/users'
 
-import { useSubscription } from '../SubscriptionProvider'
+import { SelectedType, useSubscription } from '../SubscriptionProvider'
 import { SelectMessenger, SpanPrice } from './styles'
 
 export type Props = {
@@ -72,15 +69,12 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
     [importCatId, updateSelected, onModifyList]
   )
 
-  const subscriptionList = useMemo(() => {
+  const subscriptionList: SelectedType[] = useMemo(() => {
     return selectedList
       .filter(s => categories.find(c => c.id === s.id && !!s?.selected))
       .map(selected => {
         const category = categories.find(c => c.id === selected.id)
-        return {
-          category,
-          ...selected
-        }
+        return { ...selected, category }
       })
   }, [selectedList, categories])
 
