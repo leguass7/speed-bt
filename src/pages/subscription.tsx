@@ -1,8 +1,11 @@
+import { useCallback, useEffect, useState } from 'react'
+
 import { Divider } from '@mui/material'
-import type { NextPage, GetServerSideProps } from 'next'
+import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
+import { CircleLoading } from '~/components/CircleLoading'
 import { Layout } from '~/components/Layout'
 import { PageTitle } from '~/components/PageTitle'
 import { PageContainer } from '~/components/styled'
@@ -11,29 +14,45 @@ import { SelectSubscriptionCategory } from '~/components/subscription/SelectSubs
 import { SubscriptionProvider } from '~/components/subscription/SubscriptionProvider'
 import { UserSubscriptions } from '~/components/subscription/UserSubscriptions'
 import type { ICategory } from '~/server-side/category/category.dto'
-import { list } from '~/server-side/category/category.service'
+import { getCategories } from '~/service/api/category'
 
-export type SubscriptionPageProps = {
-  categories?: ICategory[]
-}
-
-const SubscriptionPage: NextPage<SubscriptionPageProps> = ({ categories = [] }) => {
+const SubscriptionPage: NextPage = () => {
+  const [categories, setCategories] = useState<ICategory[]>([])
+  const [loading, setLoading] = useState(false)
   const { theme } = useAppTheme()
   const { push } = useRouter()
+
+  const fetchCategory = useCallback(async () => {
+    setLoading(true)
+    const response = await getCategories()
+    if (response?.success) setCategories(response?.categories || [])
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    fetchCategory()
+  }, [fetchCategory])
+
   return (
     <SubscriptionProvider>
       <Layout>
         <PageContainer horizontalPad={theme.spacing.l}>
-          <PageTitle title={'INSCRIÇÃO'} weight="normal" onBack={() => push('/')} />
-          <br />
-          <SelectSubscriptionCategory categories={categories} />
-          <br />
-          <Divider />
-          <UserSubscriptions categories={categories} />
-          <br />
-          <Divider />
-          <SaveSubscription />
-          <br />
+          {loading ? (
+            <CircleLoading />
+          ) : (
+            <>
+              <PageTitle title={'INSCRIÇÃO'} weight="normal" onBack={() => push('/')} />
+              <br />
+              <SelectSubscriptionCategory categories={categories} />
+              <br />
+              <Divider />
+              <UserSubscriptions categories={categories} />
+              <br />
+              <Divider />
+              <SaveSubscription />
+              <br />
+            </>
+          )}
         </PageContainer>
       </Layout>
     </SubscriptionProvider>
@@ -41,10 +60,3 @@ const SubscriptionPage: NextPage<SubscriptionPageProps> = ({ categories = [] }) 
 }
 
 export default SubscriptionPage
-
-export const getServerSideProps: GetServerSideProps<SubscriptionPageProps> = async ({}) => {
-  const categories = await list()
-  return {
-    props: { categories }
-  }
-}

@@ -22,7 +22,7 @@ type Props = {
   registeredGroups?: number[]
 }
 
-export const FoundList: React.FC<Props> = ({ list = [], onClickItem, searchStarted, registeredGroups = [] }) => {
+export const FoundList: React.FC<Props> = ({ list = [], onClickItem, searchStarted }) => {
   const renderSecondaryText = (email: string, hasGroup: boolean) => {
     return `${email}${hasGroup ? ` (já selecionado)` : ''}`
   }

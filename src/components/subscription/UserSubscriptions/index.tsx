@@ -62,11 +62,12 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
   const handleSelectImport = useCallback(
     async (userId: IUser['id'], data?: IUser) => {
       if (importCatId) {
-        updateSelected(importCatId, { partner: data })
+        const category = categories.find(c => c.id === importCatId)
+        updateSelected(importCatId, { partner: data, category })
         if (onModifyList) onModifyList()
       }
     },
-    [importCatId, updateSelected, onModifyList]
+    [importCatId, updateSelected, onModifyList, categories]
   )
 
   const subscriptionList: SelectedType[] = useMemo(() => {

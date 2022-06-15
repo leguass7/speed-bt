@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react'
 
-import type { ICategory } from '~/server-side/category/category.dto'
-import type { IUser } from '~/server-side/users'
+import type { IRequestStoreSubscription } from '~/server-side/subscription'
+
 export interface ISubscriptionContext {
   loading?: boolean
   selectedList?: SelectedType[]
@@ -10,12 +10,7 @@ export interface ISubscriptionContext {
 
 export const SubscriptionContext = createContext({} as ISubscriptionContext)
 
-export type SelectedType = {
-  id: number
-  selected?: boolean
-  partner?: Partial<IUser>
-  category?: Partial<ICategory>
-}
+export type SelectedType = IRequestStoreSubscription
 
 type ProviderProps = {
   children: React.ReactNode
