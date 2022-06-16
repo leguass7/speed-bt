@@ -42,6 +42,10 @@ export class ApiService {
   async post(url: string, data: any, { params }: RequestParams = {}) {
     return this.fetcher('POST', normalizeUrl(url, params), data)
   }
+
+  async delete(url: string, { params }: RequestParams = {}) {
+    return this.fetcher('DELETE', normalizeUrl(url, params))
+  }
 }
 
 export const apiService = new ApiService({ baseUrl: '/api' })
