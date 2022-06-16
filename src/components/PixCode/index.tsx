@@ -5,6 +5,7 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Toolltip from '@mui/material/Tooltip'
 
+import { CircleLoading } from '../CircleLoading'
 import { FlexContainer, Paragraph } from '../styled'
 import { PixContainer, QrcodeContainer, QrCodeHeader, QrcodeImage } from './styles'
 
@@ -65,9 +66,12 @@ export const PixCode: React.FC<Props> = ({ base64QRCode, paymentId, purchaseId, 
             </FlexContainer>
           </>
         ) : (
-          <Paragraph align="center" size={10} verticalSpaced>
-            Aguardando informações
-          </Paragraph>
+          <>
+            <Paragraph align="center" size={10} verticalSpaced>
+              Aguardando informações
+            </Paragraph>
+            <CircleLoading />
+          </>
         )}
       </QrcodeContainer>
     </PixContainer>

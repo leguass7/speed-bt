@@ -95,7 +95,7 @@ function remove(subService: ISubscriptionService): RequestHandler<NextApiRequest
     if (!subscription) throw new ApiError(403, 'Inscrição não localizada')
     if (!!subscription?.paid) throw new ApiError(403, 'Inscrição paga não pode ser excuída')
 
-    const success = await subService.remove(id)
+    const success = await subService.remove(id, true)
 
     return res.status(200).json({ success })
   }

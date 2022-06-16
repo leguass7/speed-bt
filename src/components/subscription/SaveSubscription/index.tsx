@@ -98,7 +98,7 @@ export const SaveSubscription: React.FC = () => {
       <Modal open={modalOpen} onClose={handleModalClose} keepMounted disableEscapeKeyDown>
         <ModalPixContainer>
           <Box padding={2} sx={{ backgroundColor: theme.colors.background, borderRadius: 1 }}>
-            <PixCode base64QRCode={qrcode.imageQrcode} stringQRCode={qrcode.qrcode} onClose={() => setModalOpen(false)} />
+            <PixCode base64QRCode={qrcode?.imageQrcode} stringQRCode={qrcode?.qrcode} onClose={() => setModalOpen(false)} />
           </Box>
         </ModalPixContainer>
       </Modal>
