@@ -11,8 +11,9 @@ export interface IAuthorizedUser {
   email?: string
 }
 
-export interface AuthorizedApiRequest extends NextApiRequest {
+export interface AuthorizedApiRequest<Body = any> extends NextApiRequest {
   auth: IAuthorizedUser
+  body: Body
 }
 
 function authorizedDto(data: JWT): IAuthorizedUser {

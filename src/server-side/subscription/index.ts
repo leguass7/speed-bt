@@ -5,5 +5,5 @@ export type { ISubscriptionService } from './subscription.service'
 
 export * from './subscription.dto'
 
-export { createSubscriptionSchema } from './subscription.validation'
+export { createSubscriptionSchema, createBulkSubscriptionSchema } from './subscription.validation'
 export { factorySubscriptionController, SubscriptionService }

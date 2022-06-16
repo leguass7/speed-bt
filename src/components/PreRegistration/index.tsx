@@ -31,14 +31,14 @@ export const PreRegistration: React.FC = () => {
             <p>Relize o cadastro para facilitar o processo de inscrição</p>
           </ContainerItem>
           <ContainerItem>
-            <ButtonTheme onClick={handleClick}>CADASTRE-SE</ButtonTheme>
             {!authenticated ? (
               <>
-                <br />
-                <br />
                 <ButtonGoogle />
+                <br />
+                <br />
               </>
             ) : null}
+            <ButtonTheme onClick={handleClick}>Cadastro manual</ButtonTheme>
           </ContainerItem>
         </>
       )}

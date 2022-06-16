@@ -60,10 +60,12 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  profiles            Profile[]
-  subscriptions       Subscription[]
-  subscriptionCreated Subscription[] @relation(name: "subscriptionCreatedUser")
-  subscriptionUpdated Subscription[] @relation(name: "subscriptionUpdatedUser")
+  profile              Profile?
+  subscriptions        Subscription[]
+  partnerSubscriptions Subscription[] @relation(name: "partnerSubscriptions")
+  subscriptionCreated  Subscription[] @relation(name: "subscriptionCreatedUser")
+  subscriptionUpdated  Subscription[] @relation(name: "subscriptionUpdatedUser")
+
 
   @@map("users")
 }
@@ -90,7 +92,7 @@ model AppConfig {
 
 model Profile {
   id     Int    @id @default(autoincrement())
-  userId String
+  userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
   @@map("profile")
@@ -123,22 +125,26 @@ model Category {
 model Subscription {
   id         Int       @id @default(autoincrement())
   value      Float     @default(0)
-  userId     String
   categoryId Int?
-  createdBy  String?
-  updatedBy  String?
+  userId     String
+  partnerId  String
   actived    Boolean?  @default(true)
   paid       Boolean?  @default(false)
   paymentId  Int?
+  createdBy  String?
   createdAt  DateTime? @default(now()) @db.Timestamp(0)
+  updatedBy  String?
   updatedAt  DateTime? @updatedAt
 
+
   user        User     @relation(fields: [userId], references: [id])
+  partner     User     @relation(name: "partnerSubscriptions", fields: [partnerId], references: [id])
   createdUser User?    @relation(name: "subscriptionCreatedUser", fields: [createdBy], references: [id])
   updatedUser User?    @relation(name: "subscriptionUpdatedUser", fields: [updatedBy], references: [id])
   payments    Payment? @relation(fields: [paymentId], references: [id])
 
 
+  @@unique([categoryId, userId, partnerId, actived], name: "uid_subscription")
   @@map(name: "subscriptions")
 }
 

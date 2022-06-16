@@ -36,7 +36,7 @@ export const ButtonGoogle: React.FC<ButtonThemeProps> = ({ themeColor = 'primary
         <span>
           {authenticated && session.data?.user?.image ? <Avatar src={session.data.user.image} sx={{ width: 28, height: 28 }} /> : <GoogleIcon />}
 
-          {loading ? 'verificando' : <>{authenticated ? session.data?.user?.name || 'fazer logout' : 'login com google'}</>}
+          {loading ? 'verificando' : <>{authenticated ? session.data?.user?.name || 'Sair da conta' : 'Usar conta do google'}</>}
         </span>
       </Button>
     </>
