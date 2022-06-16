@@ -14,7 +14,7 @@ import type { ISubscriptionService } from './subscription.service'
 type Reduce = [IRequestStoreSubscription[], IRequestStoreSubscription[]]
 
 function store(subService: ISubscriptionService) {
-  return async (req: AuthorizedApiRequest<{ data: IRequestStoreSubscription[] }>, res: NextApiResponse<IResponseSubscriptionStore>) => {
+  return async (req: AuthorizedApiRequest<{ data: IRequestStoreSubscription[] }>, res: NextApiResponse<any>) => {
     const { body, auth } = req
     const { data } = body
 
