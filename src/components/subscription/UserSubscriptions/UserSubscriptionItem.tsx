@@ -28,6 +28,7 @@ type Props = SelectedType & {
   index: number
   onClickPartner?: (categoryId: number) => void
   onClickDelPartner?: (categoryId: number) => void
+  onClickDelete?: (subscriptionId: number) => void
 }
 export const UserSubscriptionItem: React.FC<Props> = ({
   index,
@@ -37,6 +38,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
   category,
   onClickPartner,
   onClickDelPartner,
+  onClickDelete,
   id
 }) => {
   const { userData } = useUserAuth()
@@ -48,6 +50,10 @@ export const UserSubscriptionItem: React.FC<Props> = ({
 
   const handleClickDelPartner = () => {
     if (onClickDelPartner) onClickDelPartner(categoryId)
+  }
+
+  const handleClickDelele = () => {
+    if (onClickDelete) onClickDelete(id)
   }
 
   const renderPrice = (value: number) => {
@@ -100,7 +106,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
         </CardContent>
         <CardActions disableSpacing>
           {id ? (
-            <IconButton aria-label="excluir inscrição">
+            <IconButton aria-label="excluir inscrição" onClick={handleClickDelele}>
               <DeleteForeverIcon />
             </IconButton>
           ) : null}

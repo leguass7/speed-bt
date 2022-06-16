@@ -1,5 +1,14 @@
 import { celebrate, Joi, Segments } from 'celebrate'
 
+export const deleteSubscriptionSchema = celebrate(
+  {
+    [Segments.QUERY]: {
+      id: Joi.number().min(1).required()
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)
+
 export const createSubscriptionSchema = celebrate(
   {
     [Segments.BODY]: {

@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Grid from '@mui/material/Grid'
 
@@ -8,6 +9,7 @@ import { FlexContainer } from '~/components/styled'
 import type { ICategory } from '~/server-side/category/category.dto'
 import type { IUser } from '~/server-side/users'
 
+import { DeleteSubscriptionDrawer } from '../DeleteSubscriptionDrawer'
 import { SelectedType, useSubscription } from '../SubscriptionProvider'
 import { SelectMessenger } from './styles'
 import { UserSubscriptionItem } from './UserSubscriptionItem'
@@ -19,7 +21,25 @@ export type Props = {
 export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyList }) => {
   const [searchOpen, setSearchOpen] = useState(false)
   const [importCatId, setImportCatId] = useState(0)
-  const { selectedList, updateSelected } = useSubscription()
+  const [deleteId, setDeleteId] = useState(0)
+  const { selectedList, updateSelected, requestSubscriptions } = useSubscription()
+
+  const handleDelSubscription = useCallback((subscriptionId: number) => {
+    setDeleteId(subscriptionId)
+  }, [])
+
+  const onSubscriptionDelete = useCallback(
+    async (errorMessage?: string) => {
+      if (errorMessage) {
+        toast.error(errorMessage || 'Ocorreu um erro')
+      } else {
+        toast.success('Inscrição apagada com sucesso')
+        await requestSubscriptions()
+      }
+      setDeleteId(0)
+    },
+    [requestSubscriptions]
+  )
 
   const handleClickAddPartner = useCallback((categoryId: number) => {
     setImportCatId(categoryId)
@@ -79,6 +99,7 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
                     {...subscription}
                     onClickPartner={handleClickAddPartner}
                     onClickDelPartner={handleClickDelPartner}
+                    onClickDelete={handleDelSubscription}
                   />
                 </Grid>
               )
@@ -86,6 +107,7 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
           : null}
       </Grid>
       <SearchUserDrawer registeredGroups={[7]} open={searchOpen} onClose={() => setSearchOpen(false)} onSelect={handleSelectImport} />
+      <DeleteSubscriptionDrawer subscriptionId={deleteId} onClose={() => setDeleteId(0)} onSuccess={onSubscriptionDelete} />
     </div>
   )
 }

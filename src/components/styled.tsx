@@ -64,7 +64,7 @@ export const Span = styled.span<TextProps>`
   font-size: ${({ textSize = 14 }) => textSize}px;
 `
 
-export const Title = styled.h2<TextProps>`
+export const Title = styled.h2<TextProps & SpacingProps>`
   vertical-align: middle;
   display: flex;
   justify-content: flex-start;
@@ -75,4 +75,5 @@ export const Title = styled.h2<TextProps>`
   font-size: ${({ textSize = 20 }) => textSize}px !important;
   font-weight: ${({ weight = 'normal' }) => weight};
   font-family: Gilroy, Tahoma, Geneva, Verdana, sans-serif;
+  padding: ${({ horizontalPad = 0, verticalPad = 0 }) => `${verticalPad}px ${horizontalPad}px`};
 `

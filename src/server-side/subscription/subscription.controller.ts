@@ -1,9 +1,12 @@
+import type { Subscription } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { RequestHandler } from 'next-connect'
+import { ApiError } from 'next/dist/server/api-utils'
 
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
 
 import type { ICategoryService } from '../category/category.service'
+import type { IPaymentService } from '../payment/payment.service'
 import {
   IRequestStoreSubscription,
   CreateSubscription,
@@ -15,7 +18,7 @@ import type { ISubscriptionService } from './subscription.service'
 
 type Reduce = [IRequestStoreSubscription[], IRequestStoreSubscription[]]
 
-function store(subService: ISubscriptionService, categoryService: ICategoryService) {
+function store(subService: ISubscriptionService, categoryService: ICategoryService, paymentService: IPaymentService) {
   return async (req: AuthorizedApiRequest<{ data: IRequestStoreSubscription[] }>, res: NextApiResponse<any>) => {
     const { body, auth } = req
     const { data } = body
@@ -50,31 +53,37 @@ function store(subService: ISubscriptionService, categoryService: ICategoryServi
       })
     )
 
-    // const { id } = req.body as IRequestStoreSubscription
-    // const existUser = await subService.findOne({ id })
-    // if (existUser) throw new ApiError(400, 'Usuário já cadastrado com esse e-mail')
+    const subscriptions = await subService.find({
+      where: { id: { in: [...created, ...updated] } },
+      select: { id: true, paid: true, paymentId: true, value: true, categoryId: true }
+    })
 
-    // const createdId = await userService.create({ email: email.toLowerCase(), ...req.body })
-    // if (!createdId) throw new ApiError(400, 'Erro ao incluir usuário')
+    // deleta pagamentos antigos não realizados
+    const filterPay = (f: Subscription) => !!(!f?.paid && !!f?.paymentId)
+    await Promise.all(subscriptions.filter(filterPay).map(sub => paymentService.remove(sub.paymentId)))
 
-    // const completed = await userService.findUserComplete(createdId)
+    const toCreatePayment = subscriptions.filter(f => !f?.paid)
+    console.log('toCreatePayment', toCreatePayment)
+    // criar pagamento
+
+    // responser qrcode para o cliente
 
     return res.status(200).json({ success: true, updated, created })
   }
 }
 
-// function updateMe(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUserStore>> {
-//   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUserStore>) => {
-//     const { body, auth } = req
+function remove(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse> {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
+    const { auth, query } = req
+    const id = +query?.id
 
-//     const userId = await userService.update(auth.userId, body)
-//     if (!userId) throw new ApiError(400, 'not_found')
+    const subscription = await subService.findOne({ actived: true, userId: auth.userId, id })
+    if (!subscription) throw new ApiError(403, 'Inscrição não localizada')
+    if (!!subscription?.paid) throw new ApiError(403, 'Inscrição paga não pode ser excuída')
 
-//     const completed = await userService.findUserComplete(userId)
-
-//     return res.status(200).json({ success: true, userId, completed })
-//   }
-// }
+    return res.status(200).json({ success: true })
+  }
+}
 
 function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse<IResponseSubscriptions>> {
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseSubscriptions>) => {
@@ -84,26 +93,11 @@ function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, 
   }
 }
 
-// function me(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUser>> {
-//   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUser>) => {
-//     const { auth } = req
-//     const user = await userService.findOne({ id: auth.userId })
-//     return res.status(201).json({ success: true, user })
-//   }
-// }
-
-// function find(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUsers>> {
-//   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUsers>) => {
-//     const { query, auth } = req
-//     const users = await userService.search(`${query?.search}`, [auth.userId])
-//     return res.status(200).json({ success: true, users })
-//   }
-// }
-
-export function factorySubscriptionController(subService: ISubscriptionService, categoryService: ICategoryService) {
+export function factorySubscriptionController(subService: ISubscriptionService, categoryService: ICategoryService, paymentService: IPaymentService) {
   return {
-    store: store(subService, categoryService),
-    list: list(subService)
+    store: store(subService, categoryService, paymentService),
+    list: list(subService),
+    remove: remove(subService)
     // updateMe: updateMe(userService),
     // me: me(userService),
     // find: find(userService)

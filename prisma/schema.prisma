@@ -151,21 +151,20 @@ model Subscription {
 }
 
 model Payment {
-  id             Int           @id @default(autoincrement())
-  uuid           String?       @unique(map: "uuid") @db.VarChar(64)
-  subscriptionId Int?          @default(0)
-  method         PaymentMethod
-  value          Float         @default(0.00)
-  paid           Boolean       @default(false)
-  payday         DateTime?     @db.DateTime(0)
-  txid           String?       @unique(map: "txid") @db.VarChar(35)
-  overdue        DateTime?     @db.Date
-  createdBy      String?
-  createdAt      DateTime?     @default(now()) @db.Timestamp(0)
-  updatedBy      String?
-  updatedAt      DateTime?     @db.DateTime(0)
-  meta           String?       @db.LongText
-  actived        Boolean       @default(true)
+  id        Int           @id @default(autoincrement())
+  uuid      String?       @unique(map: "uuid") @db.VarChar(64)
+  method    PaymentMethod
+  value     Float         @default(0.00)
+  paid      Boolean       @default(false)
+  payday    DateTime?     @db.DateTime(0)
+  txid      String?       @unique(map: "txid") @db.VarChar(35)
+  overdue   DateTime?     @db.Date
+  createdBy String?
+  createdAt DateTime?     @default(now()) @db.Timestamp(0)
+  updatedBy String?
+  updatedAt DateTime?     @db.DateTime(0)
+  meta      String?       @db.LongText
+  actived   Boolean       @default(true)
 
   subscriptions Subscription[]
 

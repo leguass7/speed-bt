@@ -1,6 +1,7 @@
 import { isCelebrateError } from 'celebrate'
 import { NextApiResponse, NextApiRequest } from 'next'
 import { Options } from 'next-connect'
+import { ApiError } from 'next/dist/server/api-utils'
 
 // export interface ApiResponseErrorDto {
 //   status?: number;
@@ -8,6 +9,7 @@ import { Options } from 'next-connect'
 // }
 
 export interface ApiErrorParam {
+  success: boolean
   status: number
   message: string | string[]
 }
@@ -21,6 +23,7 @@ export default function ErrorApi(data: ApiErrorParam | string) {
 export function onErrorApi(error: any, req: NextApiRequest, res: NextApiResponse) {
   try {
     const result: ApiErrorParam = {
+      success: false,
       status: 500,
       message: error?.message || 'Something went wrong ApiResponseErrorDto'
     }
@@ -40,10 +43,10 @@ export function onErrorApi(error: any, req: NextApiRequest, res: NextApiResponse
       result.message = messages.length > 1 ? messages : messages[0]
     }
 
-    // if (error instanceof BaseError) {
-    //   result.message = { message: `${error.name}: ${error.message}` };
-    //   // trata erro do sequelize
-    // }
+    if (error instanceof ApiError) {
+      result.status = error?.statusCode
+      result.message = error?.message
+    }
 
     // if (error instanceof HttpException) {
     //   result.status = error?.status || 500
