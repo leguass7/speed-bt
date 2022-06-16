@@ -1,4 +1,4 @@
-import type { Subscription } from '@prisma/client'
+import type { Category, Subscription, User } from '@prisma/client'
 
 import type { IResponseApi } from '../api.interface'
 import type { ICategory } from '../category/category.dto'
@@ -28,28 +28,31 @@ export interface IResponseSubscription extends IResponseApi {
   subscription?: ISubscription
 }
 
+export type ResultSubscription = Subscription & { category?: Category; partner?: User }
 export interface IResponseSubscriptions extends IResponseApi {
-  subscriptions?: ISubscription[]
+  subscriptions?: ResultSubscription[]
 }
 
 export interface IRequestStoreSubscription {
-  id: number
+  id?: number
+  categoryId: number
   selected?: boolean
   actived?: boolean
   paid?: boolean
+  value?: number
   partner?: Partial<IUser>
   category?: Partial<ICategory>
 }
 
 export function requestToSubscriptionDto<T = ISubscription>(data: IRequestStoreSubscription, userId?: string): T {
-  const { actived, id, category, partner, paid } = data
+  const { actived, id, category, partner, paid, value } = data
   const result: ISubscription = {
     actived,
     id,
     categoryId: category?.id,
     partnerId: partner?.id,
     paid,
-    value: category?.price,
+    value: value || category?.price,
     userId
   }
   return result as T

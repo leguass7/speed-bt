@@ -11,8 +11,8 @@ import { ICategory } from './category.dto'
 //   //
 // ]
 
-export async function list(): Promise<ICategory[]> {
-  const result = await prisma.category.findMany({ where: { tournamentId: 1, published: true } })
+export async function list(tournamentId = 1): Promise<ICategory[]> {
+  const result = await prisma.category.findMany({ where: { tournamentId, published: true } })
   return result as ICategory[]
 }
 

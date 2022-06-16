@@ -1,97 +1,58 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import DeleteIcon from '@mui/icons-material/Delete'
-import {
-  Avatar,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText
-} from '@mui/material'
-import Fade from '@mui/material/Fade'
+import Grid from '@mui/material/Grid'
 
-import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { PageTitle } from '~/components/PageTitle'
 import { SearchUserDrawer } from '~/components/SearchUserDrawer'
 import { FlexContainer } from '~/components/styled'
-import { useUserAuth } from '~/components/UserProvider'
-import { formatPrice } from '~/helpers'
-import { normalizeImageSrc } from '~/helpers/string'
 import type { ICategory } from '~/server-side/category/category.dto'
 import type { IUser } from '~/server-side/users'
 
 import { SelectedType, useSubscription } from '../SubscriptionProvider'
-import { SelectMessenger, SpanPrice } from './styles'
+import { SelectMessenger } from './styles'
+import { UserSubscriptionItem } from './UserSubscriptionItem'
 
 export type Props = {
   categories?: ICategory[]
   onModifyList?: (a?: any) => void
 }
 export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyList }) => {
-  const { theme } = useAppTheme()
   const [searchOpen, setSearchOpen] = useState(false)
   const [importCatId, setImportCatId] = useState(0)
   const { selectedList, updateSelected } = useSubscription()
 
-  const { userData } = useUserAuth()
-
-  const handleClickAddPartner = useCallback((id: number) => {
-    return () => {
-      setImportCatId(id)
-      setSearchOpen(true)
-    }
+  const handleClickAddPartner = useCallback((categoryId: number) => {
+    setImportCatId(categoryId)
+    setSearchOpen(true)
   }, [])
 
   const handleClickDelPartner = useCallback(
-    (id: number) => {
-      return () => {
-        updateSelected(id, { partner: null })
-      }
+    (categoryId: number) => {
+      updateSelected(categoryId, { partner: null })
     },
     [updateSelected]
   )
 
-  const handleSelectImport = useCallback(
-    async (userId: IUser['id'], data?: IUser) => {
-      if (importCatId) {
-        const category = categories.find(c => c.id === importCatId)
-        updateSelected(importCatId, { partner: data, category })
-        if (onModifyList) onModifyList()
-      }
-    },
-    [importCatId, updateSelected, onModifyList, categories]
-  )
-
   const subscriptionList: SelectedType[] = useMemo(() => {
     return selectedList
-      .filter(s => categories.find(c => c.id === s.id && !!s?.selected))
-      .map(selected => {
-        const category = categories.find(c => c.id === selected.id)
-        return { ...selected, category }
+      .filter(s => categories.find(c => c.id === s.categoryId && !!s?.selected))
+      .map((selected, count) => {
+        const category = categories.find(c => c.id === selected.categoryId)
+        const value = count >= 1 ? 50 : selected?.value || category?.price
+        return { ...selected, category, value }
       })
   }, [selectedList, categories])
 
-  const renderPrice = (value: number, discount: boolean) => {
-    return (
-      <SpanPrice>
-        {discount ? (
-          <>
-            <SpanPrice line>{formatPrice(value)}</SpanPrice> por <SpanPrice>{formatPrice(50)}</SpanPrice>
-          </>
-        ) : (
-          formatPrice(value)
-        )}
-      </SpanPrice>
-    )
-  }
+  const handleSelectImport = useCallback(
+    async (userId: IUser['id'], data?: IUser) => {
+      if (importCatId) {
+        const subscription = subscriptionList.find(c => c.categoryId === importCatId)
+        updateSelected(importCatId, { partner: data, category: subscription.category, value: subscription.value })
+        if (onModifyList) onModifyList()
+      }
+    },
+    [importCatId, updateSelected, onModifyList, subscriptionList]
+  )
 
   return (
     <div>
@@ -110,52 +71,15 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
       <br />
       <Grid container spacing={1}>
         {subscriptionList?.length
-          ? subscriptionList.map(({ category, partner, id }, i) => {
+          ? subscriptionList.map((subscription, index) => {
               return (
-                <Grid key={`subscription-${id}`} item xs={12} md={6} sm={6}>
-                  <Fade in={true}>
-                    <Card sx={{ minHeight: 216 }}>
-                      <CardHeader
-                        title={`Categoria ${category?.title || '--'}`}
-                        subheader={userData?.name}
-                        avatar={<Avatar aria-label={userData?.name} alt={userData?.name} src={normalizeImageSrc(userData?.image)} />}
-                        titleTypographyProps={{ fontWeight: 'bold' }}
-                      />
-                      <CardContent>
-                        {partner ? (
-                          <List disablePadding>
-                            <ListItem
-                              disablePadding
-                              secondaryAction={
-                                <IconButton edge="end" aria-label="delete" onClick={handleClickDelPartner(id)}>
-                                  <DeleteIcon />
-                                </IconButton>
-                              }
-                            >
-                              <ListItemAvatar>
-                                <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)} />
-                              </ListItemAvatar>
-                              <ListItemText primary={partner?.name} secondary={partner?.email} />
-                            </ListItem>
-                          </List>
-                        ) : (
-                          <List disablePadding>
-                            <ListItemButton onClick={handleClickAddPartner(id)}>
-                              <ListItemText primary="Clique aqui para selecionar um parceiro(a)" sx={{ color: theme.colors.primary }} />
-                            </ListItemButton>
-                          </List>
-                        )}
-                      </CardContent>
-                      <CardActions disableSpacing>
-                        <IconButton aria-label="add to favorites">
-                          <AttachMoneyIcon />
-                        </IconButton>
-                        {renderPrice(category?.price || 100, !!(i > 0))}
-
-                        {/* <CloseIcon /> */}
-                      </CardActions>
-                    </Card>
-                  </Fade>
+                <Grid key={`subscription-${subscription.categoryId}`} item xs={12} md={6} sm={6}>
+                  <UserSubscriptionItem
+                    index={index}
+                    {...subscription}
+                    onClickPartner={handleClickAddPartner}
+                    onClickDelPartner={handleClickDelPartner}
+                  />
                 </Grid>
               )
             })

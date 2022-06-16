@@ -11,6 +11,7 @@ import { PageTitle } from '~/components/PageTitle'
 import { PageContainer } from '~/components/styled'
 import { SaveSubscription } from '~/components/subscription/SaveSubscription'
 import { SelectSubscriptionCategory } from '~/components/subscription/SelectSubscriptionCategory'
+import { SubscriptionLoader } from '~/components/subscription/SubscriptionLoader'
 import { SubscriptionProvider } from '~/components/subscription/SubscriptionProvider'
 import { UserSubscriptions } from '~/components/subscription/UserSubscriptions'
 import type { ICategory } from '~/server-side/category/category.dto'
@@ -42,15 +43,17 @@ const SubscriptionPage: NextPage = () => {
           ) : (
             <>
               <PageTitle title={'INSCRIÇÃO'} weight="normal" onBack={() => push('/')} />
-              <br />
-              <SelectSubscriptionCategory categories={categories} />
-              <br />
-              <Divider />
-              <UserSubscriptions categories={categories} />
-              <br />
-              <Divider />
-              <SaveSubscription />
-              <br />
+              <SubscriptionLoader>
+                <br />
+                <SelectSubscriptionCategory categories={categories} />
+                <br />
+                <Divider />
+                <UserSubscriptions categories={categories} />
+                <br />
+                <Divider />
+                <SaveSubscription />
+                <br />
+              </SubscriptionLoader>
             </>
           )}
         </PageContainer>

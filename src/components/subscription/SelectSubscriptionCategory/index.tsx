@@ -50,22 +50,22 @@ export const SelectSubscriptionCategory: React.FC<Props> = ({ categories = [] })
   const { selectedList, setSelectedList } = useSubscription()
 
   const handleToogleSelect = useCallback(
-    (id: number, checked: boolean) => {
+    (categoryId: number, checked: boolean) => {
       setSelectedList(old => {
         const selected = !!checked
-        const found = old.find(f => f.id === id)
+        const found = old.find(f => f.categoryId === categoryId)
         if (found)
           return old.map(f => {
-            return f.id === id ? { ...f, selected } : f
+            return f.categoryId === categoryId ? { ...f, selected } : f
           })
-        return [...old, { id, selected }].sort()
+        return [...old, { categoryId, selected }].sort()
       })
     },
     [setSelectedList]
   )
 
   const enabledList = useMemo(() => {
-    const selIds = selectedList.filter(f => f.selected).map(f => f.id)
+    const selIds = selectedList.filter(f => f.selected).map(f => f.categoryId)
     if (selIds?.length >= 2) return selIds
     return getAllowed(selIds)
   }, [selectedList])
@@ -74,9 +74,18 @@ export const SelectSubscriptionCategory: React.FC<Props> = ({ categories = [] })
     <>
       <ItemsList>
         {categories.map(category => {
-          const checked = !!selectedList.find(f => f.id === category.id && !!f?.selected)
-          const disabled = !enabledList.includes(category.id)
-          return <SelectItem key={`cat-${category.id}`} {...category} selected={checked} onSelect={handleToogleSelect} disabled={!!disabled} />
+          const checked = selectedList.find(f => f.categoryId === category.id && !!f?.selected)
+          const disabled = !enabledList.includes(category.id) || !!checked?.id
+          return (
+            <SelectItem
+              key={`cat-${category.id}`}
+              {...category}
+              selected={!!checked}
+              onSelect={handleToogleSelect}
+              disabled={!!disabled}
+              highlight={!!checked?.id}
+            />
+          )
         })}
       </ItemsList>
     </>

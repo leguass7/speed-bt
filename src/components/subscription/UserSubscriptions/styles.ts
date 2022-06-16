@@ -5,6 +5,10 @@ export const SpanPrice = styled.span<{ line?: boolean }>`
   font-size: ${({ line }) => (line ? 14 : 16)}px;
 `
 
+export const PriceContainer = styled.span`
+  margin-left: ${({ theme }) => theme.spacing.m}px;
+`
+
 export const SelectMessenger = styled.p`
   min-height: 100px;
   text-align: center;

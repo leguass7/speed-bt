@@ -1,9 +1,9 @@
-import { Subscription, Prisma as PrismaTypes } from '.prisma/client'
+import type { Subscription, Prisma as PrismaTypes } from '.prisma/client'
 
 import { removeInvalidValues } from '~/helpers/object'
 import prisma from '~/server-side/database'
 
-import { CreateSubscription, ISubscription } from './subscription.dto'
+import { CreateSubscription, ISubscription, ResultSubscription } from './subscription.dto'
 
 async function create(data: CreateSubscription): Promise<number> {
   const result = await prisma.subscription.create({ data })
@@ -19,6 +19,35 @@ async function findOne(filter: PrismaTypes.SubscriptionWhereInput): Promise<Subs
   const where = removeInvalidValues({ ...filter })
   const user = await prisma.subscription.findFirst({ where })
   return user
+}
+
+async function list(where: PrismaTypes.SubscriptionWhereInput): Promise<ResultSubscription[]> {
+  const data = await prisma.subscription.findMany({
+    where,
+    include: {
+      partner: {
+        select: {
+          actived: true,
+          gender: true,
+          cpf: true,
+          birday: true,
+          email: true,
+          id: true,
+          name: true,
+          image: true
+        }
+      },
+      category: {
+        select: {
+          id: true,
+          price: true,
+          published: true,
+          title: true
+        }
+      }
+    }
+  })
+  return (data || []) as ResultSubscription[]
 }
 
 // async function store({ id, ...data }: ISubscription): Promise<number> {
@@ -63,6 +92,7 @@ export const SubscriptionService = {
   create,
   findOne,
   // store,
+  list,
   update
 }
 

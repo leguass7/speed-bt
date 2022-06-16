@@ -117,7 +117,8 @@ model Category {
   published    Boolean? @default(true)
   price        Float?   @default(0)
 
-  tournament Tournament @relation(fields: [tournamentId], references: [id])
+  tournament    Tournament     @relation(fields: [tournamentId], references: [id])
+  subscriptions Subscription[]
 
   @@map("categories")
 }
@@ -125,7 +126,7 @@ model Category {
 model Subscription {
   id         Int       @id @default(autoincrement())
   value      Float     @default(0)
-  categoryId Int?
+  categoryId Int
   userId     String
   partnerId  String
   actived    Boolean?  @default(true)
@@ -142,6 +143,7 @@ model Subscription {
   createdUser User?    @relation(name: "subscriptionCreatedUser", fields: [createdBy], references: [id])
   updatedUser User?    @relation(name: "subscriptionUpdatedUser", fields: [updatedBy], references: [id])
   payments    Payment? @relation(fields: [paymentId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
 
 
   @@unique([categoryId, userId, partnerId, actived], name: "uid_subscription")
@@ -151,7 +153,7 @@ model Subscription {
 model Payment {
   id             Int           @id @default(autoincrement())
   uuid           String?       @unique(map: "uuid") @db.VarChar(64)
-  subscriptionId Int           @default(0)
+  subscriptionId Int?          @default(0)
   method         PaymentMethod
   value          Float         @default(0.00)
   paid           Boolean       @default(false)

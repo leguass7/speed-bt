@@ -1,27 +1,34 @@
-import type { NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { RequestHandler } from 'next-connect'
 
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
 
+import type { ICategoryService } from '../category/category.service'
 import {
   IRequestStoreSubscription,
-  IResponseSubscriptionStore,
   CreateSubscription,
   requestToSubscriptionDto,
-  UpdateSubscription
+  UpdateSubscription,
+  IResponseSubscriptions
 } from './subscription.dto'
 import type { ISubscriptionService } from './subscription.service'
 
 type Reduce = [IRequestStoreSubscription[], IRequestStoreSubscription[]]
 
-function store(subService: ISubscriptionService) {
+function store(subService: ISubscriptionService, categoryService: ICategoryService) {
   return async (req: AuthorizedApiRequest<{ data: IRequestStoreSubscription[] }>, res: NextApiResponse<any>) => {
     const { body, auth } = req
     const { data } = body
 
+    const categories = await categoryService.list()
+
     const [toCreate, toUpdate] = data.reduce(
-      ([c, u], item) => {
-        if (item?.id) u.push(item)
-        else c.push(item)
+      ([c, u], item, index) => {
+        const discount = !!(index >= 1)
+        const found = categories.find(f => f.id === item.categoryId)
+        const itemData: typeof item = { ...item, value: discount ? 50 : found.price }
+        if (item?.id) u.push(itemData)
+        else c.push(itemData)
         return [c, u]
       },
       [[], []] as Reduce
@@ -69,6 +76,14 @@ function store(subService: ISubscriptionService) {
 //   }
 // }
 
+function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse<IResponseSubscriptions>> {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseSubscriptions>) => {
+    const { auth } = req
+    const subscriptions = await subService.list({ actived: true, userId: auth.userId })
+    return res.status(200).json({ success: true, subscriptions })
+  }
+}
+
 // function me(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUser>> {
 //   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUser>) => {
 //     const { auth } = req
@@ -85,9 +100,10 @@ function store(subService: ISubscriptionService) {
 //   }
 // }
 
-export function factorySubscriptionController(userService: ISubscriptionService) {
+export function factorySubscriptionController(subService: ISubscriptionService, categoryService: ICategoryService) {
   return {
-    store: store(userService)
+    store: store(subService, categoryService),
+    list: list(subService)
     // updateMe: updateMe(userService),
     // me: me(userService),
     // find: find(userService)
