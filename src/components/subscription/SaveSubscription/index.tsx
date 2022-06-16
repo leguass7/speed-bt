@@ -18,8 +18,8 @@ const Message = styled.p`
 type Validate = [keyof SelectedType, string]
 
 const validateMessages: Validate[] = [
-  ['partner', 'Selecione um parceiro(a) na categoria $1 para continuar'],
-  ['category', 'Categoria não informada']
+  ['category', 'Categoria não informada'],
+  ['partner', 'Selecione um parceiro(a) na categoria $1 para continuar']
 ]
 
 export const SaveSubscription: React.FC = () => {
@@ -31,15 +31,18 @@ export const SaveSubscription: React.FC = () => {
 
   const validateSubscriptions = useCallback(() => {
     let msg = ''
-    if (selectedList?.length) {
-      selectedList.forEach(subscription => {
+    if (subscriptions?.length) {
+      subscriptions.forEach(subscription => {
         validateMessages.forEach(([key, message]) => {
-          if (!msg && !!(!(key in subscription) || !subscription[key])) msg = message.replace('$1', subscription?.category?.title || '')
+          if (!!(!(key in subscription) || !subscription[key])) msg = message.replace('$1', subscription?.category?.title || '')
         })
       })
+    } else {
+      msg = ''
     }
+
     setMessage(msg)
-  }, [selectedList])
+  }, [subscriptions])
 
   const handleSave = useCallback(async () => {
     await createSubscriptions(subscriptions)
@@ -52,6 +55,8 @@ export const SaveSubscription: React.FC = () => {
     }
   }, [validateSubscriptions, subscriptions])
 
+  const enabledSave = subscriptions?.length && !message
+
   if (!subscriptions?.length) return null
 
   return (
@@ -60,7 +65,7 @@ export const SaveSubscription: React.FC = () => {
         <Message>{message ? message : 'Clique para continuar'}</Message>
       </FlexContainer>
       <Stack direction="row" justifyContent="center" alignItems="flex-end" spacing={1}>
-        <Button variant="contained" size="large" endIcon={<AttachMoneyIcon />} disabled={!!message} onClick={handleSave}>
+        <Button variant="contained" size="large" endIcon={<AttachMoneyIcon />} disabled={!enabledSave} onClick={handleSave}>
           Realizar pagamento
         </Button>
       </Stack>

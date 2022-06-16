@@ -92,6 +92,8 @@ model Profile {
   id     Int    @id @default(autoincrement())
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  @@map("profile")
 }
 
 model Tournament {
