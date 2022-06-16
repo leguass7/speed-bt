@@ -59,13 +59,13 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  payments Payment[]
 
   profile              Profile?
   subscriptions        Subscription[]
   partnerSubscriptions Subscription[] @relation(name: "partnerSubscriptions")
   subscriptionCreated  Subscription[] @relation(name: "subscriptionCreatedUser")
   subscriptionUpdated  Subscription[] @relation(name: "subscriptionUpdatedUser")
-
 
   @@map("users")
 }
@@ -152,7 +152,7 @@ model Subscription {
 
 model Payment {
   id        Int           @id @default(autoincrement())
-  uuid      String?       @unique(map: "uuid") @db.VarChar(64)
+  uuid      String?       @unique(map: "uuid") @default(uuid()) @db.VarChar(64)
   method    PaymentMethod
   value     Float         @default(0.00)
   paid      Boolean       @default(false)
@@ -165,8 +165,11 @@ model Payment {
   updatedAt DateTime?     @db.DateTime(0)
   meta      String?       @db.LongText
   actived   Boolean       @default(true)
+  userId    String
+
 
   subscriptions Subscription[]
+  user          User           @relation(fields: [userId], references: [id])
 
   @@index([method], map: "method")
   @@index([paid], map: "paid")

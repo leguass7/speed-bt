@@ -54,11 +54,13 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
   )
 
   const subscriptionList: SelectedType[] = useMemo(() => {
+    const total = selectedList.length
     return selectedList
       .filter(s => categories.find(c => c.id === s.categoryId && !!s?.selected))
       .map((selected, count) => {
         const category = categories.find(c => c.id === selected.categoryId)
-        const value = count >= 1 ? 50 : selected?.value || category?.price
+        let value = count >= 1 ? 50 : selected?.value || category?.price
+        if (total === 1) value = category?.price
         return { ...selected, category, value }
       })
   }, [selectedList, categories])

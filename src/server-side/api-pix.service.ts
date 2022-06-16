@@ -9,7 +9,7 @@ export async function createApiPix(appConfigService: IAppConfigService) {
   if (!base64) throw new Error('CERTIFICATE ERROR')
 
   const buffer = Buffer.from(base64, 'base64')
-  const api = new ApiPix({ ...apiPixCredentials, certificate: { passphrase: '', path: buffer } })
+  const api = new ApiPix({ ...apiPixCredentials, dev: true, certificate: { passphrase: '', path: buffer } })
   await api.init()
 
   return api

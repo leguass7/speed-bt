@@ -15,9 +15,13 @@ async function update(id: number, data: ISubscription): Promise<number> {
   return result && result.id
 }
 
-async function remove(id: number): Promise<boolean> {
-  const result = await prisma.subscription.delete({ where: { id } })
-  return !!result
+async function remove(id: number, force?: boolean): Promise<boolean> {
+  if (force) {
+    const result = await prisma.subscription.delete({ where: { id } })
+    return !!result
+  }
+  const updated = await update(id, { actived: false })
+  return !!updated
 }
 
 async function findOne(filter: PrismaTypes.SubscriptionWhereInput): Promise<Subscription | null> {

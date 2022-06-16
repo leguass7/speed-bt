@@ -64,3 +64,25 @@ export function stringToColor(string: string) {
 export function stringAvatar(name: string) {
   return `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`
 }
+
+export function replaceAll(str = '', needle: string, replacement: string) {
+  if (!str) return ''
+  if (Array.isArray(needle)) {
+    let rtn = `${str}`
+    for (let i = 0; i < needle.length; i++) {
+      rtn = replaceAll(rtn, needle[i], replacement)
+    }
+    return rtn
+  }
+  return str.split(needle).join(replacement)
+}
+
+export const defaultForbidenChars = "'@#$%¨&*()_+{}?^:><|¹²³£¢¬§ªº°;.,~´`=-"
+export function removeAll(str = '', chars = defaultForbidenChars, replacement = '') {
+  if (!str) return ''
+  if (Array.isArray(str)) return str.map(r => removeAll(r, chars, replacement))
+  const c = Array.isArray(chars) ? chars : chars.split('')
+  let result = str
+  for (let i = 0; i < c.length; i++) result = replaceAll(result, c[i], replacement)
+  return result
+}

@@ -41,6 +41,18 @@ async function findOne(userData: Partial<User>): Promise<User | null> {
   return user
 }
 
+async function findOneToPayment(id: string) {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      cpf: true,
+      name: true,
+      id: true
+    }
+  })
+  return user
+}
+
 async function findUserComplete(userId: string): Promise<boolean> {
   const user = await findOne({ id: userId })
   if (!user) throw new ApiError(400, 'not_found')
@@ -70,7 +82,8 @@ export const UserService = {
   findOne,
   deleteUser,
   findUserComplete,
-  search
+  search,
+  findOneToPayment
 }
 
 export type IUserService = typeof UserService

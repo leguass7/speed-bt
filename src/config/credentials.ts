@@ -6,5 +6,3 @@ export const apiPixCredentials: IApiPixConfig = {
   clientId: process.env.GN_CLIENT_ID,
   clientSecret: process.env.GN_CLIENT_SECRET
 }
-
-export const certBase64 = process.env.GN_CERT_BASE64

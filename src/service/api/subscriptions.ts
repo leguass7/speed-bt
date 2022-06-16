@@ -1,8 +1,8 @@
-import type { IRequestStoreSubscription, IResponseSubscriptions } from '~/server-side/subscription'
+import type { IRequestStoreSubscription, IResponseSubscriptions, IResponseSubscriptionStore } from '~/server-side/subscription'
 
 import { apiService } from './api.service'
 
-export async function createSubscriptions(data: IRequestStoreSubscription[]): Promise<IResponseSubscriptions> {
+export async function createSubscriptions(data: IRequestStoreSubscription[]): Promise<IResponseSubscriptionStore> {
   const response = await apiService.post('/subscription', { data })
   return response
 }
