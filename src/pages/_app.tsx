@@ -10,6 +10,7 @@ import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 
 import { AppThemeProvider } from '~/components/AppThemeProvider'
+import { SocketProvider } from '~/components/SocketProvider'
 import { UserProvider } from '~/components/UserProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -17,19 +18,21 @@ function MyApp({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps?.session}>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBr}>
         <UserProvider>
-          <AppThemeProvider themeName="common">
-            <Component {...pageProps} />
-            <ToastContainer
-              theme="colored"
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              draggable
-              pauseOnHover
-            />
-          </AppThemeProvider>
+          <SocketProvider>
+            <AppThemeProvider themeName="common">
+              <Component {...pageProps} />
+              <ToastContainer
+                theme="colored"
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                draggable
+                pauseOnHover
+              />
+            </AppThemeProvider>
+          </SocketProvider>
         </UserProvider>
       </LocalizationProvider>
     </SessionProvider>

@@ -13,7 +13,7 @@ export class SocketService {
   private io: ServerIo | undefined
   public clients: ISocketClient[]
 
-  constructor(private routes?: SocketRoute[]) {
+  constructor(private routes: SocketRoute[] = []) {
     this.io = undefined
     this.clients = []
   }
@@ -52,7 +52,7 @@ export class SocketService {
 
   init() {
     if (this.io) {
-      this.routes.forEach(() => {
+      this.routes?.forEach(() => {
         //
       })
 
@@ -62,7 +62,9 @@ export class SocketService {
 
         socket.on('disconnect', () => {
           this.removeClient(id)
-          this.log(`USER DISCONNECTED`, id)
+          const count = this.clients.length
+          this.log(`USER DISCONNECTED`, id, count)
+          this.io.emit('users', count)
         })
 
         this.configureSocket(socket)
@@ -70,6 +72,7 @@ export class SocketService {
         const count = this.clients.length
         this.log('USER CONECTED:', count, id)
         socket.emit('users', count)
+        this.io.emit('users', count)
       })
     }
   }

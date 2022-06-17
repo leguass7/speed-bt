@@ -5,14 +5,38 @@ import { IResponseDash } from '~/server-side/dashboard/dashboard.dto'
 import { getDashboard } from '~/service/api/dashboard'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
-import { Title } from '../styled'
-import { Container, ChartContainer } from './styles'
+import { useAppSocket } from '../SocketProvider'
+import { Container, ChartContainer, ContainerLine, ContainerText } from './styles'
 
 export const TotalSubscriptions: React.FC = () => {
   const { theme } = useAppTheme()
+
   const [data, setData] = useState<IResponseDash>({
-    totalUsers: 0
+    totalOnline: 1,
+    totalUsers: 0,
+    totalSubscriptions: 0
   })
+
+  const updateData = useCallback((dash: Partial<IResponseDash>) => {
+    setData(old => ({ ...old, ...dash }))
+  }, [])
+
+  const {} = useAppSocket({
+    users: totalOnline => {
+      updateData({ totalOnline })
+    }
+  })
+
+  const fetchData = useCallback(async () => {
+    const response = await getDashboard()
+    if (response?.success) {
+      updateData(response)
+    }
+  }, [updateData])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   const progressStyles = buildStyles({
     pathColor: theme.colors.primary,
@@ -21,25 +45,25 @@ export const TotalSubscriptions: React.FC = () => {
     pathTransitionDuration: 2
   })
 
-  const fetchData = useCallback(async () => {
-    const response = await getDashboard()
-    if (response?.success) {
-      setData(response)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
-
   return (
     <Container>
-      <div>
-        <Title textColor={theme.colors.primary}>Total de atletas cadastrados</Title>
-      </div>
-      <ChartContainer chartWidth={'120px'}>
-        <CircularProgressbar value={data?.totalUsers} text={`${data?.totalUsers}`} styles={progressStyles} maxValue={500} minValue={0} />
-      </ChartContainer>
+      <ContainerLine>
+        <ChartContainer chartWidth={'120px'}>
+          <CircularProgressbar value={data?.totalUsers} text={`${data?.totalUsers}`} styles={progressStyles} maxValue={232} />
+        </ChartContainer>
+        <ContainerText>
+          <h2>Total de atletas cadastrados</h2>
+          <p>Agora {`${data?.totalOnline}`} usuário(s) online</p>
+        </ContainerText>
+      </ContainerLine>
+      <ContainerLine>
+        <ChartContainer chartWidth={'120px'}>
+          <CircularProgressbar value={data?.totalSubscriptions} text={`${data?.totalSubscriptions}`} styles={progressStyles} maxValue={116} />
+        </ChartContainer>
+        <ContainerText>
+          <h2>Total de inscrições</h2>
+        </ContainerText>
+      </ContainerLine>
     </Container>
   )
 }
