@@ -1,6 +1,7 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 
 import { Form } from '@unform/web'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import * as Yup from 'yup'
@@ -15,7 +16,9 @@ import { CircleLoading } from '../CircleLoading'
 import { InputText } from '../forms/InputText'
 import { useUserAuth } from '../UserProvider'
 
-interface Props {}
+interface Props {
+  csrfToken: string
+}
 
 interface IFormData {
   email: string
@@ -27,11 +30,10 @@ const schema = Yup.object({
   password: Yup.string().required('A senha é obrigatória')
 })
 
-export const FormLogin: React.FC<Props> = () => {
+export const FormLogin: React.FC<Props> = ({ csrfToken }) => {
   const isMounted = useMounted()
-  const { setLogged, updateUserData } = useUserAuth()
-  const [loading, setLoading] = useState(false)
-  const { push } = useRouter()
+  const { loading } = useUserAuth()
+  // const { push } = useRouter()
 
   const formRef = useRef(null)
 
@@ -39,21 +41,17 @@ export const FormLogin: React.FC<Props> = () => {
     async (data: IFormData) => {
       const invalid = await validateFormData(schema, data, formRef.current)
       if (invalid) return null
-      setLoading(true)
 
       const { email, password } = data
-      const { success, user } = await checkLogin(email?.toLowerCase(), password)
+      // const { success = false, user } = await checkLogin(email, password)
+      const response = await signIn('credentials', { email, password, csrfToken })
 
       if (isMounted()) {
-        setLoading(false)
-
-        setLogged(success)
-        updateUserData({ ...user })
-
-        if (success) push('/subscription')
+        console.log(response)
+        // if (success) push('/subscription')
       }
     },
-    [isMounted, updateUserData, setLogged, push]
+    [isMounted, csrfToken]
   )
 
   return (

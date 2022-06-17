@@ -32,6 +32,13 @@ async function create(data: PrismaTypes.UserCreateInput): Promise<string> {
   const hash = hashSync(password, 14)
 
   const user = await prisma.user.create({ data: { ...data, password: hash } })
+
+  // if (user?.id) {
+  //   await prisma.account.create({
+  //     data: { provider: 'credentials', type: 'oauth', userId: user.id, providerAccountId: 'custom' }
+  //   })
+  // }
+
   return user && user.id
 }
 
@@ -88,9 +95,10 @@ async function check(email: string, password: string) {
     const user = await findOne({ email })
 
     const data = {
-      ...user,
-      password: undefined,
-      cpf: undefined
+      id: user?.id,
+      email: user?.email,
+      image: user?.image,
+      name: user?.name
     }
 
     return compareSync(password, user.password) && data
