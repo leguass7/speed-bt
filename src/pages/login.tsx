@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 
 import { Stack } from '@mui/material'
 import { NextPage } from 'next'
-import { useSession } from 'next-auth/react'
+import { getCsrfToken, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 import { FormLogin } from '~/components/FormLogin'
@@ -11,7 +11,11 @@ import { Layout } from '~/components/Layout'
 import { PageTitle } from '~/components/PageTitle'
 import { PageContainer } from '~/components/styled'
 
-const Login: NextPage = () => {
+interface Props {
+  csrfToken: string
+}
+
+const Login: NextPage<Props> = ({ csrfToken }) => {
   const { push } = useRouter()
   const { status } = useSession()
 
@@ -30,10 +34,18 @@ const Login: NextPage = () => {
       </Stack>
       <PageContainer>
         <PageTitle title="Login" weight="normal" onBack={() => push('/')} />
-        <FormLogin />
+        <FormLogin csrfToken={csrfToken} />
       </PageContainer>
     </Layout>
   )
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      csrfToken: await getCsrfToken(context)
+    }
+  }
 }
 
 export default Login

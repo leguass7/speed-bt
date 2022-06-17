@@ -7,7 +7,6 @@ import GoogleProvider from 'next-auth/providers/google'
 import { googleSecrets, secret } from '~/server-side/config'
 import prisma from '~/server-side/database'
 import { UserService } from '~/server-side/users'
-import { checkLogin } from '~/service/api/user'
 
 // const authorizationUrl = 'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code'
 const maxAge = 30 * 24 * 60 * 60 // 30 days
@@ -16,6 +15,9 @@ const options: NextAuthOptions = {
   session: { strategy: 'jwt', maxAge },
   jwt: { secret, maxAge },
   adapter: PrismaAdapter(prisma),
+  // pages: {
+  //   signIn: '/login'
+  // },
   providers: [
     GoogleProvider({
       clientId: googleSecrets.clientId,
@@ -47,7 +49,8 @@ const options: NextAuthOptions = {
         return { ...user }
       }
     })
-  ]
+  ],
+  debug: true
 }
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)

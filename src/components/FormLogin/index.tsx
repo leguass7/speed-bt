@@ -16,7 +16,9 @@ import { CircleLoading } from '../CircleLoading'
 import { InputText } from '../forms/InputText'
 import { useUserAuth } from '../UserProvider'
 
-interface Props {}
+interface Props {
+  csrfToken: string
+}
 
 interface IFormData {
   email: string
@@ -28,7 +30,7 @@ const schema = Yup.object({
   password: Yup.string().required('A senha é obrigatória')
 })
 
-export const FormLogin: React.FC<Props> = () => {
+export const FormLogin: React.FC<Props> = ({ csrfToken }) => {
   const isMounted = useMounted()
   const { loading } = useUserAuth()
   // const { push } = useRouter()
@@ -40,15 +42,16 @@ export const FormLogin: React.FC<Props> = () => {
       const invalid = await validateFormData(schema, data, formRef.current)
       if (invalid) return null
 
+      const { email, password } = data
       // const { success = false, user } = await checkLogin(email, password)
-      const response = await signIn('credentials', { ...data })
+      const response = await signIn('credentials', { email, password, csrfToken })
 
       if (isMounted()) {
         console.log(response)
         // if (success) push('/subscription')
       }
     },
-    [isMounted]
+    [isMounted, csrfToken]
   )
 
   return (
