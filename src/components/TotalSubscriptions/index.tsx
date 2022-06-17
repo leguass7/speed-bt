@@ -53,7 +53,7 @@ export const TotalSubscriptions: React.FC = () => {
         </ChartContainer>
         <ContainerText>
           <h2>Total de atletas cadastrados</h2>
-          <p>Agora {`${data?.totalOnline}`} usuário(s) online</p>
+          {/* <p>Agora {`${data?.totalOnline}`} usuário(s) online</p> */}
         </ContainerText>
       </ContainerLine>
       <ContainerLine>
