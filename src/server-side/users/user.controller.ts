@@ -51,6 +51,7 @@ function me(userService: IUserService): RequestHandler<NextApiRequest, NextApiRe
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUser>) => {
     const { auth } = req
     const user = await userService.findOne({ id: auth.userId })
+    delete user.password
     return res.status(201).json({ success: true, user })
   }
 }
