@@ -103,7 +103,8 @@ export const UserService = {
   deleteUser,
   findUserComplete,
   search,
-  check
+  check,
+  findOneToPayment
 }
 
 export type IUserService = typeof UserService
