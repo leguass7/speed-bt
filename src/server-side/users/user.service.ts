@@ -1,5 +1,6 @@
 import type { User, Prisma as PrismaTypes } from '.prisma/client'
 
+import { compareSync, hashSync } from 'bcrypt'
 import { ApiError } from 'next/dist/server/api-utils'
 
 import { removeInvalidValues } from '~/helpers/object'
@@ -26,7 +27,10 @@ async function search(text: string, notIds: string[] = [], filter: PrismaTypes.U
 }
 
 async function create(data: PrismaTypes.UserCreateInput): Promise<string> {
-  const user = await prisma.user.create({ data })
+  const { password } = data
+  const hash = hashSync(password, 14)
+
+  const user = await prisma.user.create({ data: { ...data, password: hash } })
   return user && user.id
 }
 
@@ -76,6 +80,22 @@ async function deleteUser(userId: string, force = false): Promise<boolean> {
   }
 }
 
+async function check(email: string, password: string) {
+  try {
+    const user = await findOne({ email })
+
+    const data = {
+      ...user,
+      password: undefined,
+      cpf: undefined
+    }
+
+    return compareSync(password, user.password) && data
+  } catch (err) {
+    return false
+  }
+}
+
 export const UserService = {
   create,
   update,
@@ -83,7 +103,7 @@ export const UserService = {
   deleteUser,
   findUserComplete,
   search,
-  findOneToPayment
+  check
 }
 
 export type IUserService = typeof UserService
