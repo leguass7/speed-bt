@@ -16,9 +16,11 @@ export const TopHome: React.FC = () => {
   return (
     <>
       <Container>
-        <Image src={logo} alt="2022" />
+        <ImageContainer imageWidth="240px">
+          <Image src={logo} alt="2022" />
+        </ImageContainer>
         {/* <LogoSvg width={240} /> */}
-        <ImageContainer>
+        <ImageContainer imageWidth="160px">
           <Image src={year2022} alt="2022" />
         </ImageContainer>
         <SuperHeader textColor={theme.colors.primary}>

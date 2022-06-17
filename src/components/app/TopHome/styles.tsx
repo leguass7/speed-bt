@@ -20,11 +20,12 @@ export const Container = styled.div`
   }
 `
 
-export const ImageContainer = styled.div`
+export const ImageContainer = styled.div<{ imageWidth?: string }>`
   border: 0;
+  max-width: ${({ imageWidth = 'auto' }) => imageWidth};
   display: flex;
   justify-content: center;
-  margin-top: ${({ theme }) => theme.spacing.xl}px;
-  padding-top: ${({ theme }) => theme.spacing.xl}px;
-  padding-bottom: ${({ theme }) => theme.spacing.xl}px;
+  margin-top: ${({ theme }) => theme.spacing.s}px;
+  padding-top: ${({ theme }) => theme.spacing.s}px;
+  padding-bottom: ${({ theme }) => theme.spacing.l}px;
 `

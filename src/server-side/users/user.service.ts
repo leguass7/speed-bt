@@ -1,7 +1,6 @@
 import type { User, Prisma as PrismaTypes } from '.prisma/client'
 
 import { compareSync, hashSync } from 'bcrypt'
-import { randomUUID } from 'crypto'
 import { ApiError } from 'next/dist/server/api-utils'
 
 import { removeInvalidValues } from '~/helpers/object'
@@ -111,9 +110,9 @@ export const UserService = {
   findOne,
   deleteUser,
   findUserComplete,
+  findOneToPayment,
   search,
-  check,
-  findOneToPayment
+  check
 }
 
 export type IUserService = typeof UserService

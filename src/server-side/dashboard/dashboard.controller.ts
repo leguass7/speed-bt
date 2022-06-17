@@ -10,7 +10,6 @@ function dash(dashService: IDashboardService) {
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseDash>) => {
     const data = await dashService.getDash()
 
-    await wait(2000)
     return res.status(200).send({ success: true, ...data })
   }
 }

@@ -8,6 +8,7 @@ import type { SocketClientIo } from '~/server-side/services/SocketService/socket
 
 const host = hostSocket()
 
+export type { SocketClientIo }
 export type ConnectionHandler = (host?: string) => any
 export type UseSocketOptions = {
   connect?: ConnectionHandler | ConnectionHandler[]
@@ -31,7 +32,7 @@ export function useSocket(query: string, { connect, disconnect }: UseSocketOptio
     return () => {
       if (newSocket) {
         newSocket.close()
-        newSocket = null
+        newSocket = undefined
       }
     }
   }, [setSocket, query])

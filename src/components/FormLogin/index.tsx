@@ -40,9 +40,8 @@ export const FormLogin: React.FC<Props> = () => {
       const invalid = await validateFormData(schema, data, formRef.current)
       if (invalid) return null
 
-      const { email, password } = data
       // const { success = false, user } = await checkLogin(email, password)
-      const response = await signIn('credentials')
+      const response = await signIn('credentials', { ...data })
 
       if (isMounted()) {
         console.log(response)
