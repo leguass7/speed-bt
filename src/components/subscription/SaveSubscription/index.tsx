@@ -37,7 +37,7 @@ export const SaveSubscription: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [message, setMessage] = useState(null)
-  const { selectedList } = useSubscription()
+  const { selectedList, requestSubscriptions } = useSubscription()
   const [qrcode, setQrcode] = useState<IResponseSubscriptionStore>(null)
   const { userData, updateUserData } = useUserAuth()
 
@@ -63,13 +63,14 @@ export const SaveSubscription: React.FC = () => {
     const response = await createSubscriptions(subscriptions)
     const { success, imageQrcode, qrcode, message } = response
     if (success) {
+      requestSubscriptions()
       setQrcode({ imageQrcode, qrcode })
       setModalOpen(true)
     } else {
       toast.error(message)
     }
     setLoading(false)
-  }, [subscriptions])
+  }, [subscriptions, requestSubscriptions])
 
   const checkCpf = useCallback(() => {
     if (!userData.cpf) setModalOpen(true)
