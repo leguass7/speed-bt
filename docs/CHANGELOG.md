@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.3-alpha.3 (2022-06-17)
+
+
+### Features
+
+* add dep ([93eabe9](https://github.com/leguass7/speed-bt/commit/93eabe9dd114cb1517c72a73dee56d5ca0f0ee4c))
+* adicionado busca no db ([3fb8ead](https://github.com/leguass7/speed-bt/commit/3fb8ead310932a0a75717ccf1457ed8b322d486c))
+* adicionado controller de inscrição ([ce49b20](https://github.com/leguass7/speed-bt/commit/ce49b20ef9b41a4267d0f570ed4fe2be2b8f59fb))
+* adicionado dashboard ([5589f2b](https://github.com/leguass7/speed-bt/commit/5589f2ba64348eee66add99f99b0cd3cb484985a))
+* adicionado inscrição ([cf5d21e](https://github.com/leguass7/speed-bt/commit/cf5d21ecb9c1ddb06bab24950331f09f0cd67fe7))
+* adicionado regras de busca ([5789ffa](https://github.com/leguass7/speed-bt/commit/5789ffae9c39dedbd31ceb84cbb2fee6b39a20d0))
+* adicionando checagem de cpf ([11b122d](https://github.com/leguass7/speed-bt/commit/11b122dfbaefca2e0e17089bed85c7079b8b1df2))
+* alterada logo ([ea2d54b](https://github.com/leguass7/speed-bt/commit/ea2d54b437c363b4e7c4b9d5ea054ed765bd3919))
+* atualização da lista depois de pagamento ([a9b3b4e](https://github.com/leguass7/speed-bt/commit/a9b3b4e8dfafaf43d846f9d4c542405f1c4c0995))
+* busca de usuarios ([670db7f](https://github.com/leguass7/speed-bt/commit/670db7fa540d697fa38d4eb3be4a41b455066800))
+* criando pagamento ([5e1be69](https://github.com/leguass7/speed-bt/commit/5e1be69d118befc543d111bf47ec5c407f92da30))
+* delete drawer ([085424a](https://github.com/leguass7/speed-bt/commit/085424af8534b9868e40ed7904736f79526c34e7))
+* estrutura reunião ([32aa531](https://github.com/leguass7/speed-bt/commit/32aa531817e811557a29abd21dbf41f1c8d96240))
+* icon para verificar pagamento ([72bb5af](https://github.com/leguass7/speed-bt/commit/72bb5af78ec366b8255bbc4b57f44268c3df52ba))
+* inscrição ([f1608dc](https://github.com/leguass7/speed-bt/commit/f1608dc8d5c562f0578f45edb0506edccf786e63))
+* login na pagina de inscrição ([32f3d51](https://github.com/leguass7/speed-bt/commit/32f3d5149f11c2a648f6a5e460ad1f8195660bf3))
+* request inscrições existentes ([b934db5](https://github.com/leguass7/speed-bt/commit/b934db50da6843a58e5f229cae557bf1cdc38f6e))
+* salvando inscrição ([e8fd6f9](https://github.com/leguass7/speed-bt/commit/e8fd6f98e1426aa282cbc3c68d172acdf6a577bb))
+* teste com pix ([fe919ac](https://github.com/leguass7/speed-bt/commit/fe919ac9fe549ac9881644bcb282f130682e3d4b))
+
+
+### Bug Fixes
+
+* ajuste de dependencia ([664913e](https://github.com/leguass7/speed-bt/commit/664913e302499eaa9521abc6afa114c724530b79))
+* brpix-node ([629c82e](https://github.com/leguass7/speed-bt/commit/629c82eb9ad8772b20e992b2cc56cef5a1357dad))
+* dependecies ([aede1f6](https://github.com/leguass7/speed-bt/commit/aede1f67769b5a2b0bc7b51ef9df488bd7a32041))
+* erro na inscrição ([b6cb21c](https://github.com/leguass7/speed-bt/commit/b6cb21cdb7a0d89c0da1e534d53d23fc06e2d51f))
+* removido categoria do cadastro ([d99e26c](https://github.com/leguass7/speed-bt/commit/d99e26c50210480806d98211ea9296fb5faad51f))
+* serversideProps ([5ecb5d4](https://github.com/leguass7/speed-bt/commit/5ecb5d4441d01567f67c795a0781a2c75b01c427))
+* serversideProps ([bcf3380](https://github.com/leguass7/speed-bt/commit/bcf3380fe430ca7ad8d4c048e97cfe545a79aea7))
+* types ([dbb3f2c](https://github.com/leguass7/speed-bt/commit/dbb3f2cb49748e62b4795c8048266fb4d2d72def))
+
 ### 0.1.3-alpha.2 (2022-06-15)
 
 
