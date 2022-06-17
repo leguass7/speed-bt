@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { sub } from 'date-fns'
-import { object, string } from 'yup'
+import { object, ref, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { InputDate } from '~/components/forms/InputDate'
@@ -21,11 +21,12 @@ import { createUser, saveUser } from '~/service/api/user'
 
 import { Container } from './styles'
 
-type FormData = IUser
+type FormData = IUser & { confirmPassword: string }
 
 type FormRegisterProps = {
   onCancel?: () => void
 }
+
 export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
   const { loading: loadingUser, userData, updateUserData, requestMe, authenticated } = useUserAuth()
 
@@ -39,6 +40,7 @@ export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
       const invalid = await validateFormData(formSchema, { ...formData }, formRef.current)
       if (!invalid) {
         setSaving(true)
+        if (formData?.confirmPassword) delete formData.confirmPassword
 
         const save = authenticated && userData?.id ? saveUser : createUser
         const response = await save(formData)
@@ -76,7 +78,9 @@ export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
           ) : (
             <Form ref={formRef} onSubmit={handleSubmit} initialData={userData}>
               <InputText name="name" label="Nome" placeholder="seu nome" />
-              <InputText name="email" label="e-mail" disabled={!!authenticated} />
+              <InputText name="email" label="e-mail" />
+              <InputText type="password" name="password" label="senha" />
+              <InputText type="password" name="confirmPassword" label="Confirmar senha" />
               <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} />
               <InputMask name="phone" label="Telefone" mask={'(99) 9 9999-9999'} alwaysShowMask={false} />
               <InputDate name="birday" label="Nascimento" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />
@@ -106,6 +110,8 @@ const formSchema = object().shape({
   email: string().required('e-mail é requirido'),
   phone: string().required('telefone é requirido'),
   birday: string().required('data de nascimento é requirido'),
+  password: string().required('A senha é requerido'),
+  confirmPassword: string().oneOf([ref('password'), null], 'Senha e confirmar senha não batem'),
   // category: string().required('Categoria é requirido'),
   shirtSize: string().required('Tamanho da camisa é requirido')
   // gender: string().required('gênero é requirido'),

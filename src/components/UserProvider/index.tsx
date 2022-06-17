@@ -43,11 +43,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
 export function useUserAuth() {
   const { status, data } = useSession()
+  const [logged, setLogged] = useState(false)
   const { userData, loadingUser, requestMe, userError, setUserData } = useContext(UserContext)
 
   const [loading, authenticated] = useMemo(() => {
-    return [!!(loadingUser || status === 'loading'), !!(status === 'authenticated')]
-  }, [loadingUser, status])
+    return [!!(loadingUser || status === 'loading'), !!(status === 'authenticated' || logged)]
+  }, [loadingUser, status, logged])
 
   const completedAuth = useMemo(() => {
     return !!(authenticated && userData)
@@ -68,5 +69,5 @@ export function useUserAuth() {
     }
   }, [requestMe, authenticated, userData, loading, data])
 
-  return { loading, userData, completedAuth, userError, updateUserData, requestMe, authenticated, data }
+  return { loading, userData, completedAuth, userError, updateUserData, requestMe, authenticated, data, setLogged }
 }
