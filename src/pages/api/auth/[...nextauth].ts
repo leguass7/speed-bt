@@ -15,9 +15,10 @@ const options: NextAuthOptions = {
   session: { strategy: 'jwt', maxAge },
   jwt: { secret, maxAge },
   adapter: PrismaAdapter(prisma),
-  // pages: {
-  //   signIn: '/login'
-  // },
+  pages: {
+    signIn: '/login',
+    newUser: '/register'
+  },
   providers: [
     GoogleProvider({
       clientId: googleSecrets.clientId,
@@ -29,23 +30,17 @@ const options: NextAuthOptions = {
           response_type: 'code'
         }
       }
-      // @ts-ignore
-      // authorizationUrl
     }),
     CredentialsProvider({
       id: 'custom',
       name: 'custom',
       credentials: {
-        email: {},
-        password: { type: 'password' }
+        email: { type: 'email', label: 'e-mail' },
+        password: { type: 'password', label: 'senha' }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, _req) {
         const { email, password } = credentials
-
         const user = await UserService.check(email, password)
-
-        console.log('asldlkaslkdlkas', user, req, credentials)
-
         return { ...user }
       }
     })
