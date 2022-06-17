@@ -51,11 +51,20 @@ function find(userService: IUserService): RequestHandler<NextApiRequest, NextApi
   }
 }
 
+function check(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse> {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const { email, password } = req.body
+    const user = await userService.check(email, password)
+    return res.status(200).json({ success: true, user })
+  }
+}
+
 export function factoryUserController(userService: IUserService) {
   return {
     create: create(userService),
     updateMe: updateMe(userService),
     me: me(userService),
+    check: check(userService),
     find: find(userService)
   }
 }

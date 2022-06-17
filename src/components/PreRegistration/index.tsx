@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { ButtonTheme } from '~/components/ButtonTheme'
-import { ButtonGoogle } from '~/components/ButtonTheme/ButtonGoogle'
 import { Title } from '~/components/styled'
 import { useUserAuth } from '~/components/UserProvider'
 
@@ -16,8 +15,8 @@ export const PreRegistration: React.FC = () => {
   const { push } = useRouter()
   const { authenticated, userData } = useUserAuth()
 
-  const handleClick = () => {
-    push('/register')
+  const handleClick = (path: string) => () => {
+    push(path)
   }
 
   return (
@@ -31,12 +30,12 @@ export const PreRegistration: React.FC = () => {
             <p>Relize o cadastro para facilitar o processo de inscrição</p>
           </ContainerItem>
           <ContainerItem>
-            <ButtonTheme onClick={handleClick}>CADASTRE-SE</ButtonTheme>
+            <ButtonTheme onClick={handleClick('/login')}>Login</ButtonTheme>
             {!authenticated ? (
               <>
                 <br />
                 <br />
-                <ButtonGoogle />
+                <ButtonTheme onClick={handleClick('/register')}>CADASTRE-SE</ButtonTheme>
               </>
             ) : null}
           </ContainerItem>

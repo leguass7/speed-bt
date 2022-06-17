@@ -8,6 +8,7 @@ import { ContainerItem } from './styles'
 
 export const RegisterSuccess: React.FC = () => {
   const { theme } = useAppTheme()
+
   return (
     <ContainerItem textColor={theme.colors.white}>
       <Title textColor={theme.colors.primary}>
@@ -15,7 +16,7 @@ export const RegisterSuccess: React.FC = () => {
       </Title>
       <p>Aguarde até o inicio das inscrições para garantir sua vaga.</p>
       <p>
-        <i>Avisaremos quando as instcrições estiverem abertas</i>
+        <i>Avisaremos quando as inscrições estiverem abertas</i>
       </p>
     </ContainerItem>
   )

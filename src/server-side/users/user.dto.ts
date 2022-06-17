@@ -4,12 +4,16 @@ import { IResponseApi } from '../api.interface'
 
 // import type { IResponseApi } from '../api.interface'
 
-export type IUser = Partial<Omit<User, 'password'>>
+export type IUser = Partial<User>
 
 export interface IResponseUserStore extends IResponseApi {
   createdId?: string
   userId?: string
   completed?: boolean
+}
+
+export interface IResponseCheckUser extends IResponseApi {
+  user?: Partial<User>
 }
 
 export interface IResponseUser extends IResponseApi {
