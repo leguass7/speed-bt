@@ -102,6 +102,7 @@ export const UserService = {
   findOne,
   deleteUser,
   findUserComplete,
+  findOneToPayment,
   search,
   check
 }

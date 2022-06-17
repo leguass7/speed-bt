@@ -42,7 +42,7 @@ export const FormLogin: React.FC<Props> = () => {
       setLoading(true)
 
       const { email, password } = data
-      const { success, user } = await checkLogin(email, password)
+      const { success, user } = await checkLogin(email?.toLowerCase(), password)
 
       if (isMounted()) {
         setLoading(false)

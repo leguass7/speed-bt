@@ -16,7 +16,7 @@ import type { IUserService } from './user.service'
 function create(userService: IUserService) {
   return async (req: NextApiRequest, res: NextApiResponse<IResponseUserStore>) => {
     const { email } = req.body as IUser
-    const existUser = await userService.findOne({ email })
+    const existUser = await userService.findOne({ email: email.toLowerCase() })
     if (existUser) throw new ApiError(400, 'Usuário já cadastrado com esse e-mail')
 
     const createdId = await userService.create({ email: email.toLowerCase(), ...req.body })
