@@ -31,8 +31,14 @@ function create(userService: IUserService) {
 function updateMe(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUserStore>> {
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUserStore>) => {
     const { body, auth } = req
+    const { password } = body
 
-    const userId = await userService.update(auth.userId, body)
+    const data = {
+      ...body,
+      password: password || undefined
+    }
+
+    const userId = await userService.update(auth.userId, data)
     if (!userId) throw new ApiError(400, 'not_found')
 
     const completed = await userService.findUserComplete(userId)

@@ -8,6 +8,7 @@ export const updateMeSchema = celebrate(
       birday: Joi.date().allow(''),
       gender: Joi.valid('F', 'M').allow(''),
       phone: Joi.string().allow(''),
+      password: Joi.string(),
       category: Joi.string().allow(''),
       cpf: Joi.string().allow(''),
       shirtSize: Joi.valid('PP', 'P', 'M', 'G', 'GG').allow('')

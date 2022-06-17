@@ -4,6 +4,7 @@ import { compareSync, hashSync } from 'bcrypt'
 import { ApiError } from 'next/dist/server/api-utils'
 
 import { removeInvalidValues } from '~/helpers/object'
+import { isDefined } from '~/helpers/validation'
 import prisma from '~/server-side/database'
 
 import { checkCompleteData } from './user.helpers'
@@ -34,7 +35,9 @@ async function create(data: PrismaTypes.UserCreateInput): Promise<string> {
   return user && user.id
 }
 
-async function update(userId: string, data: Partial<User>): Promise<string> {
+async function update(userId: string, { password, ...rest }: Partial<User>): Promise<string> {
+  const hash = isDefined(password) ? hashSync(password, 14) : undefined
+  const data = hash ? { ...rest, password: hash } : rest
   const user = await prisma.user.update({ data, where: { id: userId } })
   return user && user.id
 }
