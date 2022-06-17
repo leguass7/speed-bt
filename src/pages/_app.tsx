@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import 'react-toastify/dist/ReactToastify.min.css'
+import 'react-circular-progressbar/dist/styles.css'
 import { ToastContainer } from 'react-toastify'
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
