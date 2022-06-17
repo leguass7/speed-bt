@@ -188,6 +188,7 @@ enum PaymentMethod {
 }
 
 enum ConfigKey {
+  CERT_DEV
   CERT
   PIX
   OTHER
