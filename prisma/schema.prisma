@@ -55,6 +55,7 @@ model User {
   birday        DateTime?   @db.Date
   completed     Boolean?    @default(false)
   shirtSize     String?
+  level         Int?        @default(1)
 
 
   accounts Account[]

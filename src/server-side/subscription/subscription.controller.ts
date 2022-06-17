@@ -79,6 +79,9 @@ function store(
     await Promise.all(toCreatePayment.map(sub => subService.update(sub.id, { paymentId })))
 
     const user = await userService.findOneToPayment(auth.userId)
+    if (!user) throw new ApiError(403, 'Usuário não identificado')
+    if (!user?.cpf) throw new ApiError(403, 'CPF não informado')
+
     const apiPix = await createApiPix(appConfigService)
     const cob = await paymentService.generate(apiPix, { user, value, paymentId })
 

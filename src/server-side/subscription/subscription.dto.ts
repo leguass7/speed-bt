@@ -41,6 +41,7 @@ export interface IRequestStoreSubscription {
   selected?: boolean
   actived?: boolean
   paid?: boolean
+  paymentId?: number
   value?: number
   partner?: Partial<IUser>
   category?: Partial<ICategory>

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import Avatar from '@mui/material/Avatar'
@@ -15,6 +14,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
+import Tooltip from '@mui/material/Tooltip'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { useUserAuth } from '~/components/UserProvider'
@@ -22,6 +22,7 @@ import { formatPrice } from '~/helpers'
 import { normalizeImageSrc } from '~/helpers/string'
 
 import type { SelectedType } from '../SubscriptionProvider'
+import { PaymentIcon } from './PaymentIcon'
 import { SpanPrice, PriceContainer } from './styles'
 
 type Props = SelectedType & {
@@ -39,6 +40,8 @@ export const UserSubscriptionItem: React.FC<Props> = ({
   onClickPartner,
   onClickDelPartner,
   onClickDelete,
+  paid,
+  paymentId,
   id
 }) => {
   const { userData } = useUserAuth()
@@ -70,6 +73,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
       </PriceContainer>
     )
   }
+
   return (
     <Fade in={true}>
       <Card sx={{ minHeight: 216 }}>
@@ -85,7 +89,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
               <ListItem
                 disablePadding
                 secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={handleClickDelPartner}>
+                  <IconButton edge="end" aria-label="delete" onClick={handleClickDelPartner} disabled={!!paid}>
                     <DeleteIcon />
                   </IconButton>
                 }
@@ -106,13 +110,13 @@ export const UserSubscriptionItem: React.FC<Props> = ({
         </CardContent>
         <CardActions disableSpacing>
           {id ? (
-            <IconButton aria-label="excluir inscrição" onClick={handleClickDelele}>
-              <DeleteForeverIcon />
-            </IconButton>
+            <Tooltip title={'Excluir inscrição'} arrow>
+              <IconButton aria-label="excluir inscrição" onClick={handleClickDelele}>
+                <DeleteForeverIcon />
+              </IconButton>
+            </Tooltip>
           ) : null}
-          <IconButton aria-label="verificar pagamento">
-            <AttachMoneyIcon />
-          </IconButton>
+          <PaymentIcon id={id} paid={!!paid} paymentId={paymentId} />
           {renderPrice(value)}
 
           {/* <CloseIcon /> */}

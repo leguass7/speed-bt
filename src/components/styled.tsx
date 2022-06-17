@@ -97,11 +97,12 @@ export const Title = styled.h2<TextProps & SpacingProps>`
   padding: ${({ horizontalPad = 0, verticalPad = 0 }) => `${verticalPad}px ${horizontalPad}px`};
 `
 
-export const Paragraph = styled.p<SimpleTextProps>`
+export const Paragraph = styled.p<SimpleTextProps & { width?: string }>`
   display: block;
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
+  width: ${({ width = '100%' }) => width};
   font-size: ${({ size }) => size}px;
   text-align: ${({ align = 'left' }) => align};
   color: ${({ textColor = 'inherit' }) => textColor};
