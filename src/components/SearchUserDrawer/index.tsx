@@ -16,6 +16,7 @@ import { FoundList } from './FoundList'
 import { ButtonClose, Container, ContentLimit } from './styles'
 import { Filter, useValidateFilter } from './useValidateFilter'
 
+export type { Filter }
 function hasValues(filter: Filter) {
   return Object.values({ ...filter }).find(f => !!f) || null
 }
@@ -24,9 +25,11 @@ type Props = {
   open?: boolean
   onClose?: () => void
   onSelect?: (userId: IUser['id'], data?: IUser) => void
-  registeredGroups: number[]
+  fixedFilter?: { categoryId: number }
+  message?: string
+  notFoundMessage?: string
 }
-export const SearchUserDrawer: React.FC<Props> = ({ open, onClose, onSelect, registeredGroups }) => {
+export const SearchUserDrawer: React.FC<Props> = ({ open, onClose, onSelect, fixedFilter, message, notFoundMessage }) => {
   const [loading, setLoading] = useState(false)
   const [searchStarted, setSearchStarted] = useState(false)
   const [filter, setFilter] = useState<Filter>({})
@@ -66,7 +69,7 @@ export const SearchUserDrawer: React.FC<Props> = ({ open, onClose, onSelect, reg
     const invalid = await validateFilter(filter)
     if (hasFilter && !invalid) {
       setLoading(true)
-      const response = await findPartner(filter)
+      const response = await findPartner({ ...filter, ...fixedFilter })
       setLoading(false)
 
       if (response?.success) {
@@ -74,7 +77,7 @@ export const SearchUserDrawer: React.FC<Props> = ({ open, onClose, onSelect, reg
         setSearchStarted(true)
       }
     }
-  }, [filter, validateFilter])
+  }, [filter, validateFilter, fixedFilter])
 
   const handleClickItem = useCallback(
     (userId: IUser['id']) => {
@@ -113,7 +116,14 @@ export const SearchUserDrawer: React.FC<Props> = ({ open, onClose, onSelect, reg
               <CircleLoading minheight={100} />
             </div>
           ) : (
-            <FoundList list={data} onClickItem={handleClickItem} searchStarted={searchStarted} registeredGroups={registeredGroups} />
+            <FoundList
+              list={data}
+              onClickItem={handleClickItem}
+              searchStarted={searchStarted}
+              registeredGroups={[]}
+              message={message}
+              notFoundMessage={notFoundMessage}
+            />
           )}
           <ButtonClose color="primary" onClick={handleClose}>
             <CloseIcon />

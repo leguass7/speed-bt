@@ -109,7 +109,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
           )}
         </CardContent>
         <CardActions disableSpacing>
-          {id ? (
+          {id && !paid ? (
             <Tooltip title={'Excluir inscrição'} arrow>
               <IconButton aria-label="excluir inscrição" onClick={handleClickDelele}>
                 <DeleteForeverIcon />

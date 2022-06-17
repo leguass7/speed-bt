@@ -76,6 +76,19 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
     [importCatId, updateSelected, onModifyList, subscriptionList]
   )
 
+  const [message, notFoundMessage] = useMemo(() => {
+    const category = categories.find(f => f.id === importCatId)
+    if (category) {
+      const prefix = category?.title ? `${category?.title}: ` : ''
+      return [
+        `${prefix}Buscar atletas cadastrados`,
+        //
+        `${prefix}Nenhum atleta encontrado`
+      ]
+    }
+    return [null, null]
+  }, [categories, importCatId])
+
   return (
     <div>
       {subscriptionList?.length ? (
@@ -108,7 +121,14 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
             })
           : null}
       </Grid>
-      <SearchUserDrawer registeredGroups={[7]} open={searchOpen} onClose={() => setSearchOpen(false)} onSelect={handleSelectImport} />
+      <SearchUserDrawer
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        onSelect={handleSelectImport}
+        fixedFilter={{ categoryId: importCatId }}
+        message={message}
+        notFoundMessage={notFoundMessage}
+      />
       <DeleteSubscriptionDrawer subscriptionId={deleteId} onClose={() => setDeleteId(0)} onSuccess={onSubscriptionDelete} />
     </div>
   )

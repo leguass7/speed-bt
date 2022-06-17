@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack'
 import styled from 'styled-components'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
+import { CircleLoading } from '~/components/CircleLoading'
 import { PixCode } from '~/components/PixCode'
 import { FlexContainer } from '~/components/styled'
 import { useUserAuth } from '~/components/UserProvider'
@@ -33,6 +34,7 @@ const validateMessages: Validate[] = [
 
 export const SaveSubscription: React.FC = () => {
   const { theme } = useAppTheme()
+  const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [message, setMessage] = useState(null)
   const { selectedList } = useSubscription()
@@ -57,6 +59,7 @@ export const SaveSubscription: React.FC = () => {
   }, [subscriptions])
 
   const fetchSave = useCallback(async () => {
+    setLoading(true)
     const response = await createSubscriptions(subscriptions)
     const { success, imageQrcode, qrcode, message } = response
     if (success) {
@@ -65,6 +68,7 @@ export const SaveSubscription: React.FC = () => {
     } else {
       toast.error(message)
     }
+    setLoading(false)
   }, [subscriptions])
 
   const checkCpf = useCallback(() => {
@@ -97,7 +101,7 @@ export const SaveSubscription: React.FC = () => {
     await fetchSave()
   }
 
-  const enabledSave = subscriptions?.length && !message && !modalOpen
+  const enabledSave = subscriptions?.length && !message && !modalOpen && !loading
 
   if (!subscriptions?.length) return null
 
@@ -113,6 +117,7 @@ export const SaveSubscription: React.FC = () => {
           </Button>
         </Stack>
       </Box>
+      {loading ? <CircleLoading /> : null}
       <Modal open={modalOpen} onClose={handleModalClose} disableEscapeKeyDown>
         <ModalPixContainer>
           <Box padding={2} sx={{ backgroundColor: theme.colors.background, borderRadius: 1 }}>

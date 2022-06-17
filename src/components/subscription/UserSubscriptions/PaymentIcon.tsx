@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import PaidIcon from '@mui/icons-material/Paid'
@@ -6,7 +7,9 @@ import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
-import { wait } from '~/helpers'
+import { checkPayment } from '~/service/api/payment'
+
+import { useSubscription } from '../SubscriptionProvider'
 
 type Props = {
   paid: boolean
@@ -15,12 +18,27 @@ type Props = {
 }
 export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId }) => {
   const [loading, setLoading] = useState(false)
+  const { requestSubscriptions } = useSubscription()
+
+  const updatePayments = useCallback(() => {
+    requestSubscriptions()
+  }, [requestSubscriptions])
 
   const handleCheckPayment = useCallback(async () => {
     setLoading(true)
-    await wait(2000)
+    const response = await checkPayment(paymentId)
+    const { success, message, paid } = response
+    if (success) {
+      if (paid) {
+        toast.success('Pagamento realizado')
+        updatePayments()
+      }
+    } else {
+      toast.error(message || 'Erro ao verificar pagamento')
+    }
+
     setLoading(false)
-  }, [])
+  }, [paymentId, updatePayments])
 
   return (
     <>
