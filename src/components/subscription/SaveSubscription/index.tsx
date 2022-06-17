@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { PixCode } from '~/components/PixCode'
 import { FlexContainer } from '~/components/styled'
+import { useUserAuth } from '~/components/UserProvider'
 import { IResponseSubscriptionStore } from '~/server-side/subscription'
 import { createSubscriptions } from '~/service/api/subscriptions'
 
@@ -35,6 +36,7 @@ export const SaveSubscription: React.FC = () => {
   const [message, setMessage] = useState(null)
   const { selectedList } = useSubscription()
   const [qrcode, setQrcode] = useState<IResponseSubscriptionStore>(null)
+  const { userData } = useUserAuth()
 
   const subscriptions = useMemo(() => selectedList?.filter(f => !!f?.selected), [selectedList])
 
@@ -53,24 +55,32 @@ export const SaveSubscription: React.FC = () => {
     setMessage(msg)
   }, [subscriptions])
 
-  const handleSave = useCallback(async () => {
-    if (qrcode) {
+  const checkCpf = useCallback(() => {
+    if (!userData.cpf) {
       setModalOpen(true)
-    } else {
-      const response = await createSubscriptions(subscriptions)
-      const { success, imageQrcode, qrcode, message } = response
-      if (success) {
-        setQrcode({ imageQrcode, qrcode })
+    }
+    return !!userData.cpf
+  }, [userData])
+
+  const handleSave = useCallback(async () => {
+    if (checkCpf()) {
+      if (qrcode) {
         setModalOpen(true)
       } else {
-        toast.error(message)
+        const response = await createSubscriptions(subscriptions)
+        const { success, imageQrcode, qrcode, message } = response
+        if (success) {
+          setQrcode({ imageQrcode, qrcode })
+          setModalOpen(true)
+        } else {
+          toast.error(message)
+        }
       }
     }
-  }, [subscriptions, qrcode])
+  }, [subscriptions, qrcode, checkCpf])
 
   const handleModalClose = (_event: any, reason: 'backdropClick' | 'escapeKeyDown') => {
     if (reason === 'backdropClick') setModalOpen(true)
-    //
   }
 
   useEffect(() => {

@@ -36,13 +36,14 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="pt_BR" />
-
           <meta property="og:title" content="Arena Speed - Beach Tennis" />
           <meta property="og:description" content="Primeira Resenha Open Speed de Beach Tennis. Cadastre-se" />
+          <meta name="description" content="Primeira Resenha Open Speed de Beach Tennis. Cadastre-se" />
           <meta property="og:image:type" content="image/png" />
           <meta property="og:image:width" content="512" />
           <meta property="og:image:height" content="512" />
           <meta property="og:image" content="https://speed.avatarsolucoesdigitais.com.br/face.png" />
+          <meta property="og:site_name" content="Arena Speed BT" />
         </Head>
         <body id="body">
           <Main />
