@@ -1,5 +1,8 @@
+import { useCallback, useEffect } from 'react'
+
 import { Stack } from '@mui/material'
 import { NextPage } from 'next'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 import { FormLogin } from '~/components/FormLogin'
@@ -10,6 +13,15 @@ import { PageContainer } from '~/components/styled'
 
 const Login: NextPage = () => {
   const { push } = useRouter()
+  const { status } = useSession()
+
+  const checkLogged = useCallback(() => {
+    if (status === 'authenticated') push('/')
+  }, [status, push])
+
+  useEffect(() => {
+    checkLogged()
+  }, [checkLogged])
 
   return (
     <Layout>

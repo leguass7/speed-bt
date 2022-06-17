@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { useSession } from 'next-auth/react'
@@ -19,14 +19,17 @@ export const UserContext = createContext({} as IUserContext)
 type UserProviderProps = {
   children: React.ReactNode
 }
+
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [loadingUser, setLoadingUser] = useState(false)
   const [userData, setUserData] = useState<IUserContext['userData']>(null)
   const [userError, setUserError] = useState(false)
+  // const isMounted = useMounted()
 
   const requestMe = useCallback(async () => {
     setLoadingUser(true)
     const response = await getMe()
+    // if (isMounted()) {
     setLoadingUser(false)
     if (response && response?.user) {
       setUserData(response.user)
@@ -35,6 +38,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       toast.error(response?.message || 'Erro de autenticação')
       setUserError(true)
     }
+    // }
     return response
   }, [])
 
@@ -43,12 +47,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
 export function useUserAuth() {
   const { status, data } = useSession()
-  const [logged, setLogged] = useState(false)
   const { userData, loadingUser, requestMe, userError, setUserData } = useContext(UserContext)
 
   const [loading, authenticated] = useMemo(() => {
-    return [!!(loadingUser || status === 'loading'), !!(status === 'authenticated' || logged)]
-  }, [loadingUser, status, logged])
+    return [!!(loadingUser || status === 'loading'), !!(status === 'authenticated')]
+  }, [loadingUser, status])
 
   const completedAuth = useMemo(() => {
     return !!(authenticated && userData)
@@ -62,12 +65,12 @@ export function useUserAuth() {
   )
 
   useEffect(() => {
-    if (!loading && authenticated && !userData) {
+    if (!loading && authenticated && !userData && !userError) {
       requestMe().then(res => {
         if (res && !res?.success) toast.warn(data?.user?.name || 'no user')
       })
     }
-  }, [requestMe, authenticated, userData, loading, data])
+  }, [requestMe, authenticated, userData, loading, data, userError])
 
-  return { loading, userData, completedAuth, userError, updateUserData, requestMe, authenticated, data, setLogged }
+  return { loading, userData, completedAuth, userError, updateUserData, requestMe, authenticated, data }
 }
