@@ -1,6 +1,7 @@
 import { Payment, PaymentMethod } from '@prisma/client'
 import type { IRequestCreateImmediateCharge } from 'brpix-api-node'
 
+import { IResponseApi } from '../api.interface'
 import type { IUser } from '../users'
 
 export type IPayment = Partial<Payment>
@@ -25,4 +26,9 @@ export type GeneratePayment = {
   infos?: IRequestCreateImmediateCharge['infoAdicionais']
   paymentId: number | string
   pixKey?: string
+}
+
+export interface IResponseCheckPayment extends IResponseApi {
+  paid: boolean
+  // payment: IPayment
 }

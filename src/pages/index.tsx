@@ -5,7 +5,7 @@ import { TopHome } from '~/components/app/TopHome'
 import { Layout } from '~/components/Layout'
 import { PreRegistration } from '~/components/PreRegistration'
 import { PageContainer } from '~/components/styled'
-// import { SubscribeCards } from '~/components/SubscribeCards'
+import { TotalSubscriptions } from '~/components/TotalSubscriptions'
 
 const Home: NextPage = () => {
   return (
@@ -14,16 +14,9 @@ const Home: NextPage = () => {
         <TopHome />
         <Divider />
         <PreRegistration />
-        {/* <FlexContainer justify="center" verticalPad={22} gap={20} horizontalPad={8}>
-          <div>
-            <ButtonTheme onClick={handleClick}>CADASTRE-SE</ButtonTheme>
-          </div>
-          <div>
-            <ButtonGoogle />
-          </div>
-        </FlexContainer> */}
         <Divider />
-        {/* <SubscribeCards /> */}
+        <TotalSubscriptions />
+        <Divider />
       </PageContainer>
     </Layout>
   )

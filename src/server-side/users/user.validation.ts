@@ -31,3 +31,13 @@ export const createUserSchema = celebrate(
   },
   { abortEarly: true, stripUnknown: true }
 )
+
+export const searchUserSchema = celebrate(
+  {
+    [Segments.QUERY]: {
+      search: Joi.string().allow(''),
+      categoryId: Joi.number().allow(null)
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)

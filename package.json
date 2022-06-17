@@ -36,6 +36,7 @@
     "next-connect": "0.11.0",
     "next-fonts": "^1.5.1",
     "react": "18.1.0",
+    "react-circular-progressbar": "^2.0.4",
     "react-dom": "18.1.0",
     "react-icons": "^4.4.0",
     "react-input-mask": "^2.0.4",

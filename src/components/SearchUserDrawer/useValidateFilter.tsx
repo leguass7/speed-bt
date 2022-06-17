@@ -4,7 +4,7 @@ import { object, string } from 'yup'
 
 import { validateFormData } from '~/helpers/validation'
 
-export type Filter = { email?: string; search?: string }
+export type Filter = { email?: string; search?: string; categoryId?: number }
 
 export function useValidateFilter(): [string, (data: Filter) => Promise<Record<keyof Filter, string>>] {
   const [error, setError] = useState<string>(null)

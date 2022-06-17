@@ -1,6 +1,12 @@
+import { sub } from 'date-fns'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { RequestHandler } from 'next-connect'
 import { ApiError } from 'next/dist/server/api-utils'
+
+import type { Prisma as PrismaTypes } from '.prisma/client'
+
+type UserWhere = PrismaTypes.UserWhereInput
+type SearchRules = [number, UserWhere]
 
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
 
@@ -46,7 +52,21 @@ function me(userService: IUserService): RequestHandler<NextApiRequest, NextApiRe
 function find(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUsers>> {
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUsers>) => {
     const { query, auth } = req
-    const users = await userService.search(`${query?.search}`, [auth.userId])
+
+    const userMe = await userService.findOne({ id: auth.userId }, { id: true, gender: true })
+
+    const categoryId = +query.categoryId
+    const rules: SearchRules[] = [
+      [1, { birday: { gte: sub(new Date(), { years: 13 }) } }],
+      [2, { gender: userMe?.gender }],
+      [3, { gender: userMe?.gender, birday: { gte: sub(new Date(), { years: 14 }) } }],
+      [4, { gender: userMe?.gender }],
+      [5, { gender: userMe?.gender, birday: { lte: sub(new Date(), { years: 49 }) } }]
+    ]
+
+    const filter = rules.find(f => f[0] === categoryId)?.[1] || {}
+
+    const users = await userService.search(`${query?.search}`, [auth.userId], filter)
     return res.status(200).json({ success: true, users })
   }
 }

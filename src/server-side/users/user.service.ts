@@ -1,4 +1,4 @@
-import { User, Prisma as PrismaTypes } from '.prisma/client'
+import type { User, Prisma as PrismaTypes } from '.prisma/client'
 
 import { ApiError } from 'next/dist/server/api-utils'
 
@@ -7,7 +7,7 @@ import prisma from '~/server-side/database'
 
 import { checkCompleteData } from './user.helpers'
 
-async function search(text: string, notIds: string[] = []): Promise<User[]> {
+async function search(text: string, notIds: string[] = [], filter: PrismaTypes.UserWhereInput = {}): Promise<User[]> {
   if (text) {
     const textWhere = {
       OR: [
@@ -19,7 +19,7 @@ async function search(text: string, notIds: string[] = []): Promise<User[]> {
     }
     const notWhere = { id: { notIn: notIds } }
 
-    const users = await prisma.user.findMany({ where: { ...notWhere, ...textWhere } })
+    const users = await prisma.user.findMany({ where: { ...notWhere, ...textWhere, ...filter } })
     return users
   }
   return []
@@ -35,10 +35,10 @@ async function update(userId: string, data: Partial<User>): Promise<string> {
   return user && user.id
 }
 
-async function findOne(userData: Partial<User>): Promise<User | null> {
+async function findOne(userData: Partial<User>, select?: PrismaTypes.UserSelect): Promise<User | null> {
   const where: PrismaTypes.UserWhereInput = removeInvalidValues({ ...userData })
-  const user = await prisma.user.findFirst({ where })
-  return user
+  const user = await prisma.user.findFirst({ where, select })
+  return user as User
 }
 
 async function findOneToPayment(id: string) {

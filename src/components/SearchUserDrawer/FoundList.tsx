@@ -20,16 +20,20 @@ type Props = {
   onClickItem?: (personId: number | string) => void
   searchStarted?: boolean
   registeredGroups?: number[]
+  message?: string
+  notFoundMessage?: string
 }
 
-export const FoundList: React.FC<Props> = ({ list = [], onClickItem, searchStarted }) => {
+export const FoundList: React.FC<Props> = ({
+  list = [],
+  onClickItem,
+  searchStarted,
+  message = 'Buscar atletas cadastrados',
+  notFoundMessage = 'Atleta não encontrado'
+}) => {
   const renderSecondaryText = (email: string, hasGroup: boolean) => {
     return `${email}${hasGroup ? ` (já selecionado)` : ''}`
   }
-
-  // const findHasGroup = (listPersonGroups: IUserGroup[] = []) => {
-  //   return !!listPersonGroups.find(f => !!registeredGroups.includes(f.groupId))
-  // }
 
   return (
     <>
@@ -52,7 +56,7 @@ export const FoundList: React.FC<Props> = ({ list = [], onClickItem, searchStart
         </List>
       ) : (
         <MessageContainer>
-          <p>{searchStarted ? 'Atleta não encontrado' : 'Buscar atletas cadastrados'}</p>
+          <p>{searchStarted ? notFoundMessage : message}</p>
         </MessageContainer>
       )}
     </>
