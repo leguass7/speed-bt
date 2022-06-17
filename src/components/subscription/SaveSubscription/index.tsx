@@ -16,6 +16,7 @@ import { IResponseSubscriptionStore } from '~/server-side/subscription'
 import { createSubscriptions } from '~/service/api/subscriptions'
 
 import { SelectedType, useSubscription } from '../SubscriptionProvider'
+import { FormCPF, FromCPFProps } from './FormCPF'
 import { ModalPixContainer } from './styles'
 
 const Message = styled.p`
@@ -36,7 +37,7 @@ export const SaveSubscription: React.FC = () => {
   const [message, setMessage] = useState(null)
   const { selectedList } = useSubscription()
   const [qrcode, setQrcode] = useState<IResponseSubscriptionStore>(null)
-  const { userData } = useUserAuth()
+  const { userData, updateUserData } = useUserAuth()
 
   const subscriptions = useMemo(() => selectedList?.filter(f => !!f?.selected), [selectedList])
 
@@ -55,33 +56,31 @@ export const SaveSubscription: React.FC = () => {
     setMessage(msg)
   }, [subscriptions])
 
-  const checkCpf = useCallback(() => {
-    if (!userData.cpf) {
+  const fetchSave = useCallback(async () => {
+    const response = await createSubscriptions(subscriptions)
+    const { success, imageQrcode, qrcode, message } = response
+    if (success) {
+      setQrcode({ imageQrcode, qrcode })
       setModalOpen(true)
+    } else {
+      toast.error(message)
     }
+  }, [subscriptions])
+
+  const checkCpf = useCallback(() => {
+    if (!userData.cpf) setModalOpen(true)
     return !!userData.cpf
   }, [userData])
 
-  const handleSave = useCallback(async () => {
+  const handleSave = useCallback(() => {
     if (checkCpf()) {
       if (qrcode) {
         setModalOpen(true)
       } else {
-        const response = await createSubscriptions(subscriptions)
-        const { success, imageQrcode, qrcode, message } = response
-        if (success) {
-          setQrcode({ imageQrcode, qrcode })
-          setModalOpen(true)
-        } else {
-          toast.error(message)
-        }
+        fetchSave()
       }
     }
-  }, [subscriptions, qrcode, checkCpf])
-
-  const handleModalClose = (_event: any, reason: 'backdropClick' | 'escapeKeyDown') => {
-    if (reason === 'backdropClick') setModalOpen(true)
-  }
+  }, [fetchSave, checkCpf, qrcode])
 
   useEffect(() => {
     if (subscriptions?.length) {
@@ -89,7 +88,16 @@ export const SaveSubscription: React.FC = () => {
     }
   }, [validateSubscriptions, subscriptions])
 
-  const enabledSave = subscriptions?.length && !message
+  const handleModalClose = (_event: any, reason: 'backdropClick' | 'escapeKeyDown') => {
+    if (reason === 'backdropClick') setModalOpen(true)
+  }
+
+  const onSuccesCPF: FromCPFProps['onSuccess'] = async formData => {
+    updateUserData({ cpf: formData?.cpf })
+    await fetchSave()
+  }
+
+  const enabledSave = subscriptions?.length && !message && !modalOpen
 
   if (!subscriptions?.length) return null
 
@@ -100,15 +108,19 @@ export const SaveSubscription: React.FC = () => {
           <Message>{message ? message : 'Clique para continuar'}</Message>
         </FlexContainer>
         <Stack direction="row" justifyContent="center" alignItems="flex-end" spacing={1}>
-          <Button variant="contained" size="large" endIcon={<AttachMoneyIcon />} disabled={!enabledSave} onClick={handleSave}>
+          <Button variant="contained" size="large" type="button" endIcon={<AttachMoneyIcon />} disabled={!enabledSave} onClick={handleSave}>
             Realizar pagamento
           </Button>
         </Stack>
       </Box>
-      <Modal open={modalOpen} onClose={handleModalClose} keepMounted disableEscapeKeyDown>
+      <Modal open={modalOpen} onClose={handleModalClose} disableEscapeKeyDown>
         <ModalPixContainer>
           <Box padding={2} sx={{ backgroundColor: theme.colors.background, borderRadius: 1 }}>
-            <PixCode base64QRCode={qrcode?.imageQrcode} stringQRCode={qrcode?.qrcode} onClose={() => setModalOpen(false)} />
+            {!userData?.cpf ? (
+              <FormCPF onCancel={() => setModalOpen(false)} onSuccess={onSuccesCPF} />
+            ) : (
+              <PixCode base64QRCode={qrcode?.imageQrcode} stringQRCode={qrcode?.qrcode} onClose={() => setModalOpen(false)} />
+            )}
           </Box>
         </ModalPixContainer>
       </Modal>

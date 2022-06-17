@@ -2,9 +2,10 @@ import React from 'react'
 
 import Image from 'next/image'
 
+import logo from '~/assets/logo.png'
 import year2022 from '~/assets/year2022.png'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
-import { LogoSvg } from '~/components/images/LogoSvg'
+// import { LogoSvg } from '~/components/images/LogoSvg'
 import { SuperHeader, Title } from '~/components/styled'
 
 import { Container, ImageContainer } from './styles'
@@ -14,7 +15,8 @@ export const TopHome: React.FC = () => {
   return (
     <>
       <Container>
-        <LogoSvg width={240} />
+        <Image src={logo} alt="2022" />
+        {/* <LogoSvg width={240} /> */}
         <ImageContainer>
           <Image src={year2022} alt="2022" />
         </ImageContainer>

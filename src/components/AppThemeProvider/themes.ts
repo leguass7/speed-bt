@@ -13,7 +13,8 @@ export const appTheme = {
   colors: {
     primary: '#C1DB30',
     secondary: '#676767',
-    contrast: '#A8518A',
+    // contrast: '#A8518A',
+    contrast: '#235910',
     background: '#151414',
     text: '#818181',
     textDark: '#151414',

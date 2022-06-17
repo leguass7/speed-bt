@@ -15,7 +15,7 @@ export const SubscriptionContext = createContext({} as ISubscriptionContext)
 export type SelectedType = Omit<IRequestStoreSubscription, 'id'> & { readonly id?: number }
 
 function subscriptionDto(data: ResultSubscription): SelectedType {
-  const { id, paid, category, partner, categoryId, value } = data
+  const { id, paid, category, partner, categoryId, value, paymentId } = data
   const result: SelectedType = {
     id,
     paid,
@@ -23,7 +23,8 @@ function subscriptionDto(data: ResultSubscription): SelectedType {
     categoryId: categoryId || category?.id,
     category: { id: category?.id, title: category?.title },
     partner: { ...partner },
-    value
+    value,
+    paymentId
   }
   return result
 }
@@ -45,9 +46,9 @@ export const SubscriptionProvider: React.FC<ProviderProps> = ({ children }) => {
       //   const filtered = old.filter(f => !!subs.find(s => s.categoryId !== f.categoryId))
       //   return [...subs, ...filtered]
       // })
-      response?.subscriptions?.map(sub => {
-        console.log('SubscriptionProvider requestSubscriptions', sub)
-        console.log('SubscriptionProvider requestSubscriptions', subscriptionDto(sub))
+      response?.subscriptions?.map(_sub => {
+        // console.log('SubscriptionProvider requestSubscriptions', sub)
+        // console.log('SubscriptionProvider requestSubscriptions', subscriptionDto(sub))
       })
     }
     setLoading(false)
