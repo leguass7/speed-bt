@@ -1,6 +1,6 @@
 import type { Subscription } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { RequestHandler } from 'next-connect'
+import type { RequestHandler } from 'next-connect'
 import { ApiError } from 'next/dist/server/api-utils'
 
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
