@@ -115,3 +115,15 @@ export const Paragraph = styled.p<SimpleTextProps & { width?: string }>`
     text-decoration: underline;
   }
 `
+
+export const LinkGoogle = styled.button`
+  display: inline-block;
+  background-color: transparent;
+  font-family: 'Gilroy';
+  border: 1px solid ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 14px;
+  padding: ${({ theme }) => `${theme.spacing.m}px ${theme.spacing.l}px`};
+  border-radius: ${({ theme }) => theme.spacing.m}px;
+  cursor: pointer;
+`

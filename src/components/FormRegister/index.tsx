@@ -78,9 +78,9 @@ export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
           ) : (
             <Form ref={formRef} onSubmit={handleSubmit} initialData={userData}>
               <InputText name="name" label="Nome" placeholder="seu nome" />
-              <InputText name="email" label="e-mail" />
-              <InputText type="password" name="password" label="senha" />
-              <InputText type="password" name="confirmPassword" label="Confirmar senha" />
+              <InputText name="email" label="e-mail" placeholder="seu e-mail" />
+              <InputText type="password" name="password" label="senha" placeholder="escolha uma senha" />
+              <InputText type="password" name="confirmPassword" label="Confirmar senha" placeholder="confirmação da senha" />
               <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} />
               <InputMask name="phone" label="Telefone" mask={'(99) 9 9999-9999'} alwaysShowMask={false} />
               <InputDate name="birday" label="Nascimento" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />

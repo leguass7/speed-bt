@@ -91,16 +91,16 @@ export const ProfilePopover: React.FC = () => {
               <ListItemText primary={userData?.name} secondary={renderSecondaryText()} />
             </ListItemButton>
           </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton dense onClick={() => push('/subscription')}>
+              <ListItemIcon>
+                <HowToRegIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Inscrições" secondary="Minhas inscrições" />
+            </ListItemButton>
+          </ListItem>
           {userData?.level >= 8 ? (
             <>
-              <ListItem disablePadding>
-                <ListItemButton dense onClick={() => push('/subscription')}>
-                  <ListItemIcon>
-                    <HowToRegIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText primary="Inscrições" secondary="Teste de inscrições" />
-                </ListItemButton>
-              </ListItem>
               <ListItem disablePadding>
                 <ListItemButton dense onClick={() => push('/admin/config')}>
                   <ListItemIcon>

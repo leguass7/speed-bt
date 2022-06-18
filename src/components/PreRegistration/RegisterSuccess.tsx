@@ -1,6 +1,7 @@
 import React from 'react'
 
 import CheckIcon from '@mui/icons-material/Check'
+import Link from 'next/link'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { Title } from '../styled'
@@ -14,9 +15,13 @@ export const RegisterSuccess: React.FC = () => {
       <Title textColor={theme.colors.primary}>
         <CheckIcon /> Cadastro efetuado com sucesso!
       </Title>
-      <p>Aguarde até o inicio das inscrições para garantir sua vaga.</p>
       <p>
-        <i>Avisaremos quando as inscrições estiverem abertas</i>
+        Faça sua inscrição <Link href={'/subscription'}>Formulário de inscrição</Link>
+      </p>
+      <p>
+        <i>
+          Não esqueça de informar o tamanho da sua camiseta <Link href={'/register'}>Seu cadastro</Link>
+        </i>
       </p>
     </ContainerItem>
   )

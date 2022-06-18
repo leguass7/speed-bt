@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { Form } from '@unform/web'
 import { signIn } from 'next-auth/react'
@@ -29,6 +29,7 @@ const schema = Yup.object({
 
 export const FormLogin: React.FC<Props> = ({}) => {
   const { loading } = useUserAuth()
+  const [sending, setSending] = useState(false)
 
   const formRef = useRef(null)
 
@@ -36,8 +37,10 @@ export const FormLogin: React.FC<Props> = ({}) => {
     const invalid = await validateFormData(schema, data, formRef.current)
     if (invalid) return null
 
+    setSending(true)
     const { email, password } = data
     await signIn('custom', { email, password })
+    setSending(false)
   }, [])
 
   return (
@@ -46,8 +49,10 @@ export const FormLogin: React.FC<Props> = ({}) => {
         <InputText label="E-mail" name="email" />
         <InputText type="password" label="Senha" name="password" />
         <ButtonContainer>
-          <ButtonTheme type="submit">Enviar</ButtonTheme>
-          <ButtonGoogle type="button" />
+          <ButtonTheme type="submit" disabled={!!sending}>
+            Enviar
+          </ButtonTheme>
+          <ButtonGoogle type="button" disabled={!!sending} />
         </ButtonContainer>
       </Form>
       {loading ? <CircleLoading /> : null}
@@ -62,7 +67,9 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
+  justify-content: center;
   padding: 4px;
+  gap: 10px;
 
   button {
     margin: 0 2px;

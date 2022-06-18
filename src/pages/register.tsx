@@ -4,25 +4,12 @@ import { Stack } from '@mui/material'
 import { NextPage } from 'next'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import styled from 'styled-components'
 
 import { FormRegister } from '~/components/FormRegister'
 import { LogoSvg } from '~/components/images/LogoSvg'
 import { Layout } from '~/components/Layout'
 import { PageTitle } from '~/components/PageTitle'
-import { PageContainer } from '~/components/styled'
-
-const LinkGoogle = styled.button`
-  display: inline-block;
-  background-color: transparent;
-  font-family: 'Gilroy';
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.primary};
-  font-size: 14px;
-  padding: ${({ theme }) => `${theme.spacing.m}px ${theme.spacing.l}px`};
-  border-radius: ${({ theme }) => theme.spacing.m}px;
-  cursor: pointer;
-`
+import { LinkGoogle, PageContainer } from '~/components/styled'
 
 const RegisterPage: NextPage = () => {
   const { status } = useSession()
@@ -46,7 +33,11 @@ const RegisterPage: NextPage = () => {
       <PageContainer>
         <PageTitle weight="normal" onBack={() => push('/')}>
           <h1>CADASTRO</h1>
-          {status === 'unauthenticated' ? <LinkGoogle onClick={loginGoogle}>{loading ? '...aguarde' : 'usar conta do google'}</LinkGoogle> : null}
+          {status === 'unauthenticated' ? (
+            <LinkGoogle type="button" onClick={loginGoogle}>
+              {loading ? '...aguarde' : 'usar uma conta Google'}
+            </LinkGoogle>
+          ) : null}
         </PageTitle>
         <FormRegister onCancel={() => push('/')} />
         <br />
