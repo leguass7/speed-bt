@@ -1,6 +1,6 @@
 {
   "name": "speed-bt",
-  "version": "0.1.3-alpha.3",
+  "version": "0.1.3",
   "private": true,
   "scripts": {
     "release": "standard-version --no-verify --skip.tag --release-as patch",
