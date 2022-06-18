@@ -15,6 +15,11 @@ async function update(id: number, data: ISubscription): Promise<number> {
   return result && result.id
 }
 
+async function updateMany(where: PrismaTypes.SubscriptionWhereInput, data: ISubscription) {
+  const result = await prisma.subscription.updateMany({ data, where })
+  return result
+}
+
 async function remove(id: number, force?: boolean): Promise<boolean> {
   if (force) {
     const result = await prisma.subscription.delete({ where: { id } })
@@ -70,7 +75,8 @@ export const SubscriptionService = {
   find,
   list,
   update,
-  remove
+  remove,
+  updateMany
 }
 
 export type ISubscriptionService = typeof SubscriptionService

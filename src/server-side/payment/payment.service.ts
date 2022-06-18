@@ -2,7 +2,7 @@ import type { Payment, Prisma as PrismaTypes } from '.prisma/client'
 
 import type { ApiPix } from 'brpix-api-node'
 
-import { removeInvalidValues } from '~/helpers/object'
+import { mergeDeep, removeInvalidValues } from '~/helpers/object'
 import { removeAll } from '~/helpers/string'
 import prisma from '~/server-side/database'
 
@@ -21,7 +21,9 @@ async function generate(apiPix: ApiPix, { user, value, infos: infoAdicionais, pa
 
   const qrcode = await apiPix.qrcodeByLocation(cob.loc.id)
 
-  await update(Number(`${paymentId}`), { txid: cob.txid })
+  // salvar localizador
+  const meta = mergeDeep({}, { loc: cob?.loc })
+  await update(Number(`${paymentId}`), { txid: cob.txid, meta: JSON.stringify(meta) })
 
   return { ...cob, ...qrcode }
 }

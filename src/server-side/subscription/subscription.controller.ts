@@ -75,13 +75,18 @@ function store(
     const toCreatePayment = subscriptions.filter(f => !f?.paid)
     const value = toCreatePayment.reduce((acc, { value }) => (acc += value), 0)
 
+    // cria pagamento
     const paymentId = await paymentService.create({ actived: true, method: 'PIX', paid: false, value, createdBy: auth.userId, userId: auth.userId })
+
+    // salva Id do pagamento
     await Promise.all(toCreatePayment.map(sub => subService.update(sub.id, { paymentId })))
 
+    // adquiri usuário
     const user = await userService.findOneToPayment(auth.userId)
     if (!user) throw new ApiError(403, 'Usuário não identificado')
     if (!user?.cpf) throw new ApiError(403, 'CPF não informado')
 
+    // gera pix
     const apiPix = await createApiPix(appConfigService)
     const cob = await paymentService.generate(apiPix, { user, value, paymentId })
 

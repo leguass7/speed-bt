@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 
 import logo from '~/assets/logo.png'
-import year2022 from '~/assets/year2022.png'
+// import year2022 from '~/assets/year2022.png'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { SuperHeader, Title } from '~/components/styled'
 
@@ -20,9 +20,9 @@ export const TopHome: React.FC = () => {
           <Image src={logo} alt="2022" />
         </ImageContainer>
         {/* <LogoSvg width={240} /> */}
-        <ImageContainer imageWidth="160px">
+        {/* <ImageContainer imageWidth="160px">
           <Image src={year2022} alt="2022" />
-        </ImageContainer>
+        </ImageContainer> */}
         <SuperHeader textColor={theme.colors.primary}>
           1<sup>&ordf;</sup> RESENHA OPEN SPEED
         </SuperHeader>
