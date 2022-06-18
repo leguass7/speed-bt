@@ -1,4 +1,4 @@
-import type { IResponseUser, IResponseUsers, IResponseUserStore, IUser } from '~/server-side/users'
+import type { IResponseCheckUser, IResponseUser, IResponseUsers, IResponseUserStore, IUser } from '~/server-side/users'
 
 import { apiService } from './api.service'
 
@@ -14,6 +14,11 @@ export async function createUser(data: IUser): Promise<IResponseUserStore> {
 
 export async function getMe(): Promise<IResponseUser> {
   const response = await apiService.get('/user/me')
+  return response
+}
+
+export async function checkLogin(email: string, password: string): Promise<IResponseCheckUser> {
+  const response = await apiService.post('/user/login', { email, password })
   return response
 }
 

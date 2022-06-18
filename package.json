@@ -1,6 +1,6 @@
 {
   "name": "speed-bt",
-  "version": "0.1.3-alpha.3",
+  "version": "0.1.3",
   "private": true,
   "scripts": {
     "release": "standard-version --no-verify --skip.tag --release-as patch",
@@ -25,6 +25,7 @@
     "@prisma/client": "^3.15.2",
     "@unform/core": "^2.1.6",
     "@unform/web": "^2.1.6",
+    "bcrypt": "^5.0.1",
     "brpix-api-node": "0.1.6-alpha.2",
     "camelcase": "^6.3.0",
     "celebrate": "^15.0.1",
@@ -49,6 +50,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/chroma-js": "^2.1.3",
     "@types/node": "17.0.38",
     "@types/react": "18.0.10",

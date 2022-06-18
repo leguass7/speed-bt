@@ -16,7 +16,7 @@ import type { IUserService } from './user.service'
 function create(userService: IUserService) {
   return async (req: NextApiRequest, res: NextApiResponse<IResponseUserStore>) => {
     const { email } = req.body as IUser
-    const existUser = await userService.findOne({ email })
+    const existUser = await userService.findOne({ email: email.toLowerCase() })
     if (existUser) throw new ApiError(400, 'Usuário já cadastrado com esse e-mail')
 
     const createdId = await userService.create({ email: email.toLowerCase(), ...req.body })
@@ -31,8 +31,11 @@ function create(userService: IUserService) {
 function updateMe(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUserStore>> {
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUserStore>) => {
     const { body, auth } = req
+    const { password } = body
 
-    const userId = await userService.update(auth.userId, body)
+    const data = { ...body, password: password || undefined }
+
+    const userId = await userService.update(auth.userId, data)
     if (!userId) throw new ApiError(400, 'not_found')
 
     const completed = await userService.findUserComplete(userId)
@@ -45,6 +48,7 @@ function me(userService: IUserService): RequestHandler<NextApiRequest, NextApiRe
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUser>) => {
     const { auth } = req
     const user = await userService.findOne({ id: auth.userId })
+    delete user.password
     return res.status(201).json({ success: true, user })
   }
 }
@@ -71,11 +75,20 @@ function find(userService: IUserService): RequestHandler<NextApiRequest, NextApi
   }
 }
 
+function check(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse> {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const { email, password } = req.body
+    const user = await userService.check(email, password)
+    return res.status(200).json({ success: true, user })
+  }
+}
+
 export function factoryUserController(userService: IUserService) {
   return {
     create: create(userService),
     updateMe: updateMe(userService),
     me: me(userService),
+    check: check(userService),
     find: find(userService)
   }
 }

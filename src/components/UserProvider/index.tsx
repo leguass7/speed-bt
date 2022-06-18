@@ -19,6 +19,7 @@ export const UserContext = createContext({} as IUserContext)
 type UserProviderProps = {
   children: React.ReactNode
 }
+
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [loadingUser, setLoadingUser] = useState(false)
   const [userData, setUserData] = useState<IUserContext['userData']>(null)
@@ -61,12 +62,12 @@ export function useUserAuth() {
   )
 
   useEffect(() => {
-    if (!loading && authenticated && !userData) {
+    if (!loading && authenticated && !userData && !userError) {
       requestMe().then(res => {
         if (res && !res?.success) toast.warn(data?.user?.name || 'no user')
       })
     }
-  }, [requestMe, authenticated, userData, loading, data])
+  }, [requestMe, authenticated, userData, loading, data, userError])
 
   return { loading, userData, completedAuth, userError, updateUserData, requestMe, authenticated, data }
 }

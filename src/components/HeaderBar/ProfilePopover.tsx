@@ -1,8 +1,10 @@
 import React, { MouseEvent, useEffect, useState } from 'react'
 
+import HowToRegIcon from '@mui/icons-material/HowToReg'
 import LogoutIcon from '@mui/icons-material/Logout'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant'
+import SettingsIcon from '@mui/icons-material/Settings'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -89,15 +91,25 @@ export const ProfilePopover: React.FC = () => {
               <ListItemText primary={userData?.name} secondary={renderSecondaryText()} />
             </ListItemButton>
           </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton dense onClick={() => push('/subscription')}>
+              <ListItemIcon>
+                <HowToRegIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Inscrições" secondary="Minhas inscrições" />
+            </ListItemButton>
+          </ListItem>
           {userData?.level >= 8 ? (
-            <ListItem disablePadding>
-              <ListItemButton dense onClick={() => push('/subscription')}>
-                <ListItemIcon>
-                  <LogoutIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Inscrições" secondary="Teste de inscrições" />
-              </ListItemButton>
-            </ListItem>
+            <>
+              <ListItem disablePadding>
+                <ListItemButton dense onClick={() => push('/admin/config')}>
+                  <ListItemIcon>
+                    <SettingsIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Configurações" secondary="Administrador" />
+                </ListItemButton>
+              </ListItem>
+            </>
           ) : null}
           <ListItem disablePadding>
             <ListItemButton dense onClick={handleLogout}>

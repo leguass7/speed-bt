@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react'
 import { ReactInputMask, Props as InputMaskProps } from 'react-input-mask'
 
 import Fade from '@mui/material/Fade'
@@ -16,8 +16,10 @@ type InputText = {
   themeColor?: VariantColorsTypes
   placeholder?: string
   disabled?: boolean
+  type?: InputHTMLAttributes<HTMLInputElement>['type']
 }
-export const InputText: React.FC<InputText> = ({ themeColor = 'primary', name, label, placeholder, disabled }) => {
+
+export const InputText: React.FC<InputText> = ({ themeColor = 'primary', name, label, placeholder, disabled, type = 'text' }) => {
   const { theme } = useAppTheme()
   const [focused, setFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -43,7 +45,7 @@ export const InputText: React.FC<InputText> = ({ themeColor = 'primary', name, l
       <Input
         ref={inputRef}
         id={id}
-        type={'text'}
+        type={type}
         placeholder={placeholder}
         disabled={disabled}
         defaultValue={defaultValue}

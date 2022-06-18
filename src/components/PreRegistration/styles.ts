@@ -1,16 +1,39 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { TextProps } from '../styled'
 
-export const ContainerItem = styled.div<{ textColor?: string }>`
+export const Div = styled.div`
+  max-width: 500px;
+`
+
+export const ContainerItem = styled.div<{ textColor?: string; grow?: number }>`
   padding: ${({ theme }) => theme.spacing.l}px;
   color: ${({ textColor = 'inherit' }) => textColor};
+
   @media (max-width: 420px) {
     width: 100%;
   }
+  i {
+    font-size: 14px;
+  }
+
   p {
     padding-top: ${({ theme }) => theme.spacing.l}px;
+    line-height: 22px;
+    padding-bottom: ${({ theme }) => theme.spacing.s}px;
   }
+  ul,
+  li {
+    margin: 0;
+    padding-top: ${({ theme }) => theme.spacing.l}px;
+    padding-bottom: ${({ theme }) => theme.spacing.s}px;
+  }
+  ${({ grow }) =>
+    grow
+      ? css`
+          flex: ${grow};
+        `
+      : css``}
 `
 
 export const ContainerRegistration = styled.div<TextProps>`

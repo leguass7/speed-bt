@@ -32,8 +32,10 @@ function saveFile(filename, base64) {
 }
 
 async function start() {
-  const base64 = loadCert('homologacao-290881-h-speed-bt.p12')
-  saveFile('cert-base64', base64)
+  // const base64 = loadCert('homologacao-290881-h-speed-bt.p12')
+  // saveFile('cert-base64', base64)
+  const base64 = loadCert('producao-290881-speed-bt.p12')
+  saveFile('cert-base64-prod', base64)
 }
 
 start()

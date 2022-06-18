@@ -9,12 +9,13 @@ const globCss = css`
   h2 {
     font-size: 20px;
   }
-  a {
+  a,
+  a:visited,
+  a:hover {
     text-decoration: none;
-  }
-  /* a:hover {
+    color: ${({ theme }) => theme.colors.primary};
     text-decoration: underline;
-  } */
+  }
 `
 
 const GlobalStyle = createGlobalStyle`

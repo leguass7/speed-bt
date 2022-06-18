@@ -17,10 +17,11 @@ type Props = {
   onClose?: () => void
 }
 
-export const PixCode: React.FC<Props> = ({ base64QRCode, paymentId, purchaseId, onClose }) => {
+export const PixCode: React.FC<Props> = ({ base64QRCode, stringQRCode, paymentId, purchaseId, onClose }) => {
   const [tipOpen, setTipOpen] = useState(false)
 
   const handleClickCopy = () => {
+    if (stringQRCode) navigator?.clipboard?.writeText(stringQRCode)
     setTipOpen(true)
   }
 
@@ -40,30 +41,27 @@ export const PixCode: React.FC<Props> = ({ base64QRCode, paymentId, purchaseId, 
             </IconButton>
           </QrCodeHeader>
         ) : null}
-        {/* {paymentCode ? (
-          <Paragraph align="center" bold>
-            {paymentCode}
-          </Paragraph>
-        ) : null} */}
         <Paragraph align="center" size={14} verticalSpaced>
           QRCode para pagamento via PIX
         </Paragraph>
         {base64QRCode ? (
           <>
             <QrcodeImage src={base64QRCode} alt="QRCODE" />
-            <FlexContainer justify="center" verticalPad={10}>
-              <Toolltip
-                open={!!tipOpen}
-                title="Código copiado. Agora cole no seu aplicativo de pagamento"
-                placement="bottom"
-                arrow
-                onMouseLeave={() => setTipOpen(false)}
-              >
-                <Button variant="outlined" onClick={handleClickCopy}>
-                  COPIA E COLA
-                </Button>
-              </Toolltip>
-            </FlexContainer>
+            {stringQRCode ? (
+              <FlexContainer justify="center" verticalPad={10}>
+                <Toolltip
+                  open={!!tipOpen}
+                  title="Código copiado. Agora cole no seu aplicativo de pagamento"
+                  placement="bottom"
+                  arrow
+                  onMouseLeave={() => setTipOpen(false)}
+                >
+                  <Button variant="outlined" onClick={handleClickCopy}>
+                    COPIA E COLA
+                  </Button>
+                </Toolltip>
+              </FlexContainer>
+            ) : null}
           </>
         ) : (
           <>

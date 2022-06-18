@@ -12,7 +12,8 @@ const rules = [
   [2, 5], // iniciante / 50+
   [3, 4], // intermediária / Open
   [3, 5], // intermediária / 50+
-  [5, 4] // intermediária / Open
+  [5, 4], // intermediária / Open
+  [6, 1] // teste
 ]
 
 function filter(ids: number[]): number[][] {

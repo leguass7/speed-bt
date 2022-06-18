@@ -8,9 +8,20 @@ export const updateMeSchema = celebrate(
       birday: Joi.date().allow(''),
       gender: Joi.valid('F', 'M').allow(''),
       phone: Joi.string().allow(''),
+      password: Joi.string(),
       category: Joi.string().allow(''),
       cpf: Joi.string().allow(''),
       shirtSize: Joi.valid('PP', 'P', 'M', 'G', 'GG').allow('')
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)
+
+export const checkUserSchema = celebrate(
+  {
+    [Segments.BODY]: {
+      email: Joi.string().email().required(),
+      password: Joi.string().required()
     }
   },
   { abortEarly: true, stripUnknown: true }
@@ -24,6 +35,7 @@ export const createUserSchema = celebrate(
       birday: Joi.date().allow(''),
       gender: Joi.valid('F', 'M').allow(''),
       phone: Joi.string().allow(''),
+      password: Joi.string().required(),
       category: Joi.string().allow(''),
       cpf: Joi.string().allow(''),
       shirtSize: Joi.valid('PP', 'P', 'M', 'G', 'GG').allow('')

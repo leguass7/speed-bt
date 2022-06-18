@@ -25,7 +25,7 @@ export const Button = styled.button<{
   padding: ${({ theme }) => `${theme.spacing.m}px ${theme.spacing.xl}px`};
   border: 0;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 16px;
   border-radius: 22px;
   transition: all ease-in-out 0.2s;
   cursor: pointer;
