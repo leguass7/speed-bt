@@ -25,7 +25,7 @@ function checkPayment(paymentService: IPaymentService, subService: ISubscription
     const paymentId = +query?.paymentId
     if (!paymentId) throw new ApiError(400, 'Pagamento não informado')
 
-    const payment = await paymentService.findOne({ id: paymentId, userId: auth.userId })
+    const payment = await paymentService.findOne({ id: paymentId })
     if (!payment) throw new ApiError(400, 'Pagamento não localizado')
 
     const apiPix = await createApiPix(appConfigService)
@@ -39,8 +39,8 @@ function checkPayment(paymentService: IPaymentService, subService: ISubscription
       const pix = pixInfo?.pix.find(f => f.txid === payment.txid)
       const payday = pix ? pix.horario : undefined
       const meta = pix ? JSON.stringify(mergeDeep({}, paymentMeta, { endToEndId: pix?.endToEndId, horario: pix?.horario })) : undefined
-      await paymentService.update(payment.id, { paid: true, payday, meta })
-      await subService.updateMany({ paymentId }, { paid: true })
+      await paymentService.update(payment.id, { paid: true, payday, meta, updatedBy: auth.userId })
+      await subService.updateMany({ paymentId }, { paid: true, updatedBy: auth.userId })
     }
 
     return res.status(200).send({ success: true, paid: !!payment?.paid })

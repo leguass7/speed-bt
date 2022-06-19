@@ -90,7 +90,7 @@ function store(
     const apiPix = await createApiPix(appConfigService)
     const cob = await paymentService.generate(apiPix, { user, value, paymentId })
 
-    return res.status(200).json({ success: true, imageQrcode: cob.imagemQrcode, qrcode: cob.qrcode })
+    return res.status(200).json({ success: true, imageQrcode: cob.imagemQrcode, qrcode: cob.qrcode, paymentId, txid: cob?.txid })
   }
 }
 
@@ -116,7 +116,6 @@ function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, 
     return res.status(200).json({ success: true, subscriptions })
   }
 }
-
 export function factorySubscriptionController(
   subService: ISubscriptionService,
   categoryService: ICategoryService,
@@ -128,8 +127,5 @@ export function factorySubscriptionController(
     store: store(subService, categoryService, userService, paymentService, appConfigService),
     list: list(subService),
     remove: remove(subService)
-    // updateMe: updateMe(userService),
-    // me: me(userService),
-    // find: find(userService)
   }
 }

@@ -9,6 +9,7 @@ export interface IAuthorizedUser {
   userId: string
   name: string
   email?: string
+  level?: number
 }
 
 export interface AuthorizedApiRequest<Body = any> extends NextApiRequest {

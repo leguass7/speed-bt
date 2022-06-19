@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps?.session}>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBr}>
         <UserProvider>
-          <SocketProvider>
+          <SocketProvider disabled>
             <AppThemeProvider themeName="common">
               <Component {...pageProps} />
               <ToastContainer

@@ -58,13 +58,20 @@ export const SaveSubscription: React.FC = () => {
     setMessage(msg)
   }, [subscriptions])
 
+  const onReceivedPay = useCallback(
+    (paid: boolean) => {
+      if (!!paid) requestSubscriptions()
+    },
+    [requestSubscriptions]
+  )
+
   const fetchSave = useCallback(async () => {
     setLoading(true)
     const response = await createSubscriptions(subscriptions)
-    const { success, imageQrcode, qrcode, message } = response
+    const { success, imageQrcode, qrcode, message, paymentId, txid } = response
     if (success) {
       requestSubscriptions()
-      setQrcode({ imageQrcode, qrcode })
+      setQrcode({ imageQrcode, qrcode, paymentId, txid })
       setModalOpen(true)
     } else {
       toast.error(message)
@@ -102,7 +109,8 @@ export const SaveSubscription: React.FC = () => {
     await fetchSave()
   }
 
-  const enabledSave = subscriptions?.length && !message && !modalOpen && !loading
+  const notPaid = subscriptions?.filter(f => !f?.paid)
+  const enabledSave = subscriptions?.length && !message && !modalOpen && !loading && notPaid?.length
 
   if (!subscriptions?.length) return null
 
@@ -110,7 +118,7 @@ export const SaveSubscription: React.FC = () => {
     <>
       <Box padding={2}>
         <FlexContainer justify="center" verticalPad={10}>
-          <Message>{message ? message : 'Clique para continuar'}</Message>
+          <Message>{!notPaid?.length ? 'Nenhuma nova inscrição' : <>{message ? message : 'Clique para continuar'}</>}</Message>
         </FlexContainer>
         <Stack direction="row" justifyContent="center" alignItems="flex-end" spacing={1}>
           <Button variant="contained" size="large" type="button" endIcon={<AttachMoneyIcon />} disabled={!enabledSave} onClick={handleSave}>
@@ -125,7 +133,14 @@ export const SaveSubscription: React.FC = () => {
             {!userData?.cpf ? (
               <FormCPF onCancel={() => setModalOpen(false)} onSuccess={onSuccesCPF} />
             ) : (
-              <PixCode base64QRCode={qrcode?.imageQrcode} stringQRCode={qrcode?.qrcode} onClose={() => setModalOpen(false)} />
+              <PixCode
+                base64QRCode={qrcode?.imageQrcode}
+                stringQRCode={qrcode?.qrcode}
+                onClose={() => setModalOpen(false)}
+                paymentId={qrcode?.paymentId}
+                txid={qrcode?.txid}
+                onReceivedPay={onReceivedPay}
+              />
             )}
           </Box>
         </ModalPixContainer>

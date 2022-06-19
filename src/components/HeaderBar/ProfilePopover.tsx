@@ -102,11 +102,11 @@ export const ProfilePopover: React.FC = () => {
           {userData?.level >= 8 ? (
             <>
               <ListItem disablePadding>
-                <ListItemButton dense onClick={() => push('/admin/config')}>
+                <ListItemButton dense onClick={() => push('/admin/temp')}>
                   <ListItemIcon>
                     <SettingsIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText primary="Configurações" secondary="Administrador" />
+                  <ListItemText primary="Admin" secondary="Administrador" />
                 </ListItemButton>
               </ListItem>
             </>

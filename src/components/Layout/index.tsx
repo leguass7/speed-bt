@@ -9,6 +9,7 @@ import { CSSProperties } from 'styled-components'
 import favicon from '~/assets/favicon.png'
 import { HeaderBar } from '~/components/HeaderBar'
 
+import { AdminMenus } from '../admin/AdminMenus'
 import { useUserAuth } from '../UserProvider'
 import { Footer, LayoutContainer, FooterItem } from './styles'
 
@@ -45,7 +46,10 @@ export const Layout: React.FC<Props> = ({ children, admin, pageTitle = 'Arena Sp
         <meta name="theme-color" content="#151515" />
       </Head>
       <LayoutContainer style={styleMain}>
-        <main ref={ref}>{children}</main>
+        <main ref={ref}>
+          {admin ? <AdminMenus /> : null}
+          {children}
+        </main>
         <Footer>
           <FooterItem>
             <a href="https://github.com/leguass7/speed-bt" target="_blank" rel="noreferrer">

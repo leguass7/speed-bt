@@ -55,6 +55,11 @@ async function findOne(userData: Partial<User>, select?: PrismaTypes.UserSelect)
   return user as User
 }
 
+async function findUser(where: PrismaTypes.UserWhereInput, select?: PrismaTypes.UserSelect): Promise<User | null> {
+  const user = await prisma.user.findFirst({ where, select })
+  return user as User
+}
+
 async function findOneToPayment(id: string) {
   const user = await prisma.user.findUnique({
     where: { id },
@@ -115,7 +120,8 @@ export const UserService = {
   findUserComplete,
   findOneToPayment,
   search,
-  check
+  check,
+  findUser
 }
 
 export type IUserService = typeof UserService

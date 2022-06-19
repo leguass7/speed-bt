@@ -41,21 +41,18 @@ async function find(filter: PrismaTypes.SubscriptionFindManyArgs): Promise<Subsc
 }
 
 async function list(where: PrismaTypes.SubscriptionWhereInput): Promise<ResultSubscription[]> {
+  const userFileds = ['actived', 'gender', 'cpf', 'birday', 'email', 'id', 'name', 'image']
+
+  const selectUser: any = userFileds.reduce((acc, field) => {
+    acc[field] = true
+    return acc
+  }, {})
+
   const data = await prisma.subscription.findMany({
     where,
     include: {
-      partner: {
-        select: {
-          actived: true,
-          gender: true,
-          cpf: true,
-          birday: true,
-          email: true,
-          id: true,
-          name: true,
-          image: true
-        }
-      },
+      user: { select: selectUser },
+      partner: { select: selectUser },
       category: {
         select: {
           id: true,

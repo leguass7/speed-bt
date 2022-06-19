@@ -13,10 +13,11 @@ export const SocketContext = createContext({} as ISocketContext)
 
 type SocketProviderProps = {
   children: React.ReactNode
+  disabled?: boolean
 }
-export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+export const SocketProvider: React.FC<SocketProviderProps> = ({ children, disabled }) => {
   const { userData } = useUserAuth()
-  const [socket] = useSocket(`${userData?.id || ''}`)
+  const [socket] = useSocket(`${userData?.id || ''}`, { disabled: !!disabled })
 
   return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>
 }

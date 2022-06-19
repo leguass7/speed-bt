@@ -62,7 +62,8 @@ export function stringToColor(string: string) {
 }
 
 export function stringAvatar(name: string) {
-  return `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`
+  const [n, s] = name?.split(' ')
+  return `${n}${s}`
 }
 
 export function replaceAll(str = '', needle: string, replacement: string) {

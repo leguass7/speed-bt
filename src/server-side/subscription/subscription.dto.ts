@@ -19,18 +19,17 @@ export type CreateSubscription = {
 export type UpdateSubscription = Partial<CreateSubscription> & { id?: number; updatedBy?: string }
 
 export interface IResponseSubscriptionStore extends IResponseApi {
-  // createdId?: string
-  // userId?: string
-  // completed?: boolean
   imageQrcode: string
   qrcode: string
+  paymentId: number
+  txid: string
 }
 
 export interface IResponseSubscription extends IResponseApi {
   subscription?: ISubscription
 }
 
-export type ResultSubscription = Subscription & { category?: Category; partner?: User }
+export type ResultSubscription = Subscription & { category?: Category; partner?: User; user?: User }
 export interface IResponseSubscriptions extends IResponseApi {
   subscriptions?: ResultSubscription[]
 }

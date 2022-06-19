@@ -20,8 +20,8 @@ export const Footer = styled.footer`
   a,
   a:visited,
   a:focus {
-    text-decoration: none;
-    color: ${({ theme }) => theme.colors.white};
+    text-decoration: none !important;
+    color: ${({ theme }) => theme.colors.white} !important;
     font-size: 12px;
     display: flex;
     justify-content: flex-start;

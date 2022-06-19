@@ -11,11 +11,12 @@ const host = hostSocket()
 export type { SocketClientIo }
 export type ConnectionHandler = (host?: string) => any
 export type UseSocketOptions = {
+  disabled?: boolean
   connect?: ConnectionHandler | ConnectionHandler[]
   disconnect?: ConnectionHandler | ConnectionHandler[]
 }
 
-export function useSocket(query: string, { connect, disconnect }: UseSocketOptions = {}) {
+export function useSocket(query: string, { disabled, connect, disconnect }: UseSocketOptions = {}) {
   const [socket, setSocket] = useState<SocketClientIo | null>(null)
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export function useSocket(query: string, { connect, disconnect }: UseSocketOptio
       return newSocket
     }
 
-    initializeSoket()
+    if (!disabled) initializeSoket()
 
     return () => {
       if (newSocket) {
@@ -35,7 +36,7 @@ export function useSocket(query: string, { connect, disconnect }: UseSocketOptio
         newSocket = undefined
       }
     }
-  }, [setSocket, query])
+  }, [setSocket, query, disabled])
 
   useEffect(() => {
     const connectListener = () => {

@@ -17,12 +17,12 @@ import ListItemText from '@mui/material/ListItemText'
 import Tooltip from '@mui/material/Tooltip'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
+import { PaymentIcon } from '~/components/PaymentIcon'
 import { useUserAuth } from '~/components/UserProvider'
 import { formatPrice } from '~/helpers'
 import { normalizeImageSrc } from '~/helpers/string'
 
-import type { SelectedType } from '../SubscriptionProvider'
-import { PaymentIcon } from './PaymentIcon'
+import { SelectedType, useSubscription } from '../SubscriptionProvider'
 import { SpanPrice, PriceContainer } from './styles'
 
 type Props = SelectedType & {
@@ -46,6 +46,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
 }) => {
   const { userData } = useUserAuth()
   const { theme } = useAppTheme()
+  const { requestSubscriptions } = useSubscription()
 
   const handleClickAddPartner = () => {
     if (onClickPartner) onClickPartner(categoryId)
@@ -116,7 +117,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
               </IconButton>
             </Tooltip>
           ) : null}
-          <PaymentIcon id={id} paid={!!paid} paymentId={paymentId} />
+          <PaymentIcon id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={requestSubscriptions} />
           {renderPrice(value)}
 
           {/* <CloseIcon /> */}

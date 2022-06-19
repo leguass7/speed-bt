@@ -9,20 +9,18 @@ import Tooltip from '@mui/material/Tooltip'
 
 import { checkPayment } from '~/service/api/payment'
 
-import { useSubscription } from '../SubscriptionProvider'
-
 type Props = {
   paid: boolean
   paymentId?: number
   id?: number
+  updateSubscriptionHandler?: () => void
 }
-export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId }) => {
+export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId, updateSubscriptionHandler }) => {
   const [loading, setLoading] = useState(false)
-  const { requestSubscriptions } = useSubscription()
 
   const updatePayments = useCallback(() => {
-    requestSubscriptions()
-  }, [requestSubscriptions])
+    if (updateSubscriptionHandler) updateSubscriptionHandler()
+  }, [updateSubscriptionHandler])
 
   const handleCheckPayment = useCallback(async () => {
     setLoading(true)

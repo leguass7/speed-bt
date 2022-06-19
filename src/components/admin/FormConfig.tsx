@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
 
-import { getAdminConfig, saveAdminConfig } from '~/service/api/admin-config'
+import { getAdminConfig, saveAdminConfig } from '~/service/api/admin'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { InputText } from '../forms/InputText'
