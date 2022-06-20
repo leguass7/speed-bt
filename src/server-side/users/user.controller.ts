@@ -63,7 +63,8 @@ function find(userService: IUserService): RequestHandler<NextApiRequest, NextApi
     const rules: SearchRules[] = [
       [1, { birday: { gte: sub(new Date(), { years: 13 }) } }],
       [2, { gender: userMe?.gender }],
-      [3, { gender: userMe?.gender, birday: { gte: sub(new Date(), { years: 14 }) } }],
+      // [3, { gender: userMe?.gender, birday: { gte: sub(new Date(), { years: 14 }) } }],
+      [3, { gender: userMe?.gender }],
       [4, { gender: userMe?.gender }],
       [5, { gender: userMe?.gender, birday: { lte: sub(new Date(), { years: 49 }) } }]
     ]
