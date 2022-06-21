@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
+import QrCode2Icon from '@mui/icons-material/QrCode2'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
@@ -21,8 +23,19 @@ type Props = {
   subscriptions?: IResponseSubscriptions['subscriptions']
   loading?: boolean
   updateListHandler?: () => void
+  onClickPix?: (paymentId: number) => void
+  loadPix?: boolean
 }
-export const TempSubscriptions: React.FC<Props> = ({ subscriptions = [], loading, updateListHandler }) => {
+export const TempSubscriptions: React.FC<Props> = ({ subscriptions = [], loading, updateListHandler, onClickPix }) => {
+  const fetchPixCode = useCallback(
+    (paymentId: number) => {
+      return () => {
+        if (onClickPix) onClickPix(paymentId)
+      }
+    },
+    [onClickPix]
+  )
+
   return (
     <>
       <Grid container spacing={1} padding={1}>
@@ -35,7 +48,16 @@ export const TempSubscriptions: React.FC<Props> = ({ subscriptions = [], loading
                   <List disablePadding>
                     <ListItem
                       disablePadding
-                      secondaryAction={<PaymentIcon id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />}
+                      secondaryAction={
+                        <>
+                          <PaymentIcon id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
+                          {!paid ? (
+                            <IconButton onClick={fetchPixCode(paymentId)}>
+                              <QrCode2Icon />
+                            </IconButton>
+                          ) : null}
+                        </>
+                      }
                     >
                       <ListItemAvatar>
                         <AvatarGroup spacing="small" max={2} total={2}>
@@ -51,11 +73,6 @@ export const TempSubscriptions: React.FC<Props> = ({ subscriptions = [], loading
                     </ListItem>
                   </List>
                 </CardContent>
-                {/* <CardActions disableSpacing>
-                  <IconButton edge="end" aria-label="delete" disabled={true}>
-                    <DeleteIcon />
-                  </IconButton>
-                </CardActions> */}
               </Card>
             </Grid>
           )

@@ -122,7 +122,7 @@ export const SaveSubscription: React.FC = () => {
         </FlexContainer>
         <Stack direction="row" justifyContent="center" alignItems="flex-end" spacing={1}>
           <Button variant="contained" size="large" type="button" endIcon={<AttachMoneyIcon />} disabled={!enabledSave} onClick={handleSave}>
-            Realizar pagamento
+            {loading ? '...salvando aguarde' : 'Realizar pagamento'}
           </Button>
         </Stack>
       </Box>

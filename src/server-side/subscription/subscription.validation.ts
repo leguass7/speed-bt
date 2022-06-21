@@ -1,5 +1,15 @@
 import { celebrate, Joi, Segments } from 'celebrate'
 
+export const listAllSubscriptionSchema = celebrate(
+  {
+    [Segments.QUERY]: {
+      categoryId: Joi.number().allow('').min(1),
+      gender: Joi.valid('F', 'M').allow('')
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)
+
 export const deleteSubscriptionSchema = celebrate(
   {
     [Segments.QUERY]: {

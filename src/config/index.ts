@@ -1,7 +1,8 @@
 // import { OAuthUserConfig } from 'next-auth/providers'
 
 import pkg from '../../package.json'
-export const dev = process.env.NODE_ENV !== 'production'
+// export const dev = process.env.NODE_ENV !== 'production'
+export const dev = false
 
 const virtualHost = `${process.env.NEXT_PUBLIC_VIRTUAL_HOST}` || ''
 const vhost = typeof virtualHost === 'undefined' || virtualHost === 'undefined' ? '' : virtualHost

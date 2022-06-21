@@ -1,5 +1,5 @@
 import { Payment, PaymentMethod } from '@prisma/client'
-import type { IRequestCreateImmediateCharge } from 'brpix-api-node'
+import type { IRequestCreateImmediateCharge, IResponseCob } from 'brpix-api-node'
 
 import { IResponseApi } from '../api.interface'
 import type { IUser } from '../users'
@@ -30,5 +30,9 @@ export type GeneratePayment = {
 
 export interface IResponseCheckPayment extends IResponseApi {
   paid: boolean
+  imageQrcode?: string
+  qrcode?: string
   // payment: IPayment
 }
+
+export type PaymentMeta = { loc?: IResponseCob['loc']; horario?: Date | string; endToEndId?: string }

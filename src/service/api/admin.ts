@@ -15,7 +15,11 @@ export async function getAdminConfig(): Promise<IResponseApi & { data: any }> {
   return response
 }
 
-export async function getAdminSubscriptions(): Promise<IResponseSubscriptions> {
-  const response = await apiService.get('/admin/subscription')
+export type AdminSubscriptionsParams = {
+  gender?: 'F' | 'M'
+  categoryId?: number
+}
+export async function getAdminSubscriptions(params?: AdminSubscriptionsParams): Promise<IResponseSubscriptions> {
+  const response = await apiService.get('/admin/subscription', { params })
   return response
 }

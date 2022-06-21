@@ -50,6 +50,7 @@ async function list(where: PrismaTypes.SubscriptionWhereInput): Promise<ResultSu
 
   const data = await prisma.subscription.findMany({
     where,
+    orderBy: { user: { name: 'asc' } },
     include: {
       user: { select: selectUser },
       partner: { select: selectUser },
