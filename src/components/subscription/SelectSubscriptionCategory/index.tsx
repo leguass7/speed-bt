@@ -59,7 +59,7 @@ export const SelectSubscriptionCategory: React.FC<Props> = ({ categories = [] })
           return old.map(f => {
             return f.categoryId === categoryId ? { ...f, selected } : f
           })
-        return [...old, { categoryId, selected }].sort()
+        return [...old, { categoryId, selected, partnerId: '', createdAt: '' }].sort()
       })
     },
     [setSelectedList]

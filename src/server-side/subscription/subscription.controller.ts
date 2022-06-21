@@ -158,13 +158,13 @@ function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, 
   }
 }
 
-// function listByPartner(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse<IResponseSubscriptions>> {
-//   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseSubscriptions>) => {
-//     const { auth } = req
-//     const subscriptions = await subService.list({ actived: true, partnerId: auth.userId })
-//     return res.status(200).json({ success: true, subscriptions })
-//   }
-// }
+function listByPartner(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse> {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
+    const { auth } = req
+    const subscriptions = await subService.list({ actived: true, partnerId: auth.userId })
+    return res.status(200).json({ success: true, subscriptions })
+  }
+}
 
 export function factorySubscriptionController(
   subService: ISubscriptionService,
@@ -176,7 +176,7 @@ export function factorySubscriptionController(
   return {
     store: store(subService, categoryService, userService, paymentService, appConfigService),
     list: list(subService),
-    remove: remove(subService)
-    // listByPartner: listByPartner(subService)
+    remove: remove(subService),
+    listByPartner: listByPartner(subService)
   }
 }
