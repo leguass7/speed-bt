@@ -30,13 +30,18 @@ export async function authProtect(req: AuthorizedApiRequest, res: NextApiRespons
   try {
     // console.log('secret', secret, process.env.NEXTAUTH_URL, process.env.VERCEL_URL)
     let session = await getToken({ req, secret })
+    // console.log('session token', session)
     if (!session) {
       session = await getSession()
+      // console.log('session session', session)
       if (!session) {
         return unauthorize()
       }
     }
     req.auth = authorizedDto(session)
+    // console.log('req.auth', req.auth)
+    if (!req.auth?.userId) return unauthorize()
+
     next()
   } catch (error) {
     return unauthorize()

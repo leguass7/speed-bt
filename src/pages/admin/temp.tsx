@@ -17,15 +17,15 @@ import { AdminSubscriptionsParams, getAdminSubscriptions, IResponseSubscriptions
 import { checkPayment } from '~/service/api/payment'
 
 const cats = [
-  { index: 0, gender: undefined, categoryId: 1, label: 'Infantil' },
-  { index: 1, gender: 'M', categoryId: 2, label: 'Iniciante (M)' },
-  { index: 2, gender: 'F', categoryId: 2, label: 'Iniciante (F)' },
-  { index: 3, gender: 'M', categoryId: 3, label: 'Intermadiário (M)' },
-  { index: 4, gender: 'F', categoryId: 3, label: 'Intermadiário (F)' },
-  { index: 5, gender: 'M', categoryId: 4, label: 'Open (M)' },
-  { index: 6, gender: 'F', categoryId: 4, label: 'Open (F)' },
-  { index: 7, gender: 'M', categoryId: 5, label: '50+ (M)' },
-  { index: 8, gender: 'F', categoryId: 5, label: '50+ (F)' }
+  { index: 1, gender: undefined, categoryId: 1, label: 'Infantil' },
+  { index: 2, gender: 'M', categoryId: 2, label: 'Iniciante' },
+  { index: 3, gender: 'F', categoryId: 2, label: 'Iniciante' },
+  { index: 4, gender: 'M', categoryId: 3, label: 'Intermadiário' },
+  { index: 5, gender: 'F', categoryId: 3, label: 'Intermadiário' },
+  { index: 6, gender: 'M', categoryId: 4, label: 'Open' },
+  { index: 7, gender: 'F', categoryId: 4, label: 'Open' },
+  { index: 8, gender: 'M', categoryId: 5, label: '50+' },
+  { index: 9, gender: 'F', categoryId: 5, label: '50+' }
 ] as const
 // type Options = typeof cats
 // type Option = typeof cats[number]
@@ -34,8 +34,8 @@ const AdminTempPage: NextPage = () => {
   const { theme } = useAppTheme()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<IResponseSubscriptions['subscriptions']>([])
-  const [age, setAge] = useState('')
-  const [filter, setFilter] = useState<AdminSubscriptionsParams>({})
+  const [age, setAge] = useState('1')
+  const [filter, setFilter] = useState<AdminSubscriptionsParams>({ categoryId: 1 })
   const [modalOpen, setModalOpen] = useState(false)
   const [qrcode, setQrcode] = useState<IResponseSubscriptionStore>(null)
 
@@ -98,7 +98,7 @@ const AdminTempPage: NextPage = () => {
               {cats.map(cat => {
                 return (
                   <MenuItem key={`cat-${cat.index}`} value={cat.index}>
-                    {cat.label}
+                    {cat.label} {cat?.gender ? `(${cat.gender})` : ``}
                   </MenuItem>
                 )
               })}

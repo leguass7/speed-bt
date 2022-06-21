@@ -47,6 +47,9 @@ function updateMe(userService: IUserService): RequestHandler<NextApiRequest, Nex
 function me(userService: IUserService): RequestHandler<NextApiRequest, NextApiResponse<IResponseUser>> {
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseUser>) => {
     const { auth } = req
+    if (!auth || !auth?.userId) throw new ApiError(403, 'Usuário sem permissões')
+
+    // console.log('auth', auth)
     const user = await userService.findOne({ id: auth.userId })
     delete user.password
     return res.status(201).json({ success: true, user })

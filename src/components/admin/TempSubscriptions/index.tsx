@@ -16,8 +16,12 @@ import Typography from '@mui/material/Typography'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { PaymentIcon } from '~/components/PaymentIcon'
-import { normalizeImageSrc, stringAvatar } from '~/helpers/string'
+import { normalizeImageSrc, stringAvatar, stringToColor } from '~/helpers/string'
 import type { IResponseSubscriptions } from '~/service/api/admin'
+
+function sxColor(name: string) {
+  return { bgcolor: stringToColor(name) }
+}
 
 type Props = {
   subscriptions?: IResponseSubscriptions['subscriptions']
@@ -61,10 +65,10 @@ export const TempSubscriptions: React.FC<Props> = ({ subscriptions = [], loading
                     >
                       <ListItemAvatar>
                         <AvatarGroup spacing="small" max={2} total={2}>
-                          <Avatar alt={user?.name} src={normalizeImageSrc(user?.image)}>
+                          <Avatar alt={user?.name} src={normalizeImageSrc(user?.image)} sx={sxColor(partner?.name)}>
                             {stringAvatar(user?.name)}
                           </Avatar>
-                          <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)}>
+                          <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)} sx={sxColor(partner?.name)}>
                             {stringAvatar(partner?.name)}
                           </Avatar>
                         </AvatarGroup>
