@@ -16,11 +16,16 @@ import {
   requestToSubscriptionDto,
   UpdateSubscription,
   IResponseSubscriptions,
-  IResponseSubscriptionStore
+  IResponseSubscriptionStore,
+  ResultSubscription
 } from './subscription.dto'
 import type { ISubscriptionService } from './subscription.service'
 
 type Reduce = [IRequestStoreSubscription[], IRequestStoreSubscription[]]
+type ReduceResult = [ResultSubscription[], ResultSubscription[]]
+type ResultSubscriptionMerged = Omit<ResultSubscription, 'id' | 'paymentId' | 'createdBy' | 'updatedBy'> & {
+  merged?: boolean
+}
 
 function store(
   subService: ISubscriptionService,
@@ -109,13 +114,58 @@ function remove(subService: ISubscriptionService): RequestHandler<NextApiRequest
   }
 }
 
-function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse<IResponseSubscriptions>> {
+function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse> {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
+    const { auth } = req
+
+    const subscriptions = await subService.list({ actived: true, OR: [{ userId: auth.userId }, { partnerId: auth.userId }] })
+
+    const [byUser, byPartner] = subscriptions.reduce(
+      ([u, p], item) => {
+        if (item.userId === auth.userId) u.push(item)
+        if (item.partnerId === auth.userId) p.push(item)
+        return [u, p]
+      },
+      [[], []] as ReduceResult
+    )
+
+    const data: ResultSubscriptionMerged[] = [
+      ...byUser,
+      ...byPartner
+        .map(p => {
+          //
+          const r: ResultSubscriptionMerged = {
+            actived: !!p?.actived,
+            categoryId: p.categoryId,
+            paid: !!p?.paid,
+            partnerId: p.userId,
+            userId: auth.userId, /// important
+            value: p.value,
+            user: p.user,
+            partner: p.partner,
+            category: p.category,
+            createdAt: p.createdAt,
+            updatedAt: p?.updatedAt,
+            merged: true
+          }
+          const found = byUser.find(f => f.userId === auth.userId && f.partnerId === p.userId)
+          return found ? null : r
+          //
+        })
+        .filter(f => !!f)
+    ]
+    return res.status(200).json({ success: true, subscriptions: data })
+  }
+}
+
+function listByPartner(subService: ISubscriptionService): RequestHandler<NextApiRequest, NextApiResponse<IResponseSubscriptions>> {
   return async (req: AuthorizedApiRequest, res: NextApiResponse<IResponseSubscriptions>) => {
     const { auth } = req
-    const subscriptions = await subService.list({ actived: true, userId: auth.userId })
+    const subscriptions = await subService.list({ actived: true, partnerId: auth.userId })
     return res.status(200).json({ success: true, subscriptions })
   }
 }
+
 export function factorySubscriptionController(
   subService: ISubscriptionService,
   categoryService: ICategoryService,
@@ -126,6 +176,7 @@ export function factorySubscriptionController(
   return {
     store: store(subService, categoryService, userService, paymentService, appConfigService),
     list: list(subService),
-    remove: remove(subService)
+    remove: remove(subService),
+    listByPartner: listByPartner(subService)
   }
 }

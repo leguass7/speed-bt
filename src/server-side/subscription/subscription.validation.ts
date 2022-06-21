@@ -34,9 +34,10 @@ const category = Joi.object({
 const subscription = Joi.object({
   id: Joi.number().allow(null),
   categoryId: Joi.number().min(1).required(),
-  value: Joi.number().required(),
-  partner,
-  category
+  partnerId: Joi.string().required(),
+  value: Joi.number().required()
+  // partner,
+  // category
 }).options({ stripUnknown: true })
 
 export const createBulkSubscriptionSchema = celebrate(

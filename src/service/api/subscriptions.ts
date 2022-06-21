@@ -7,8 +7,9 @@ export async function createSubscriptions(data: IRequestStoreSubscription[]): Pr
   return response
 }
 
-export async function listSubscriptions(): Promise<IResponseSubscriptions> {
-  const response = await apiService.get('/subscription')
+export async function listSubscriptions(byPartner?: boolean): Promise<IResponseSubscriptions> {
+  const url = byPartner ? '/subscription/partner' : '/subscription'
+  const response = await apiService.get(url)
   return response
 }
 

@@ -69,7 +69,7 @@ export const UserSubscriptions: React.FC<Props> = ({ categories = [], onModifyLi
     async (userId: IUser['id'], data?: IUser) => {
       if (importCatId) {
         const subscription = subscriptionList.find(c => c.categoryId === importCatId)
-        updateSelected(importCatId, { partner: data, category: subscription.category, value: subscription.value })
+        updateSelected(importCatId, { partner: data, category: subscription.category, value: subscription.value, partnerId: userId })
         if (onModifyList) onModifyList()
       }
     },

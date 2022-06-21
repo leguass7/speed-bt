@@ -61,9 +61,9 @@ export function stringToColor(string: string) {
   return color
 }
 
-export function stringAvatar(name: string) {
-  const [n, s] = name?.split(' ')
-  return `${n}${s}`
+export function stringAvatar(name?: string) {
+  const [n = '', s = ''] = `${name}`?.split(' ')
+  return `${n[0] || ''}${s[0] || ''}`.toUpperCase()
 }
 
 export function replaceAll(str = '', needle: string, replacement: string) {

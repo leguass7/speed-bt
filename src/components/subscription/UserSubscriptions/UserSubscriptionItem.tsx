@@ -1,29 +1,50 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Divider, Typography } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
+import Collapse from '@mui/material/Collapse'
 import Fade from '@mui/material/Fade'
-import IconButton from '@mui/material/IconButton'
+import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
+import { styled } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
+import { parseJSON, format } from 'date-fns'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { PaymentIcon } from '~/components/PaymentIcon'
 import { useUserAuth } from '~/components/UserProvider'
 import { formatPrice } from '~/helpers'
-import { normalizeImageSrc } from '~/helpers/string'
+import { normalizeImageSrc, stringAvatar } from '~/helpers/string'
 
 import { SelectedType, useSubscription } from '../SubscriptionProvider'
 import { SpanPrice, PriceContainer } from './styles'
+
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { expand, ...other } = props
+  return <IconButton {...other} />
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest
+  })
+}))
 
 type Props = SelectedType & {
   index: number
@@ -42,8 +63,12 @@ export const UserSubscriptionItem: React.FC<Props> = ({
   onClickDelete,
   paid,
   paymentId,
-  id
+  user,
+  id,
+  merged,
+  createdAt
 }) => {
+  const [expanded, setExpanded] = useState(false)
   const { userData } = useUserAuth()
   const { theme } = useAppTheme()
   const { requestSubscriptions } = useSubscription()
@@ -75,13 +100,24 @@ export const UserSubscriptionItem: React.FC<Props> = ({
     )
   }
 
+  const handleExpandClick = () => {
+    setExpanded(!expanded)
+  }
+
+  const meData = user || userData
+  const dataCreated = createdAt ? format(parseJSON(`${createdAt}`), 'dd/MM/yyyy') : '--'
+
   return (
     <Fade in={true}>
       <Card sx={{ minHeight: 216 }}>
         <CardHeader
           title={`Categoria ${category?.title || '--'}`}
-          subheader={userData?.name}
-          avatar={<Avatar aria-label={userData?.name} alt={userData?.name} src={normalizeImageSrc(userData?.image)} />}
+          subheader={meData?.name}
+          avatar={
+            <Avatar aria-label={meData?.name} alt={meData?.name} src={normalizeImageSrc(meData?.image)}>
+              {stringAvatar(meData?.name)}
+            </Avatar>
+          }
           titleTypographyProps={{ fontWeight: 'bold' }}
         />
         <CardContent>
@@ -90,13 +126,15 @@ export const UserSubscriptionItem: React.FC<Props> = ({
               <ListItem
                 disablePadding
                 secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={handleClickDelPartner} disabled={!!paid}>
+                  <IconButton edge="end" aria-label="delete" onClick={handleClickDelPartner} disabled={!!paid || !!merged}>
                     <DeleteIcon />
                   </IconButton>
                 }
               >
                 <ListItemAvatar>
-                  <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)} />
+                  <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)}>
+                    {stringAvatar(partner?.name)}
+                  </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={partner?.name} secondary={partner?.email} />
               </ListItem>
@@ -110,7 +148,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
           )}
         </CardContent>
         <CardActions disableSpacing>
-          {id && !paid ? (
+          {id && !paid && !merged ? (
             <Tooltip title={'Excluir inscrição'} arrow>
               <IconButton aria-label="excluir inscrição" onClick={handleClickDelele}>
                 <DeleteForeverIcon />
@@ -119,9 +157,23 @@ export const UserSubscriptionItem: React.FC<Props> = ({
           ) : null}
           <PaymentIcon id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={requestSubscriptions} />
           {renderPrice(value)}
-
-          {/* <CloseIcon /> */}
+          {merged ? (
+            <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+              <ExpandMoreIcon />
+            </ExpandMore>
+          ) : null}
         </CardActions>
+        {merged ? (
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <Divider />
+            <CardContent>
+              <Typography variant="h5">Atenção:</Typography>
+              <Typography paragraph>
+                Você foi selecionado pela sua dupla em {dataCreated}, efetue o pagamento para confirmar sua inscrição.
+              </Typography>
+            </CardContent>
+          </Collapse>
+        ) : null}
       </Card>
     </Fade>
   )

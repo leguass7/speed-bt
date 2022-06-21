@@ -29,7 +29,7 @@ export interface IResponseSubscription extends IResponseApi {
   subscription?: ISubscription
 }
 
-export type ResultSubscription = Subscription & { category?: Category; partner?: User; user?: User }
+export type ResultSubscription = Subscription & { category?: Category; partner?: User; user?: User; merged?: boolean }
 export interface IResponseSubscriptions extends IResponseApi {
   subscriptions?: ResultSubscription[]
 }
@@ -37,22 +37,25 @@ export interface IResponseSubscriptions extends IResponseApi {
 export interface IRequestStoreSubscription {
   id?: number
   categoryId: number
+  partnerId: string
   selected?: boolean
   actived?: boolean
   paid?: boolean
   paymentId?: number
   value?: number
+  user?: Partial<IUser>
   partner?: Partial<IUser>
   category?: Partial<ICategory>
+  merged?: boolean
 }
 
 export function requestToSubscriptionDto<T = ISubscription>(data: IRequestStoreSubscription, userId?: string): T {
-  const { actived, id, category, partner, paid, value } = data
+  const { actived, id, category, paid, value, partnerId, categoryId } = data
   const result: ISubscription = {
     actived,
     id,
-    categoryId: category?.id,
-    partnerId: partner?.id,
+    categoryId,
+    partnerId,
     paid,
     value: value || category?.price,
     userId
