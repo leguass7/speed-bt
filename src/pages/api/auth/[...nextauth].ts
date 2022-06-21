@@ -4,6 +4,7 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
+import { dev } from '~/config'
 import { googleSecrets, secret } from '~/server-side/config'
 import prisma from '~/server-side/database'
 import { UserService } from '~/server-side/users'
@@ -45,7 +46,7 @@ const options: NextAuthOptions = {
       }
     })
   ],
-  debug: true
+  debug: !!dev
 }
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)
