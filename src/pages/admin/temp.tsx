@@ -5,7 +5,7 @@ import { Box, FormControl, InputLabel, MenuItem, Modal } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import type { NextPage } from 'next'
 
-import { TempSubscriptions } from '~/components/admin/TempSubscriptions'
+import { Subscriptions } from '~/components/admin/Subscriptions'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { Layout } from '~/components/Layout'
 import { PageTitle } from '~/components/PageTitle'
@@ -27,8 +27,6 @@ const cats = [
   { index: 8, gender: 'M', categoryId: 5, label: '50+' },
   { index: 9, gender: 'F', categoryId: 5, label: '50+' }
 ] as const
-// type Options = typeof cats
-// type Option = typeof cats[number]
 
 const AdminTempPage: NextPage = () => {
   const { theme } = useAppTheme()
@@ -43,7 +41,7 @@ const AdminTempPage: NextPage = () => {
     const v = Number(event?.target?.value) || null
     setAge(v ? `${v}` : '')
     const found = cats.find(f => f.index === v)
-    setFilter(found ? { categoryId: found.categoryId, gender: found?.gender } : {})
+    setFilter(found ? { categoryId: found.categoryId, gender: found?.gender || '' } : {})
   }
 
   const fetchData = useCallback(async () => {
@@ -107,7 +105,7 @@ const AdminTempPage: NextPage = () => {
         </div>
       </FlexContainer>
 
-      <TempSubscriptions subscriptions={data} loading={loading} updateListHandler={fetchData} onClickPix={fetchPixCode} />
+      <Subscriptions subscriptions={data} loading={loading} updateListHandler={fetchData} onClickPix={fetchPixCode} />
       <Modal open={modalOpen} onClose={handleModalClose}>
         <ModalPixContainer>
           <Box padding={2} sx={{ backgroundColor: theme.colors.background, borderRadius: 1 }}>

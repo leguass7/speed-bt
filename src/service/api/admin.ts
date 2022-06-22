@@ -1,5 +1,5 @@
 import type { IResponseApi } from '~/server-side/api.interface'
-import type { IResponseSubscriptions, ResultSubscription } from '~/server-side/subscription'
+import type { IResponseSubscriptions, RequestUpdateSubCategory, ResultSubscription } from '~/server-side/subscription'
 
 import { apiService } from './api.service'
 
@@ -21,5 +21,10 @@ export type AdminSubscriptionsParams = {
 }
 export async function getAdminSubscriptions(params?: AdminSubscriptionsParams): Promise<IResponseSubscriptions> {
   const response = await apiService.get('/admin/subscription', { params })
+  return response
+}
+
+export async function updateAdminSubCategory(data?: RequestUpdateSubCategory): Promise<IResponseSubscriptions> {
+  const response = await apiService.patch('/admin/subscription', data)
   return response
 }

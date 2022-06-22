@@ -3,7 +3,7 @@ import type { NextApiResponse } from 'next'
 import type { Prisma as PrismaTypes } from '.prisma/client'
 
 import { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
-import type { ISubscriptionService } from '~/server-side/subscription'
+import type { ISubscriptionService, RequestUpdateSubCategory } from '~/server-side/subscription'
 
 function listAll(subService: ISubscriptionService) {
   return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
@@ -19,8 +19,19 @@ function listAll(subService: ISubscriptionService) {
   }
 }
 
+function updateCategory(subService: ISubscriptionService) {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
+    const { auth } = req
+    const { categoryId, subscriptionId } = req.body as RequestUpdateSubCategory
+
+    await subService.updateMany({ id: { in: subscriptionId } }, { categoryId, updatedBy: auth.userId })
+    return res.status(200).json({ success: true })
+  }
+}
+
 export function factoryAdminSubscriptionController(subService: ISubscriptionService) {
   return {
-    listAll: listAll(subService)
+    listAll: listAll(subService),
+    updateCategory: updateCategory(subService)
   }
 }

@@ -11,5 +11,5 @@ import { UserService } from '~/server-side/users'
 const controller = factoryAdminSubscriptionController(SubscriptionService)
 const adminAuthMiddle = createAdminMiddleware([8, 9], UserService)
 
-const handler = nc(ncConfig).use(authProtect).use(adminAuthMiddle).get(listAllSubscriptionSchema, controller.listAll)
+const handler = nc(ncConfig).use(authProtect).use(adminAuthMiddle).get(listAllSubscriptionSchema, controller.listAll).patch(controller.updateCategory)
 export default handler

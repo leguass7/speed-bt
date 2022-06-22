@@ -41,7 +41,7 @@ export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId, updateSubscr
   return (
     <>
       {paid ? (
-        <Tooltip title={'Inscrição paga'} arrow>
+        <Tooltip title={`Inscrição paga '${id} / ${paymentId}'`} arrow>
           <IconButton aria-label="inscrição paga">
             <PaidIcon color="success" />
           </IconButton>

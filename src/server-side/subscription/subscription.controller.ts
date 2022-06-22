@@ -15,7 +15,6 @@ import {
   CreateSubscription,
   requestToSubscriptionDto,
   UpdateSubscription,
-  // IResponseSubscriptions,
   IResponseSubscriptionStore,
   ResultSubscription
 } from './subscription.dto'

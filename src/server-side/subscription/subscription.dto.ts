@@ -62,3 +62,8 @@ export function requestToSubscriptionDto<T = ISubscription>(data: IRequestStoreS
   }
   return result as T
 }
+
+export interface RequestUpdateSubCategory {
+  categoryId: number
+  subscriptionId: number[]
+}

@@ -1,6 +1,7 @@
 import { ApiPix, IApiPixConfig } from 'brpix-api-node'
 
-import { dev } from '~/config'
+// import { dev } from '~/config'
+const dev = false
 
 import type { OtherConfigValue } from './app-config/app-config.dto'
 import type { IAppConfigService } from './app-config/app-config.service'
