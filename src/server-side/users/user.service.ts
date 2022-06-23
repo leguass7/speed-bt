@@ -7,6 +7,8 @@ import { removeInvalidValues } from '~/helpers/object'
 import { isDefined } from '~/helpers/validation'
 import prisma from '~/server-side/database'
 
+import { PaginationQueryDto } from '../services/pagination/pagination.dto'
+import { PaginationService } from '../services/pagination/pagination.service'
 import { checkCompleteData } from './user.helpers'
 
 async function search(text: string, notIds: string[] = [], filter: PrismaTypes.UserWhereInput = {}): Promise<User[]> {
@@ -58,6 +60,11 @@ async function findOne(userData: Partial<User>, select?: PrismaTypes.UserSelect)
 async function findUser(where: PrismaTypes.UserWhereInput, select?: PrismaTypes.UserSelect): Promise<User | null> {
   const user = await prisma.user.findFirst({ where, select })
   return user as User
+}
+
+async function paginate(pagination: PaginationQueryDto) {
+  const paginated = PaginationService.paginate<User>({ model: 'User', ...pagination })
+  return paginated
 }
 
 async function findOneToPayment(id: string) {
@@ -121,7 +128,8 @@ export const UserService = {
   findOneToPayment,
   search,
   check,
-  findUser
+  findUser,
+  paginate
 }
 
 export type IUserService = typeof UserService

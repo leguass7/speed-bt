@@ -10,14 +10,14 @@ interface Props extends PaginationQueryDto {
   model: Prisma.ModelName
   size?: number
   page?: number
-  orderBy?: string
+  orderby?: string
   order?: 'asc' | 'desc'
   include?: any
   select?: any
   where?: any
 }
 
-async function paginate<T = unknown>({ model, size = 25, page = 1, orderBy, order, select, include, where }: Props): Promise<PaginationDto<T>> {
+async function paginate<T = unknown>({ model, size = 25, page = 1, orderby, order, select, include, where }: Props): Promise<PaginationDto<T>> {
   // @ts-ignore
   const prismaModel = prisma[camelcase(model)]
   const totalCount = await prismaModel.count({ where: { ...where } })
@@ -31,7 +31,7 @@ async function paginate<T = unknown>({ model, size = 25, page = 1, orderBy, orde
     // console.log('skip', skip);
     findManyArgs = { ...findManyArgs, take: size, skip }
   }
-  if (orderBy) findManyArgs = { ...findManyArgs, orderBy: { [orderBy]: order } }
+  if (orderby) findManyArgs = { ...findManyArgs, orderBy: { [orderby]: order } }
 
   if (include) findManyArgs = { ...findManyArgs, include: include }
 
@@ -60,8 +60,8 @@ async function paginate<T = unknown>({ model, size = 25, page = 1, orderBy, orde
   }
 }
 
-export const PrismaService = {
+export const PaginationService = {
   paginate
 }
 
-export type IUserService = typeof PrismaService
+export type IPaginationService = typeof PaginationService

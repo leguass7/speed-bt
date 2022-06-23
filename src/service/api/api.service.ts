@@ -1,4 +1,5 @@
 import { querystring } from '~/helpers/string'
+import type { QueryPagination } from '~/server-side/api.interface'
 
 type ApiOptions = {
   baseUrl?: string
@@ -28,6 +29,18 @@ export class ApiService {
       return response
     } catch (error) {
       return { success: false, message: 'app offline' }
+    }
+  }
+
+  async getFileByDownload(url: string, params: QueryPagination = {}) {
+    try {
+      const u = normalizeUrl(url, params)
+      const response = await fetch(`${this.options.baseUrl}${u}`, {
+        method: 'GET'
+      }).then(res => res.blob())
+      return response
+    } catch (error) {
+      return null
     }
   }
 

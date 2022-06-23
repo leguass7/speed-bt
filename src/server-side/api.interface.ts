@@ -1,9 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { RequestHandler } from 'next-connect'
-
 export interface IResponseApi {
   success?: boolean
   message?: string | string[]
 }
 
-export type Controller = Record<string, RequestHandler<NextApiRequest, NextApiResponse>>
+export interface QueryPagination {
+  page?: number
+  size?: number
+  order?: string
+  orderby?: string
+  search?: string
+}
+
+export interface IResponsePaginated<T = any> extends IResponseApi {
+  total: number
+  size: number
+  page: number
+  data: T[]
+}
