@@ -9,7 +9,6 @@ import type { IUserService } from '~/server-side/users'
 function paginate(userService: IUserService) {
   return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
     const { ...pagination } = req?.query as PaginationQueryDto
-    console.log('pagination', pagination)
     const data = await userService.paginate(pagination)
     return res.status(200).send({ success: true, ...data })
   }
