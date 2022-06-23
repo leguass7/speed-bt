@@ -5,12 +5,13 @@ import type { ApiPix } from 'brpix-api-node'
 import { mergeDeep, removeInvalidValues } from '~/helpers/object'
 import { removeAll } from '~/helpers/string'
 import prisma from '~/server-side/database'
+import { expiracao } from '~/server-side/config'
 
 import { CreatePayment, IPayment, GeneratePayment } from './payment.dto'
 
 async function generate(apiPix: ApiPix, { user, value, infos: infoAdicionais, paymentId, pixKey: chave }: GeneratePayment) {
   const cob = await apiPix.createCob({
-    calendario: { expiracao: 2592000 },
+    calendario: { expiracao },
     devedor: { cpf: removeAll(user?.cpf), nome: user.name },
     valor: { original: Number(`${value}`).toFixed(2) },
     chave: chave || 'lesbr3@gmail.com',

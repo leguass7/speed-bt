@@ -1,9 +1,11 @@
 import type { Subscription } from '@prisma/client'
+import { add } from 'date-fns'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { RequestHandler } from 'next-connect'
 import { ApiError } from 'next/dist/server/api-utils'
 
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
+import { expiracao } from '~/server-side/config'
 
 import { createApiPix } from '../api-pix.service'
 import type { IAppConfigService } from '../app-config/app-config.service'
@@ -80,7 +82,17 @@ function store(
     const value = toCreatePayment.reduce((acc, { value }) => (acc += value), 0)
 
     // cria pagamento
-    const paymentId = await paymentService.create({ actived: true, method: 'PIX', paid: false, value, createdBy: auth.userId, userId: auth.userId })
+
+    const overdue = add(new Date(), { minutes: expiracao })
+    const paymentId = await paymentService.create({
+      actived: true,
+      method: 'PIX',
+      paid: false,
+      value,
+      createdBy: auth.userId,
+      userId: auth.userId,
+      overdue
+    })
 
     // salva Id do pagamento
     await Promise.all(toCreatePayment.map(sub => subService.update(sub.id, { paymentId })))
