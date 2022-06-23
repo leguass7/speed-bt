@@ -71,7 +71,7 @@ function createPartnerSubscription(
     await subService.update(subscriptionId, { paymentId })
 
     // 6. Adquiri usuário para pagamento
-    const user = await userService.findOneToPayment(auth.userId)
+    const user = await userService.findOneToPayment(userId)
     if (!user) throw new ApiError(403, 'Usuário não identificado')
     if (!user?.cpf) throw new ApiError(403, 'CPF não informado')
 
