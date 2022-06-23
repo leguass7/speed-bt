@@ -23,7 +23,7 @@ function sxColor(name: string) {
 }
 
 type Props = {
-  userId?: String
+  userId?: string
   partner: ResultSubscription['partner']
   categoryId: number
   updateListHandler?: () => void

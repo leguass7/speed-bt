@@ -72,5 +72,5 @@ export interface RequestGeneratePartnerSubscription {
   categoryId: number
   userId: string
   partnerId: string
-  value: number
+  // value?: number
 }
