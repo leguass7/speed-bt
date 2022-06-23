@@ -6,16 +6,22 @@ import PaidIcon from '@mui/icons-material/Paid'
 import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
+import styled from 'styled-components'
 
+import { formatPrice } from '~/helpers'
 import { checkPayment } from '~/service/api/payment'
 
+const MiniPrice = styled.span`
+  font-size: 10px;
+`
 type Props = {
+  value?: number
   paid: boolean
   paymentId?: number
   id?: number
   updateSubscriptionHandler?: () => void
 }
-export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId, updateSubscriptionHandler }) => {
+export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId, value, updateSubscriptionHandler }) => {
   const [loading, setLoading] = useState(false)
 
   const updatePayments = useCallback(() => {
@@ -41,15 +47,18 @@ export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId, updateSubscr
   return (
     <>
       {paid ? (
-        <Tooltip title={`Inscrição paga '${id} / ${paymentId}'`} arrow>
-          <IconButton aria-label="inscrição paga">
-            <PaidIcon color="success" />
-          </IconButton>
-        </Tooltip>
+        <>
+          {value ? <MiniPrice>{formatPrice(value)}</MiniPrice> : null}
+          <Tooltip title={`Inscrição '${id}' paga, pagamanto '${paymentId}'${value ? ` - ${formatPrice(value)}` : ''}`} arrow>
+            <IconButton size="small">
+              <PaidIcon color="success" />
+            </IconButton>
+          </Tooltip>
+        </>
       ) : (
         <>
           {id && paymentId && !loading ? (
-            <Tooltip title={`Verificar pagamento '${id} / ${paymentId}'`} arrow>
+            <Tooltip title={`Verificar pagamento '${paymentId}' inscrição '${id}'${value ? ` - ${formatPrice(value)}` : ''}`} arrow>
               <IconButton aria-label="verificar pagamento" onClick={handleCheckPayment}>
                 <AttachMoneyIcon />
               </IconButton>

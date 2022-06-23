@@ -2,8 +2,11 @@ import type { NextApiResponse } from 'next'
 
 import type { Prisma as PrismaTypes } from '.prisma/client'
 
+import { ApiError } from 'next/dist/server/api-utils'
+
+import { wait } from '~/helpers'
 import { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
-import type { ISubscriptionService, RequestUpdateSubCategory } from '~/server-side/subscription'
+import type { ISubscriptionService, RequestGeneratePartnerSubscription, RequestUpdateSubCategory } from '~/server-side/subscription'
 
 function listAll(subService: ISubscriptionService) {
   return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
@@ -29,9 +32,22 @@ function updateCategory(subService: ISubscriptionService) {
   }
 }
 
+function createPartnerSubscription(subService: ISubscriptionService) {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
+    const { auth, body } = req
+    const { categoryId, partnerId, userId } = body as RequestGeneratePartnerSubscription
+    const hasSub = await subService.findOne({ categoryId, userId, partnerId, actived: true })
+    if (hasSub) throw new ApiError(403, 'Inscrição já existe')
+
+    await wait(2000)
+    return res.status(201).json({ success: true })
+  }
+}
+
 export function factoryAdminSubscriptionController(subService: ISubscriptionService) {
   return {
     listAll: listAll(subService),
-    updateCategory: updateCategory(subService)
+    updateCategory: updateCategory(subService),
+    createPartnerSubscription: createPartnerSubscription(subService)
   }
 }

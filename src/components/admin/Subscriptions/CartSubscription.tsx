@@ -87,7 +87,7 @@ export const CardSubscription: React.FC<CardSubscriptionProps> = ({ category, pa
     )
   }
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3} xl={3}>
+    <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
       <Card sx={{ minHeight: 220 }}>
         <CardHeader
           subheader={renderTitle()}
@@ -102,7 +102,12 @@ export const CardSubscription: React.FC<CardSubscriptionProps> = ({ category, pa
           {pair ? (
             <ItemSubscription {...pair} updateListHandler={updateListHandler} onClickPix={onClickPix} />
           ) : (
-            <ItemAddSubscriptions partner={rest.partner} />
+            <ItemAddSubscriptions
+              partner={rest.partner}
+              userId={rest?.user?.id || rest.userId}
+              categoryId={rest.categoryId}
+              updateListHandler={updateListHandler}
+            />
           )}
         </CardContent>
       </Card>

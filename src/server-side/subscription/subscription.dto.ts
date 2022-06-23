@@ -67,3 +67,10 @@ export interface RequestUpdateSubCategory {
   categoryId: number
   subscriptionId: number[]
 }
+
+export interface RequestGeneratePartnerSubscription {
+  categoryId: number
+  userId: string
+  partnerId: string
+  value: number
+}

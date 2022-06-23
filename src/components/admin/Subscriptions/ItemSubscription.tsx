@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 
 import QrCode2Icon from '@mui/icons-material/QrCode2'
+import { Tooltip } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import IconButton from '@mui/material/IconButton'
@@ -10,6 +11,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemText from '@mui/material/ListItemText'
 
 import { PaymentIcon } from '~/components/PaymentIcon'
+import { formatPrice } from '~/helpers'
 import { normalizeImageSrc, stringAvatar, stringToColor } from '~/helpers/string'
 import type { ResultSubscription } from '~/server-side/subscription'
 
@@ -22,7 +24,7 @@ export type ItemSubscriptionProps = ResultSubscription & {
   updateListHandler?: () => void
 }
 
-export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({ id, paid, paymentId, user, partner, onClickPix, updateListHandler }) => {
+export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({ id, paid, paymentId, user, partner, value, onClickPix, updateListHandler }) => {
   const fetchPixCode = useCallback(
     (paymentId: number) => {
       return () => {
@@ -38,11 +40,13 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({ id, paid, pa
         disablePadding
         secondaryAction={
           <>
-            <PaymentIcon id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
+            <PaymentIcon value={value} id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
             {!paid ? (
-              <IconButton onClick={fetchPixCode(paymentId)}>
-                <QrCode2Icon />
-              </IconButton>
+              <Tooltip title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''}`} arrow>
+                <IconButton onClick={fetchPixCode(paymentId)}>
+                  <QrCode2Icon />
+                </IconButton>
+              </Tooltip>
             ) : null}
           </>
         }

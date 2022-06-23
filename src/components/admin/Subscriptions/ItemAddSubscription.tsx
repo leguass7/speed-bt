@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Avatar from '@mui/material/Avatar'
 import List from '@mui/material/List'
@@ -11,6 +12,7 @@ import styled from 'styled-components'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { normalizeImageSrc, stringAvatar, stringToColor } from '~/helpers/string'
 import type { ResultSubscription } from '~/server-side/subscription'
+import { generateAdminPartnerSubscription } from '~/service/api/admin'
 
 const Span = styled.span`
   color: ${({ theme }) => theme.colors.errors};
@@ -21,25 +23,40 @@ function sxColor(name: string) {
 }
 
 type Props = {
-  user?: ResultSubscription['user']
+  userId?: String
   partner: ResultSubscription['partner']
+  categoryId: number
+  updateListHandler?: () => void
 }
-export const ItemAddSubscriptions: React.FC<Props> = ({ partner }) => {
+export const ItemAddSubscriptions: React.FC<Props> = ({ partner, userId, categoryId, updateListHandler }) => {
   const { theme } = useAppTheme()
+  const [loading, setLoading] = useState(false)
 
-  const disabled = !partner?.cpf
+  const fetchGenerate = useCallback(async () => {
+    setLoading(true)
+    const response = await generateAdminPartnerSubscription({ categoryId, userId: partner.id, partnerId: userId })
+    if (response?.success) {
+      toast.success('Inscrição gerada')
+      updateListHandler()
+    } else {
+      toast.error(response?.message || 'Error ')
+    }
+    setLoading(false)
+    //
+  }, [categoryId, userId, partner, updateListHandler])
+
+  const disabled = !!(!partner?.cpf || !!loading)
 
   return (
     <List disablePadding>
       <ListItem disablePadding>
-        <ListItemButton title="Criar inscrição" dense disabled={!!disabled}>
+        <ListItemButton title="Criar inscrição" dense disabled={!!disabled} onClick={fetchGenerate}>
           <ListItemAvatar>
             <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)} sx={sxColor(partner?.name)}>
               {stringAvatar(partner?.name)}
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            //
             primary={partner?.name}
             secondary={
               <>
