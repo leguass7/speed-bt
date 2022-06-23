@@ -35,7 +35,7 @@ async function findOne(filter: PrismaTypes.SubscriptionWhereInput): Promise<Subs
   return user
 }
 
-async function find(filter: PrismaTypes.SubscriptionFindManyArgs): Promise<Subscription[]> {
+async function find(filter: PrismaTypes.SubscriptionFindManyArgs) {
   const result = await prisma.subscription.findMany(filter)
   return result || []
 }

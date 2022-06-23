@@ -1,4 +1,7 @@
+import { removeInvalidValues } from '~/helpers/object'
 import prisma from '~/server-side/database'
+
+import type { Prisma as PrismaTypes } from '.prisma/client'
 
 import { ICategory } from './category.dto'
 
@@ -16,8 +19,15 @@ export async function list(tournamentId = 1): Promise<ICategory[]> {
   return result as ICategory[]
 }
 
+export async function findOne(filter: PrismaTypes.CategoryWhereInput) {
+  const where = removeInvalidValues({ ...filter })
+  const result = await prisma.category.findFirst({ where })
+  return result
+}
+
 export const CategoryService = {
-  list
+  list,
+  findOne
 }
 
 export type ICategoryService = typeof CategoryService
