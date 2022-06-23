@@ -2,7 +2,7 @@ import nc from 'next-connect'
 
 import { createAdminMiddleware } from '~/server-side/admin/admin.middleware'
 import { factoryAdminSubscriptionController } from '~/server-side/admin/subscription/admin-sub.controller'
-import { createPartnerSubscriptionSchema } from '~/server-side/admin/subscription/admin-sub.validation'
+import { createPartnerSubscriptionSchema, deleteAdminSubscriptionSchema } from '~/server-side/admin/subscription/admin-sub.validation'
 import { AppConfigService } from '~/server-side/app-config/app-config.service'
 import { authProtect } from '~/server-side/auth/auth-protect.middleware'
 import { CategoryService } from '~/server-side/category/category.service'
@@ -21,4 +21,5 @@ const handler = nc(ncConfig)
   .get(listAllSubscriptionSchema, controller.listAll)
   .patch(controller.updateCategory)
   .post(createPartnerSubscriptionSchema, controller.createPartnerSubscription)
+  .delete(deleteAdminSubscriptionSchema, controller.deleteSubscription)
 export default handler

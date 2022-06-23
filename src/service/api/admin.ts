@@ -38,3 +38,8 @@ export async function generateAdminPartnerSubscription(data?: RequestGeneratePar
   const response = await apiService.post('/admin/subscription', data)
   return response
 }
+
+export async function deleteAdminSubscription(id: number): Promise<IResponseSubscriptions> {
+  const response = await apiService.delete('/admin/subscription', { params: { id } })
+  return response
+}

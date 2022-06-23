@@ -87,6 +87,15 @@ function createPartnerSubscription(
   }
 }
 
+function deleteSubscription(subService: ISubscriptionService, _paymentService: IPaymentService) {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
+    const subscriptionId = +req?.query?.id
+
+    const deleted = await subService.remove(subscriptionId, true)
+    return res.status(200).json({ success: true, subscriptionId, deleted })
+  }
+}
+
 export function factoryAdminSubscriptionController(
   subService: ISubscriptionService,
   categoryService: ICategoryService,
@@ -97,6 +106,7 @@ export function factoryAdminSubscriptionController(
   return {
     listAll: listAll(subService),
     updateCategory: updateCategory(subService),
-    createPartnerSubscription: createPartnerSubscription(subService, categoryService, paymentService, userService, appConfigService)
+    createPartnerSubscription: createPartnerSubscription(subService, categoryService, paymentService, userService, appConfigService),
+    deleteSubscription: deleteSubscription(subService, paymentService)
   }
 }

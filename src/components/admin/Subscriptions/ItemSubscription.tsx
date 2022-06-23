@@ -1,5 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
+import { toast } from 'react-toastify'
 
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import QrCode2Icon from '@mui/icons-material/QrCode2'
 import { Tooltip } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
@@ -14,6 +16,8 @@ import { PaymentIcon } from '~/components/PaymentIcon'
 import { formatPrice } from '~/helpers'
 import { normalizeImageSrc, stringAvatar, stringToColor } from '~/helpers/string'
 import type { ResultSubscription } from '~/server-side/subscription'
+import { deleteAdminSubscription } from '~/service/api/admin'
+import { checkPayment } from '~/service/api/payment'
 
 function sxColor(name: string) {
   return { bgcolor: stringToColor(name) }
@@ -24,7 +28,19 @@ export type ItemSubscriptionProps = ResultSubscription & {
   updateListHandler?: () => void
 }
 
-export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({ id, paid, paymentId, user, partner, value, onClickPix, updateListHandler }) => {
+export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
+  id,
+  paid,
+  paymentId,
+  user,
+  partner,
+  value,
+  createdBy,
+  userId,
+  onClickPix,
+  updateListHandler
+}) => {
+  const [loading, setLoading] = useState(false)
   const fetchPixCode = useCallback(
     (paymentId: number) => {
       return () => {
@@ -34,12 +50,33 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({ id, paid, pa
     [onClickPix]
   )
 
+  const fetchDelete = useCallback(async () => {
+    setLoading(true)
+    const check = await checkPayment(paymentId)
+    if (!check?.paid) {
+      const response = await deleteAdminSubscription(id)
+      if (response?.success) {
+        toast.success('Inscrição deletada')
+        updateListHandler()
+      }
+    } else {
+      toast.success('Pagamento realizado')
+    }
+
+    setLoading(false)
+  }, [id, updateListHandler, paymentId])
+
   return (
     <List disablePadding>
       <ListItem
         disablePadding
         secondaryAction={
           <>
+            {createdBy !== userId && !paid ? (
+              <IconButton onClick={fetchDelete} title={`Deletar inscrição '${id}'`} disabled={!!loading}>
+                <DeleteForeverIcon />
+              </IconButton>
+            ) : null}
             <PaymentIcon value={value} id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
             {!paid ? (
               <Tooltip title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''}`} arrow>

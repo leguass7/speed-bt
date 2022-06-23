@@ -10,3 +10,12 @@ export const createPartnerSubscriptionSchema = celebrate(
   },
   { abortEarly: true, stripUnknown: true }
 )
+
+export const deleteAdminSubscriptionSchema = celebrate(
+  {
+    [Segments.QUERY]: {
+      id: Joi.number().min(1).required()
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)

@@ -50,7 +50,12 @@ export const ItemAddSubscriptions: React.FC<Props> = ({ partner, userId, categor
   return (
     <List disablePadding>
       <ListItem disablePadding>
-        <ListItemButton title="Criar inscrição" dense disabled={!!disabled} onClick={fetchGenerate}>
+        <ListItemButton
+          title="Criar inscrição"
+          dense //disabled={!!disabled}
+          disabled={true}
+          onClick={fetchGenerate}
+        >
           <ListItemAvatar>
             <Avatar alt={partner?.name} src={normalizeImageSrc(partner?.image)} sx={sxColor(partner?.name)}>
               {stringAvatar(partner?.name)}
