@@ -46,15 +46,19 @@ function createPartnerSubscription(
   return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
     const { auth, body } = req
     const { categoryId, partnerId, userId } = body as RequestGeneratePartnerSubscription
+
     const hasSub = await subService.findOne({ categoryId, userId, partnerId, actived: true })
     if (hasSub) throw new ApiError(400, 'Inscrição já existe')
+
+    const hasSubUser = await subService.findOne({ categoryId, userId, actived: true })
+    if (hasSubUser) throw new ApiError(400, 'Inscrição já existe na categoria')
 
     const category = await categoryService.findOne({ id: categoryId })
     if (!category) throw new ApiError(400, 'Categoria não encontrada')
 
     // 1. verificar quantas inscrições o usuário tem
     const qtdeSubs = await subService.find({ where: { actived: true, userId } })
-    if (qtdeSubs?.length > 2) throw new ApiError(400, 'Usuário já possui 2 inscrições')
+    if (qtdeSubs?.length >= 2) throw new ApiError(400, 'Usuário já possui 2 inscrições')
 
     // 2. determinar valor da inscrição
     const value = qtdeSubs?.length >= 1 ? 50 : category?.price || 81
