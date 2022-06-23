@@ -15,6 +15,7 @@ import styled from 'styled-components'
 import type { ResultSubscription } from '~/server-side/subscription'
 import { updateAdminSubCategory } from '~/service/api/admin'
 
+import { ItemAddSubscriptions } from './ItemAddSubscription'
 import { ItemSubscription, ItemSubscriptionProps } from './ItemSubscription'
 
 const SelectContainer = styled.div<{ edit?: boolean }>`
@@ -87,7 +88,7 @@ export const CardSubscription: React.FC<CardSubscriptionProps> = ({ category, pa
   }
   return (
     <Grid item xs={12} sm={6} md={4} lg={3} xl={3}>
-      <Card>
+      <Card sx={{ minHeight: 220 }}>
         <CardHeader
           subheader={renderTitle()}
           action={
@@ -98,7 +99,11 @@ export const CardSubscription: React.FC<CardSubscriptionProps> = ({ category, pa
         />
         <CardContent sx={{ padding: 1 }}>
           <ItemSubscription {...rest} updateListHandler={updateListHandler} onClickPix={onClickPix} />
-          {pair ? <ItemSubscription {...pair} updateListHandler={updateListHandler} onClickPix={onClickPix} /> : null}
+          {pair ? (
+            <ItemSubscription {...pair} updateListHandler={updateListHandler} onClickPix={onClickPix} />
+          ) : (
+            <ItemAddSubscriptions partner={rest.partner} />
+          )}
         </CardContent>
       </Card>
     </Grid>

@@ -49,7 +49,7 @@ export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId, updateSubscr
       ) : (
         <>
           {id && paymentId && !loading ? (
-            <Tooltip title={'Verificar pagamento'} arrow>
+            <Tooltip title={`Verificar pagamento '${id} / ${paymentId}'`} arrow>
               <IconButton aria-label="verificar pagamento" onClick={handleCheckPayment}>
                 <AttachMoneyIcon />
               </IconButton>
