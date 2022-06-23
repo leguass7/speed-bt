@@ -32,8 +32,10 @@ const AdminTempPage: NextPage = () => {
   const { theme } = useAppTheme()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<IResponseSubscriptions['subscriptions']>([])
-  const [age, setAge] = useState('1')
-  const [filter, setFilter] = useState<AdminSubscriptionsParams>({ categoryId: 1 })
+  const [age, setAge] = useState('')
+  const [filter, setFilter] = useState<AdminSubscriptionsParams>({
+    /*categoryId: 1*/
+  })
   const [modalOpen, setModalOpen] = useState(false)
   const [qrcode, setQrcode] = useState<IResponseSubscriptionStore>(null)
 
@@ -41,6 +43,7 @@ const AdminTempPage: NextPage = () => {
     const v = Number(event?.target?.value) || null
     setAge(v ? `${v}` : '')
     const found = cats.find(f => f.index === v)
+    setData([])
     setFilter(found ? { categoryId: found.categoryId, gender: found?.gender || '' } : {})
   }
 
