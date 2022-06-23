@@ -54,7 +54,9 @@ export const PreRegistration: React.FC = () => {
               <Title textColor={theme.colors.primary}>Instruções:</Title>
               <ul>
                 <li>Verifique sua dupla está cadastrada, para completar a inscrição será necessário</li>
-
+                <li>
+                  Esqueceu a senha? <Link href={'/forgot'}>clique aqui para recuperar</Link>
+                </li>
                 <li>
                   De preferência utilize o login com o Google{' '}
                   <LinkGoogle type="button" onClick={loginGoogle}>

@@ -25,7 +25,7 @@ const SwitchRow: React.FC<Props> = ({ id, actived = false, tableName = 'table', 
       if (onChange) {
         setLoading(true)
         const response = await onChange(id, check)
-        if (isMounted.current) {
+        if (isMounted()) {
           setLoading(false)
           if (response) setChecked(!!response?.actived)
         }

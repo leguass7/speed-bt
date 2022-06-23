@@ -8,8 +8,10 @@ import type { Prisma as PrismaTypes } from '.prisma/client'
 type UserWhere = PrismaTypes.UserWhereInput
 type SearchRules = [number, UserWhere]
 
+import { generatePassword } from '~/helpers/string'
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
 
+import type { MailService } from '../services/EmailService'
 import type { IResponseUser, IResponseUsers, IResponseUserStore, IUser } from './user.dto'
 import type { IUserService } from './user.service'
 
@@ -87,12 +89,39 @@ function check(userService: IUserService): RequestHandler<NextApiRequest, NextAp
   }
 }
 
-export function factoryUserController(userService: IUserService) {
+function forgot(userService: IUserService, mailService: MailService): RequestHandler<NextApiRequest, NextApiResponse> {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const { email } = req.body
+    const user = await userService.findOne({ email })
+    if (!user) throw new ApiError(400, 'Usuário não cadastrado')
+
+    const password = generatePassword()
+    const updated = await userService.update(user.id, { password })
+    if (!updated) throw new ApiError(500, 'Erro ao gerar nova senha')
+
+    const sent = await mailService.send({
+      subject: 'Sua nova senha - Speed BT',
+      to: user.email,
+      html: `<p>
+      Sua nova senha tempor&aacute;ria &eacute;: <strong>${password}</strong><br />
+      Acesse: <a href="https://speed-bt.avatarsolucoesdigitais.com.br" target"_blank">Speed BT</a> para fazer login.<br /><br />
+      <strong>Para sua seguran&ccedil;a, n&atilde;o esque&ccedil;a de trocar a senha no menu de cadastro.</strong>
+      <p/>`
+    })
+
+    if (!sent?.accepted?.length) throw new ApiError(400, 'Problemas ao enviar email')
+
+    return res.status(200).json({ success: true })
+  }
+}
+
+export function factoryUserController(userService: IUserService, mailService: MailService) {
   return {
     create: create(userService),
     updateMe: updateMe(userService),
     me: me(userService),
     check: check(userService),
-    find: find(userService)
+    find: find(userService),
+    forgot: forgot(userService, mailService)
   }
 }

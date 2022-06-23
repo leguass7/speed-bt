@@ -28,6 +28,11 @@ export async function findPartner(params: any = {}): Promise<IResponseUsers> {
   return response
 }
 
+export async function forgotPass(email: string): Promise<IResponseUsers> {
+  const response = await apiService.post('/user/forgot', { email })
+  return response
+}
+
 export async function getFileByDownload(params: QueryPagination = {}) {
   const response = await apiService.getFileByDownload('/admin/users/download', params)
   return response || null
