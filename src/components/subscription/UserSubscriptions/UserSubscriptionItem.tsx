@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import QrCode2Icon from '@mui/icons-material/QrCode2'
 import { Divider, Typography } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Card from '@mui/material/Card'
@@ -51,6 +52,7 @@ type Props = SelectedType & {
   onClickPartner?: (categoryId: number) => void
   onClickDelPartner?: (categoryId: number) => void
   onClickDelete?: (subscriptionId: number) => void
+  onClickPixCode?: (paymentId: number) => void
 }
 export const UserSubscriptionItem: React.FC<Props> = ({
   index,
@@ -61,6 +63,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
   onClickPartner,
   onClickDelPartner,
   onClickDelete,
+  onClickPixCode,
   paid,
   paymentId,
   user,
@@ -83,6 +86,10 @@ export const UserSubscriptionItem: React.FC<Props> = ({
 
   const handleClickDelele = () => {
     if (onClickDelete) onClickDelete(id)
+  }
+
+  const handleClickPixCode = () => {
+    if (onClickPixCode) onClickPixCode(paymentId)
   }
 
   const renderPrice = (value: number) => {
@@ -148,9 +155,16 @@ export const UserSubscriptionItem: React.FC<Props> = ({
           )}
         </CardContent>
         <CardActions disableSpacing>
+          {id && !paid && !merged && paymentId ? (
+            <Tooltip title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''}`} arrow>
+              <IconButton onClick={handleClickPixCode}>
+                <QrCode2Icon />
+              </IconButton>
+            </Tooltip>
+          ) : null}
           {id && !paid && !merged ? (
-            <Tooltip title={'Excluir inscrição'} arrow>
-              <IconButton aria-label="excluir inscrição" onClick={handleClickDelele}>
+            <Tooltip title={`Excluir inscrição '${id}'`} arrow>
+              <IconButton onClick={handleClickDelele}>
                 <DeleteForeverIcon />
               </IconButton>
             </Tooltip>
@@ -169,7 +183,7 @@ export const UserSubscriptionItem: React.FC<Props> = ({
             <CardContent>
               <Typography variant="h5">Atenção:</Typography>
               <Typography paragraph>
-                Você foi selecionado pela sua dupla em {dataCreated}, efetue o pagamento para confirmar sua inscrição.
+                Você foi selecionado pela sua dupla em <strong>{dataCreated}</strong>, efetue o pagamento para confirmar sua inscrição.
               </Typography>
             </CardContent>
           </Collapse>

@@ -109,7 +109,7 @@ export const SaveSubscription: React.FC = () => {
     await fetchSave()
   }
 
-  const notPaid = subscriptions?.filter(f => !f?.paid)
+  const notPaid = subscriptions?.filter(f => !f?.paid || !f?.id)
   const enabledSave = subscriptions?.length && !message && !modalOpen && !loading && notPaid?.length
 
   if (!subscriptions?.length) return null
