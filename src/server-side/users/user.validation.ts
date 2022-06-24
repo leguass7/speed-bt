@@ -27,6 +27,15 @@ export const checkUserSchema = celebrate(
   { abortEarly: true, stripUnknown: true }
 )
 
+export const forgotPassSchema = celebrate(
+  {
+    [Segments.BODY]: {
+      email: Joi.string().email().required()
+    }
+  },
+  { abortEarly: true, stripUnknown: true }
+)
+
 export const createUserSchema = celebrate(
   {
     [Segments.BODY]: {

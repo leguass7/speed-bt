@@ -87,3 +87,11 @@ export function removeAll(str = '', chars = defaultForbidenChars, replacement = 
   for (let i = 0; i < c.length; i++) result = replaceAll(result, c[i], replacement)
   return result
 }
+
+export function generatePassword() {
+  // return timeStamp().toLowerCase().slice(-6);
+  return Math.random()
+    .toString(36)
+    .replace(/[ilLI|`oO0]/g, '')
+    .slice(-6)
+}

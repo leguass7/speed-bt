@@ -1,3 +1,4 @@
+import type { QueryPagination } from '~/server-side/api.interface'
 import type { IResponseCheckUser, IResponseUser, IResponseUsers, IResponseUserStore, IUser } from '~/server-side/users'
 
 import { apiService } from './api.service'
@@ -25,4 +26,14 @@ export async function checkLogin(email: string, password: string): Promise<IResp
 export async function findPartner(params: any = {}): Promise<IResponseUsers> {
   const response = await apiService.get('/user/find', { params })
   return response
+}
+
+export async function forgotPass(email: string): Promise<IResponseUsers> {
+  const response = await apiService.post('/user/forgot', { email })
+  return response
+}
+
+export async function getFileByDownload(params: QueryPagination = {}) {
+  const response = await apiService.getFileByDownload('/admin/users/download', params)
+  return response || null
 }

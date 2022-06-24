@@ -1,4 +1,6 @@
-import type { IResponseApi } from '~/server-side/api.interface'
+import type { User } from '@prisma/client'
+
+import type { IResponseApi, IResponsePaginated, QueryPagination } from '~/server-side/api.interface'
 import type {
   IResponseSubscriptions,
   RequestUpdateSubCategory,
@@ -41,5 +43,12 @@ export async function generateAdminPartnerSubscription(data?: RequestGeneratePar
 
 export async function deleteAdminSubscription(id: number): Promise<IResponseSubscriptions> {
   const response = await apiService.delete('/admin/subscription', { params: { id } })
+  return response
+}
+
+export type IResponsePaginatedUsers = IResponsePaginated<Partial<User>>
+
+export async function adminPaginateUsers(params?: QueryPagination): Promise<IResponsePaginatedUsers> {
+  const response = await apiService.get('/admin/user', { params })
   return response
 }

@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 
 import { Form } from '@unform/web'
 import { signIn } from 'next-auth/react'
+import Link from 'next/link'
 import styled from 'styled-components'
 import * as Yup from 'yup'
 
@@ -53,6 +54,10 @@ export const FormLogin: React.FC<Props> = ({}) => {
             Enviar
           </ButtonTheme>
           <ButtonGoogle type="button" disabled={!!sending} />
+        </ButtonContainer>
+        <br />
+        <ButtonContainer>
+          <Link href={'/forgot'}>esqueceu a senha?</Link>
         </ButtonContainer>
       </Form>
       {loading ? <CircleLoading /> : null}
