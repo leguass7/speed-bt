@@ -11,7 +11,7 @@ import { Button } from '../styles'
 
 import type { ButtonThemeProps } from '..'
 
-export const ButtonGoogle: React.FC<ButtonThemeProps> = ({ themeColor = 'primary', onClick, disabled }) => {
+export const ButtonGoogle: React.FC<ButtonThemeProps> = ({ themeColor = 'primary', onClick, disabled, type = 'button' }) => {
   const { theme, matchingBackgroudText } = useAppTheme()
   const session = useSession()
 
@@ -32,7 +32,7 @@ export const ButtonGoogle: React.FC<ButtonThemeProps> = ({ themeColor = 'primary
   return (
     <>
       {authenticated && session.data?.user?.image ? <></> : null}
-      <Button bgColor={bgColor} hoverColor={hover} textColor={textColor} onClick={handleClick} disabled={!!disabled}>
+      <Button type={type} bgColor={bgColor} hoverColor={hover} textColor={textColor} onClick={handleClick} disabled={!!disabled}>
         <span>
           {authenticated && session.data?.user?.image ? <Avatar src={session.data.user.image} sx={{ width: 28, height: 28 }} /> : <GoogleIcon />}
 

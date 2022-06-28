@@ -105,8 +105,13 @@ function store(
     // gera pix
     const apiPix = await createApiPix(appConfigService)
     const cob = await paymentService.generate(apiPix, { user, value, paymentId })
+    // console.log('cob', cob)
+    if (!cob || !cob?.success) {
+      // console.log('cob', cob)
+      throw new ApiError(403, 'Erro ao gerar PIX')
+    }
 
-    return res.status(200).json({ success: true, imageQrcode: cob.imagemQrcode, qrcode: cob.qrcode, paymentId, txid: cob?.txid })
+    return res.status(200).json({ success: true, imageQrcode: cob?.imagemQrcode, qrcode: cob?.qrcode, paymentId, txid: cob?.txid })
   }
 }
 
@@ -140,31 +145,30 @@ function list(subService: ISubscriptionService): RequestHandler<NextApiRequest, 
       [[], []] as ReduceResult
     )
 
-    const data: ResultSubscriptionMerged[] = [
-      ...byUser,
-      ...byPartner
-        .map(p => {
-          //
-          const r: ResultSubscriptionMerged = {
-            actived: !!p?.actived,
-            categoryId: p.categoryId,
-            paid: !!p?.paid,
-            partnerId: p.userId,
-            userId: auth.userId, /// important
-            value: p.value,
-            user: p.user,
-            partner: p.partner,
-            category: p.category,
-            createdAt: p.createdAt,
-            updatedAt: p?.updatedAt,
-            merged: true
-          }
-          const found = byUser.find(f => f.userId === auth.userId && f.partnerId === p.userId)
-          return found ? null : r
-          //
-        })
-        .filter(f => !!f)
-    ]
+    const toMerge = byPartner
+      .map(p => {
+        //
+        const r: ResultSubscriptionMerged = {
+          actived: !!p?.actived,
+          categoryId: p.categoryId,
+          paid: !!p?.paid,
+          partnerId: p.userId,
+          userId: auth.userId, /// important
+          value: p.value,
+          user: p.user,
+          partner: p.partner,
+          category: p.category,
+          createdAt: p.createdAt,
+          updatedAt: p?.updatedAt,
+          merged: true
+        }
+        const found = byUser.find(f => f.userId === auth.userId && f.partnerId === p.userId)
+        return found ? null : r
+        //
+      })
+      .filter(f => !!f)
+
+    const data: ResultSubscriptionMerged[] = [...byUser, ...toMerge]
     return res.status(200).json({ success: true, subscriptions: data })
   }
 }

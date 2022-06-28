@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
@@ -35,6 +35,23 @@ export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
 
   const formRef = useRef<FormHandles>(null)
 
+  const formSchema = useMemo(
+    () =>
+      object().shape({
+        name: string().required('seu nome é requerido'),
+        email: string().required('e-mail é requirido'),
+        phone: string().required('telefone é requirido'),
+        birday: string().required('data de nascimento é requirido'),
+        password: authenticated ? string() : string().required('A senha é requerido'),
+        confirmPassword: string().oneOf([ref('password'), null], 'Senha e confirmar senha não batem'),
+        shirtSize: string().required('Tamanho da camisa é requirido')
+        // category: string().required('Categoria é requirido'),
+        // gender: string().required('gênero é requirido'),
+        // cpf: string().required('CPF é requirido')
+      }),
+    [authenticated]
+  )
+
   const handleSubmit = useCallback(
     async (formData: FormData) => {
       const invalid = await validateFormData(formSchema, { ...formData }, formRef.current)
@@ -64,7 +81,7 @@ export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
         })
       }
     },
-    [userData, updateUserData, requestMe, authenticated]
+    [userData, updateUserData, requestMe, authenticated, formSchema]
   )
 
   return (
@@ -104,16 +121,3 @@ export const FormRegister: React.FC<FormRegisterProps> = ({ onCancel }) => {
     </Container>
   )
 }
-
-const formSchema = object().shape({
-  name: string().required('seu nome é requerido'),
-  email: string().required('e-mail é requirido'),
-  phone: string().required('telefone é requirido'),
-  birday: string().required('data de nascimento é requirido'),
-  password: string().required('A senha é requerido'),
-  confirmPassword: string().oneOf([ref('password'), null], 'Senha e confirmar senha não batem'),
-  // category: string().required('Categoria é requirido'),
-  shirtSize: string().required('Tamanho da camisa é requirido')
-  // gender: string().required('gênero é requirido'),
-  // cpf: string().required('CPF é requirido')
-})

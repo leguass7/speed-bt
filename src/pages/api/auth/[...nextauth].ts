@@ -42,7 +42,7 @@ const options: NextAuthOptions = {
       async authorize(credentials, _req) {
         const { email, password } = credentials
         const user = await UserService.check(email, password)
-        return { ...user }
+        return user ? { ...user } : null
       }
     })
   ],

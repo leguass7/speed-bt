@@ -115,7 +115,7 @@ async function check(email: string, password: string) {
 
     return compareSync(password, user.password) && data
   } catch (err) {
-    return false
+    return null
   }
 }
 

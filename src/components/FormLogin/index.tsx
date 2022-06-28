@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { Form } from '@unform/web'
 import { signIn } from 'next-auth/react'
@@ -40,7 +41,10 @@ export const FormLogin: React.FC<Props> = ({}) => {
 
     setSending(true)
     const { email, password } = data
-    await signIn('custom', { email, password })
+    const response = await signIn('custom', { email, password, redirect: false })
+    if (response?.status === 401) {
+      toast.error('E-mail/senha não autorizados')
+    }
     setSending(false)
   }, [])
 

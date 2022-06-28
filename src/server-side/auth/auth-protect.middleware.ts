@@ -38,6 +38,7 @@ export async function authProtect(req: AuthorizedApiRequest, res: NextApiRespons
         return unauthorize()
       }
     }
+
     req.auth = authorizedDto(session)
     // console.log('req.auth', req.auth)
     if (!req.auth?.userId) return unauthorize()
