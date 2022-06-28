@@ -10,7 +10,7 @@ import { adminPaginateUsers } from '~/service/api/admin'
 import { columns } from './columns'
 import { Filter } from './Filter'
 
-const pageSize = 24
+const pageSize = 32
 
 export const TableUsers: React.FC = () => {
   const [loading, setLoading] = useState(false)

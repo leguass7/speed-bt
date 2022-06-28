@@ -36,8 +36,9 @@ export const CellContainer = styled.div`
   border: 0;
 `
 
-export const Span = styled.span`
+export const Span = styled.span<{ textColor?: string }>`
   font-size: 12px;
+  color: ${({ textColor }) => textColor || 'inherit'};
 `
 
 export const P = styled.p<{ textColor?: string; linkColor?: string }>`
