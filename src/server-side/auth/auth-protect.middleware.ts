@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getToken, JWT } from 'next-auth/jwt'
 import { getSession } from 'next-auth/react'
 import { NextHandler } from 'next-connect'
+import { parse, UserAgent } from 'next-useragent'
 
 import { secret } from '~/server-side/config'
 
@@ -13,6 +14,7 @@ export interface IAuthorizedUser {
 }
 
 export interface AuthorizedApiRequest<Body = any> extends NextApiRequest {
+  ua?: UserAgent | null
   auth: IAuthorizedUser
   body: Body
 }
@@ -40,6 +42,7 @@ export async function authProtect(req: AuthorizedApiRequest, res: NextApiRespons
     }
 
     req.auth = authorizedDto(session)
+    req.ua = req?.headers['user-agent'] ? parse(req.headers['user-agent']) : null
     // console.log('req.auth', req.auth)
     if (!req.auth?.userId) return unauthorize()
 
