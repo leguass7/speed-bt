@@ -21,7 +21,7 @@ export const ButtonGoogle: React.FC<ButtonThemeProps> = ({ themeColor = 'primary
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (...args) => {
     if (onClick) onClick(...args)
-    if (session.status === 'unauthenticated') signIn('google')
+    if (session.status === 'unauthenticated') signIn('google', { redirect: false })
     else signOut()
   }
 
