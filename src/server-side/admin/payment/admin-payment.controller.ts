@@ -35,8 +35,6 @@ function manualPayment(paymentService: IPaymentService, subService: ISubscriptio
 
     await subService.updateMany({ paymentId }, { updatedBy, paid: true })
 
-    console.log('payData', payData)
-
     return res.status(200).json({ success: true, paymentId, e2eId, paid: true })
   }
 }
