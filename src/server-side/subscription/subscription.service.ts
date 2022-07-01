@@ -1,5 +1,6 @@
 import type { Subscription, Prisma as PrismaTypes } from '.prisma/client'
 
+import { makeArray } from '~/helpers/array'
 import { removeInvalidValues } from '~/helpers/object'
 import prisma from '~/server-side/database'
 
@@ -40,17 +41,23 @@ async function find(filter: PrismaTypes.SubscriptionFindManyArgs) {
   return result || []
 }
 
-async function list(where: PrismaTypes.SubscriptionWhereInput): Promise<ResultSubscription[]> {
-  const userFileds = ['actived', 'gender', 'cpf', 'birday', 'email', 'id', 'name', 'image']
+async function list(
+  where?: PrismaTypes.SubscriptionWhereInput,
+  orderBy?: PrismaTypes.SubscriptionFindManyArgs['orderBy']
+): Promise<ResultSubscription[]> {
+  const userFileds = ['actived', 'gender', 'cpf', 'birday', 'email', 'id', 'name', 'image', 'phone']
 
   const selectUser: any = userFileds.reduce((acc, field) => {
     acc[field] = true
     return acc
   }, {})
 
+  const order = makeArray(orderBy)
+  order.push({ user: { name: 'asc' } })
+
   const data = await prisma.subscription.findMany({
     where,
-    orderBy: { user: { name: 'asc' } },
+    orderBy: order,
     include: {
       user: { select: selectUser },
       partner: { select: selectUser },

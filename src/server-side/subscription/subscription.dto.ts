@@ -1,5 +1,7 @@
 import type { Category, Subscription, User } from '@prisma/client'
 
+import { formatPrice } from '~/helpers'
+
 import type { IResponseApi } from '../api.interface'
 import type { ICategory } from '../category/category.dto'
 import type { IUser } from '../users'
@@ -73,4 +75,29 @@ export interface RequestGeneratePartnerSubscription {
   userId: string
   partnerId: string
   // value?: number
+}
+
+//
+
+export interface SubscriptionSheetDto {
+  name: string
+  phone?: string
+  category: string
+  gender?: string
+  paid?: any
+  paymentId?: number
+  amount?: number | string
+}
+
+export function subscriptionToSheetDto(data: ResultSubscription): SubscriptionSheetDto {
+  const { user, paid, category, paymentId, value } = data
+  return {
+    category: category?.title,
+    paid: paid ? 'yes' : 'no',
+    paymentId,
+    gender: user?.gender,
+    name: user?.name,
+    phone: user?.phone,
+    amount: formatPrice(value)
+  }
 }

@@ -9,7 +9,13 @@ import { IAppConfigService } from '~/server-side/app-config/app-config.service'
 import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middleware'
 import type { ICategoryService } from '~/server-side/category/category.service'
 import type { IPaymentService } from '~/server-side/payment/payment.service'
-import type { ISubscriptionService, RequestGeneratePartnerSubscription, RequestUpdateSubCategory } from '~/server-side/subscription'
+import type { FactoryXlsxService } from '~/server-side/services/XlsxService'
+import {
+  ISubscriptionService,
+  RequestGeneratePartnerSubscription,
+  RequestUpdateSubCategory,
+  subscriptionToSheetDto
+} from '~/server-side/subscription'
 import type { IUserService } from '~/server-side/users'
 
 function listAll(subService: ISubscriptionService) {
@@ -96,17 +102,40 @@ function deleteSubscription(subService: ISubscriptionService, _paymentService: I
   }
 }
 
+function downloadSubscriptions(subService: ISubscriptionService, factoryXlsxService: FactoryXlsxService) {
+  return async (req: AuthorizedApiRequest, res: NextApiResponse) => {
+    const sheet = factoryXlsxService()
+
+    const subscriptions = await subService.list({ actived: true }, [{ category: { id: 'asc' } }, { user: { gender: 'asc' } }])
+
+    const data = subscriptions.map(subscriptionToSheetDto)
+    if (!data?.length) throw new ApiError(404, 'Arquivo vazio')
+
+    const result = await sheet.createDownloadResource('xlsx', data)
+
+    const stream = typeof result.resource === 'string' ? Buffer.from(result.resource, result.encode) : result.resource
+
+    res.writeHead(200, {
+      'Content-Type': result.mimeType,
+      'Content-Length': stream.length
+    })
+    return res.end(stream)
+  }
+}
+
 export function factoryAdminSubscriptionController(
   subService: ISubscriptionService,
   categoryService: ICategoryService,
   paymentService: IPaymentService,
   userService: IUserService,
-  appConfigService: IAppConfigService
+  appConfigService: IAppConfigService,
+  factoryXlsxService: FactoryXlsxService
 ) {
   return {
     listAll: listAll(subService),
     updateCategory: updateCategory(subService),
     createPartnerSubscription: createPartnerSubscription(subService, categoryService, paymentService, userService, appConfigService),
-    deleteSubscription: deleteSubscription(subService, paymentService)
+    deleteSubscription: deleteSubscription(subService, paymentService),
+    downloadSubscriptions: downloadSubscriptions(subService, factoryXlsxService)
   }
 }
