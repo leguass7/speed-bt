@@ -36,3 +36,17 @@ export interface IResponseCheckPayment extends IResponseApi {
 }
 
 export type PaymentMeta = { loc?: IResponseCob['loc']; horario?: Date | string; endToEndId?: string }
+
+export interface IRequestManualPayment {
+  e2eId: string
+}
+
+export interface ResponseApiPixEndToEnd {
+  data: {
+    endToEndId: string
+    valor: string
+    chave: string
+    horario: Date
+  }
+  success: true
+}

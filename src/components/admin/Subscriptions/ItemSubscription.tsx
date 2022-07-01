@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
+import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import QrCode2Icon from '@mui/icons-material/QrCode2'
 import { Tooltip } from '@mui/material'
@@ -12,6 +13,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemText from '@mui/material/ListItemText'
 
+import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { PaymentIcon } from '~/components/PaymentIcon'
 import { formatPrice } from '~/helpers'
 import { normalizeImageSrc, stringAvatar, stringToColor } from '~/helpers/string'
@@ -26,6 +28,7 @@ function sxColor(name: string) {
 export type ItemSubscriptionProps = ResultSubscription & {
   onClickPix?: (paymentId: number) => void
   updateListHandler?: () => void
+  manualPaidHandler?: (paymentId: number) => void
 }
 
 export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
@@ -38,9 +41,16 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
   createdBy,
   userId,
   onClickPix,
-  updateListHandler
+  updateListHandler,
+  manualPaidHandler
 }) => {
+  const { theme } = useAppTheme()
   const [loading, setLoading] = useState(false)
+
+  const handleClickManualPaid = useCallback(() => {
+    if (manualPaidHandler) manualPaidHandler(paymentId)
+  }, [manualPaidHandler, paymentId])
+
   const fetchPixCode = useCallback(
     (paymentId: number) => {
       return () => {
@@ -79,11 +89,18 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
             ) : null}
             <PaymentIcon value={value} id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
             {!paid ? (
-              <Tooltip title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''}`} arrow>
-                <IconButton onClick={fetchPixCode(paymentId)}>
-                  <QrCode2Icon />
-                </IconButton>
-              </Tooltip>
+              <>
+                <Tooltip title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''}`} arrow>
+                  <IconButton onClick={fetchPixCode(paymentId)}>
+                    <QrCode2Icon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={`Inserir pagamento manualmente`} arrow>
+                  <IconButton onClick={handleClickManualPaid} sx={{ color: theme.colors.primary }}>
+                    <CreditScoreIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
             ) : null}
           </>
         }

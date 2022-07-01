@@ -1,6 +1,7 @@
 import type { User } from '@prisma/client'
 
 import type { IResponseApi, IResponsePaginated, QueryPagination } from '~/server-side/api.interface'
+import { IRequestManualPayment, IResponseCheckPayment } from '~/server-side/payment/payment.dto'
 import type {
   IResponseSubscriptions,
   RequestUpdateSubCategory,
@@ -50,5 +51,10 @@ export type IResponsePaginatedUsers = IResponsePaginated<Partial<User>>
 
 export async function adminPaginateUsers(params?: QueryPagination): Promise<IResponsePaginatedUsers> {
   const response = await apiService.get('/admin/user', { params })
+  return response
+}
+
+export async function adminManualPayment(paymentId: number, data?: IRequestManualPayment): Promise<IResponseCheckPayment> {
+  const response = await apiService.post(`/admin/payment/${paymentId}`, data)
   return response
 }

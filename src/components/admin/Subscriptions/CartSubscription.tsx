@@ -38,9 +38,10 @@ export type CardSubscriptionProps = ResultSubscription & {
   pair?: ResultSubscription
   onClickPix?: ItemSubscriptionProps['onClickPix']
   updateListHandler: ItemSubscriptionProps['updateListHandler']
+  manualPaidHandler?: ItemSubscriptionProps['manualPaidHandler']
 }
 
-export const CardSubscription: React.FC<CardSubscriptionProps> = ({ category, pair, updateListHandler, onClickPix, ...rest }) => {
+export const CardSubscription: React.FC<CardSubscriptionProps> = ({ category, pair, updateListHandler, manualPaidHandler, onClickPix, ...rest }) => {
   const [loading, setLoading] = useState(false)
   const [edit, setEdit] = useState(false)
   const [cat, setCat] = React.useState(`${category?.id || ''}`)
@@ -98,9 +99,9 @@ export const CardSubscription: React.FC<CardSubscriptionProps> = ({ category, pa
           }
         />
         <CardContent sx={{ padding: 1 }}>
-          <ItemSubscription {...rest} updateListHandler={updateListHandler} onClickPix={onClickPix} />
+          <ItemSubscription {...rest} updateListHandler={updateListHandler} onClickPix={onClickPix} manualPaidHandler={manualPaidHandler} />
           {pair ? (
-            <ItemSubscription {...pair} updateListHandler={updateListHandler} onClickPix={onClickPix} />
+            <ItemSubscription {...pair} updateListHandler={updateListHandler} onClickPix={onClickPix} manualPaidHandler={manualPaidHandler} />
           ) : (
             <ItemAddSubscriptions
               partner={rest.partner}

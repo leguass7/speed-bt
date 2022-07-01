@@ -127,3 +127,15 @@ export const LinkGoogle = styled.button`
   border-radius: ${({ theme }) => theme.spacing.m}px;
   cursor: pointer;
 `
+
+export const BoxCenter = styled.div`
+  border: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+`

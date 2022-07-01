@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
+import { Card, CardContent, CardHeader } from '@mui/material'
 import Grid from '@mui/material/Grid'
+import Modal from '@mui/material/Modal'
 
 import { CircleLoading } from '~/components/CircleLoading'
-import { Paragraph } from '~/components/styled'
+import { BoxCenter, Paragraph } from '~/components/styled'
 import { compareValues } from '~/helpers/array'
 import type { IResponseSubscriptions } from '~/service/api/admin'
 
 import { CardSubscription, CardSubscriptionProps } from './CartSubscription'
+import { FormManualPaid } from './FormManualPaid'
 
 type ResponseSubscriptions = IResponseSubscriptions['subscriptions']
 type PreparedSubscription = Omit<CardSubscriptionProps, 'updateListHandler' | 'onClickPix'> & { key: string }
@@ -60,13 +63,11 @@ function prepareDto(subs: ResponseSubscriptions): PreparedSubscription[] {
     }
   })
 
-  // console.log('excludes', excludes.length, excludes)
-  // console.log('allowed', allowed.length, allowed)
-
   return result.filter(f => !excludes.includes(f.id)).sort(compareValues('key', 'desc')) //findAdded(result, added)
 }
 
 export const Subscriptions: React.FC<Props> = ({ subscriptions = [], loading, updateListHandler, onClickPix }) => {
+  const [openPaid, setOpenPaid] = useState<number | null>(null)
   const preparedData = prepareDto(subscriptions.sort(compareValues('id', 'desc')))
 
   const total = preparedData.reduce((acc, sub) => {
@@ -75,16 +76,44 @@ export const Subscriptions: React.FC<Props> = ({ subscriptions = [], loading, up
     return acc
   }, 0)
 
+  const handleClose = () => setOpenPaid(null)
+
+  const onManualSuccess = () => {
+    updateListHandler()
+    handleClose()
+  }
+
+  const manualPaidHandler = useCallback((paymentId: number) => {
+    setOpenPaid(paymentId)
+  }, [])
+
   return (
     <>
       <Paragraph horizontalSpaced>Total: {total} inscrições</Paragraph>
       <Grid container spacing={1} padding={1}>
         {preparedData?.map(({ key, ...sub }) => {
-          return <CardSubscription key={key} {...sub} onClickPix={onClickPix} updateListHandler={updateListHandler} />
+          return (
+            <CardSubscription
+              key={key}
+              {...sub}
+              onClickPix={onClickPix}
+              updateListHandler={updateListHandler}
+              manualPaidHandler={manualPaidHandler}
+            />
+          )
         })}
       </Grid>
-
       {loading ? <CircleLoading /> : null}
+      <Modal open={!!openPaid} onClose={handleClose} disableEscapeKeyDown={false} keepMounted={false}>
+        <BoxCenter>
+          <Card>
+            <CardHeader title="Inserir Pagamento" />
+            <CardContent>
+              <FormManualPaid paymentId={openPaid} onCancel={handleClose} onSuccess={onManualSuccess} />
+            </CardContent>
+          </Card>
+        </BoxCenter>
+      </Modal>
     </>
   )
 }
