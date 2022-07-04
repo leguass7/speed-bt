@@ -45,7 +45,7 @@ async function list(
   where?: PrismaTypes.SubscriptionWhereInput,
   orderBy?: PrismaTypes.SubscriptionFindManyArgs['orderBy']
 ): Promise<ResultSubscription[]> {
-  const userFileds = ['actived', 'gender', 'cpf', 'birday', 'email', 'id', 'name', 'image', 'phone']
+  const userFileds = ['actived', 'gender', 'cpf', 'birday', 'email', 'id', 'name', 'image', 'phone', 'shirtSize']
 
   const selectUser: any = userFileds.reduce((acc, field) => {
     acc[field] = true

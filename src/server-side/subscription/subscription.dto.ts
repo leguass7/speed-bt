@@ -87,6 +87,7 @@ export interface SubscriptionSheetDto {
   paid?: any
   paymentId?: number
   amount?: number | string
+  shirtSize?: string
 }
 
 export function subscriptionToSheetDto(data: ResultSubscription): SubscriptionSheetDto {
@@ -98,6 +99,7 @@ export function subscriptionToSheetDto(data: ResultSubscription): SubscriptionSh
     gender: user?.gender,
     name: user?.name,
     phone: user?.phone,
-    amount: formatPrice(value)
+    amount: formatPrice(value),
+    shirtSize: user?.shirtSize || ''
   }
 }

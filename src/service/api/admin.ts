@@ -58,3 +58,8 @@ export async function adminManualPayment(paymentId: number, data?: IRequestManua
   const response = await apiService.post(`/admin/payment/${paymentId}`, data)
   return response
 }
+
+export async function getDownloadSubscriptions(params: QueryPagination = {}) {
+  const response = await apiService.getFileByDownload('/admin/download', params)
+  return response || null
+}

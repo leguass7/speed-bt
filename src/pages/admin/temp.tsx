@@ -1,9 +1,11 @@
 import { useCallback, useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-import { Box, FormControl, InputLabel, MenuItem, Modal } from '@mui/material'
+import { Download } from '@mui/icons-material'
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import type { NextPage } from 'next'
+// import Link from 'next/link'
 
 import { Subscriptions } from '~/components/admin/Subscriptions'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
@@ -12,8 +14,9 @@ import { PageTitle } from '~/components/PageTitle'
 import { PixCode } from '~/components/PixCode'
 import { FlexContainer } from '~/components/styled'
 import { ModalPixContainer } from '~/components/subscription/SaveSubscription/styles'
+import { fileDownload } from '~/helpers/dom'
 import { IResponseSubscriptionStore } from '~/server-side/subscription'
-import { AdminSubscriptionsParams, getAdminSubscriptions, IResponseSubscriptions } from '~/service/api/admin'
+import { AdminSubscriptionsParams, getAdminSubscriptions, getDownloadSubscriptions, IResponseSubscriptions } from '~/service/api/admin'
 import { checkPayment } from '~/service/api/payment'
 
 const cats = [
@@ -88,10 +91,17 @@ const AdminTempPage: NextPage = () => {
     setModalOpen(false)
   }
 
+  const handleDownloadClick = async () => {
+    setLoading(true)
+    const file = await getDownloadSubscriptions()
+    if (file) fileDownload(file, `download.xlsx`)
+    setLoading(false)
+  }
+
   return (
     <Layout admin>
       <PageTitle title="Página temporária para inscrições" weight="normal" horizontalPad={10} />
-      <FlexContainer verticalPad={8} horizontalPad={10}>
+      <FlexContainer verticalPad={8} horizontalPad={10} gap={10}>
         <div style={{ width: 240 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
@@ -106,6 +116,14 @@ const AdminTempPage: NextPage = () => {
             </Select>
           </FormControl>
         </div>
+        <Button startIcon={<Download />} onClick={handleDownloadClick} disabled={!!loading}>
+          {!!loading ? '...aguarde' : 'BAIXAR'}
+        </Button>
+        <div style={{ flex: 1 }} />
+
+        {/* <Link href="/api/admin/download" target={'_blank'}>
+          Dowload
+        </Link> */}
       </FlexContainer>
 
       <Subscriptions subscriptions={data} loading={loading} updateListHandler={fetchData} onClickPix={fetchPixCode} />

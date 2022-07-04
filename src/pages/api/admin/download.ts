@@ -21,9 +21,6 @@ const controller = factoryAdminSubscriptionController(
 )
 const adminAuthMiddle = createAdminMiddleware([8, 9], UserService)
 
-const handler = nc(ncConfig)
-  // .use(authProtect)
-  // .use(adminAuthMiddle)
-  .get(controller.downloadSubscriptions)
+const handler = nc(ncConfig).use(authProtect).use(adminAuthMiddle).get(controller.downloadSubscriptions)
 
 export default handler
