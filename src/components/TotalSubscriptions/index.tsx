@@ -49,16 +49,16 @@ export const TotalSubscriptions: React.FC = () => {
     <Container>
       <ContainerLine>
         <ChartContainer chartWidth={'120px'}>
-          <CircularProgressbar value={data?.totalUsers} text={`${data?.totalUsers}`} styles={progressStyles} maxValue={400} />
+          <CircularProgressbar value={data?.totalUsers} text={`${data?.totalUsers}`} styles={progressStyles} maxValue={500} />
         </ChartContainer>
         <ContainerText>
-          <h2>Total de atletas cadastrados</h2>
+          <h2>Atletas cadastrados</h2>
           {/* <p>Agora {`${data?.totalOnline}`} usuário(s) online</p> */}
         </ContainerText>
       </ContainerLine>
       <ContainerLine>
         <ChartContainer chartWidth={'120px'}>
-          <CircularProgressbar value={data?.totalSubscriptions} text={`${data?.totalSubscriptions}`} styles={progressStyles} maxValue={200} />
+          <CircularProgressbar value={data?.totalSubscriptions} text={`${data?.totalSubscriptions}`} styles={progressStyles} maxValue={250} />
         </ChartContainer>
         <ContainerText>
           <h2>Total de inscrições</h2>

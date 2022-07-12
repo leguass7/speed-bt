@@ -15,9 +15,9 @@ export const RegisterSuccess: React.FC = () => {
       <Title textColor={theme.colors.primary}>
         <CheckIcon /> Cadastro efetuado com sucesso!
       </Title>
-      <p>
+      {/* <p>
         Faça sua inscrição <Link href={'/subscription'}>Formulário de inscrição</Link>
-      </p>
+      </p> */}
       <p>
         <i>
           Não esqueça de informar o tamanho da sua camiseta <Link href={'/register'}>Seu cadastro</Link>
