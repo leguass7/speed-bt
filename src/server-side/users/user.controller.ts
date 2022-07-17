@@ -13,6 +13,7 @@ import type { AuthorizedApiRequest } from '~/server-side/auth/auth-protect.middl
 
 import type { MailService } from '../services/EmailService'
 import type { IResponseUser, IResponseUsers, IResponseUserStore, IUser } from './user.dto'
+import { findUserDto } from './user.helper'
 import type { IUserService } from './user.service'
 
 function create(userService: IUserService) {
@@ -68,7 +69,7 @@ function find(userService: IUserService): RequestHandler<NextApiRequest, NextApi
     const rules: SearchRules[] = [
       [1, { birday: { gte: sub(new Date(), { years: 13 }) } }],
       [2, { gender: userMe?.gender }],
-      // [3, { gender: userMe?.gender, birday: { gte: sub(new Date(), { years: 14 }) } }],
+      // [3, { gender: userMe?.gender, birday: { lte: sub(new Date(), { years: 14 }) } }],
       [3, { gender: userMe?.gender }],
       [4, { gender: userMe?.gender }],
       [5, { gender: userMe?.gender, birday: { lte: sub(new Date(), { years: 49 }) } }]
@@ -77,7 +78,8 @@ function find(userService: IUserService): RequestHandler<NextApiRequest, NextApi
     const filter = rules.find(f => f[0] === categoryId)?.[1] || {}
 
     const users = await userService.search(`${query?.search}`, [auth.userId], filter)
-    return res.status(200).json({ success: true, users })
+
+    return res.status(200).json({ success: true, users: users.map(findUserDto) })
   }
 }
 

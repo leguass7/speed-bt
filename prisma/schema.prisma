@@ -82,10 +82,11 @@ model VerificationToken {
 }
 
 model AppConfig {
-  id    Int       @id @default(autoincrement())
-  key   ConfigKey
-  value String    @db.LongText
-
+  id      Int       @id @default(autoincrement())
+  arenaId Int       @default(1)
+  key     ConfigKey
+  value   String    @db.LongText
+  arena   Arena     @relation(fields: [arenaId], references: [id])
 
   @@unique([id, key])
   @@map("config")
@@ -99,13 +100,27 @@ model Profile {
   @@map("profile")
 }
 
+model Arena {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?      @db.LongText
+  published   Boolean      @default(true)
+  tournaments Tournament[]
+
+  AppConfig AppConfig[]
+  @@map("arena")
+}
+
 model Tournament {
-  id          Int        @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
+  arenaId     Int      @default(1)
   title       String
-  description String?    @db.LongText
+  description String?  @db.LongText
   expires     DateTime
-  published   Boolean    @default(true)
-  categories  Category[]
+  published   Boolean  @default(true)
+
+  categories Category[]
+  arena      Arena      @relation(fields: [arenaId], references: [id])
 
   @@map("tournaments")
 }
@@ -157,7 +172,7 @@ model Payment {
   value     Float         @default(0.00)
   paid      Boolean       @default(false)
   payday    DateTime?     @db.DateTime(0)
-  txid      String?       @unique(map: "txid") @db.VarChar(35)
+  txid      String?       @db.VarChar(35)
   overdue   DateTime?     @db.Date
   createdBy String?
   createdAt DateTime?     @default(now()) @db.Timestamp(0)

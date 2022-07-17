@@ -9,12 +9,14 @@ import prisma from '~/server-side/database'
 
 import { PaginationQueryDto } from '../services/pagination/pagination.dto'
 import { PaginationService } from '../services/pagination/pagination.service'
+import { selectSearchFields } from './user.helper'
 import { checkCompleteData } from './user.helpers'
 
-async function search(text: string, notIds: string[] = [], filter: PrismaTypes.UserWhereInput = {}): Promise<User[]> {
+async function search(text: string, notIds: string[] = [], filter: PrismaTypes.UserWhereInput = {}) {
   if (text) {
     const textWhere = {
       OR: [
+        { email: { contains: `%${text}%` } },
         { name: { contains: `%${text}%` } },
         { email: { contains: `%${text}%` } },
         { phone: { contains: `%${text}%` } },
@@ -23,7 +25,16 @@ async function search(text: string, notIds: string[] = [], filter: PrismaTypes.U
     }
     const notWhere = { id: { notIn: notIds } }
 
-    const users = await prisma.user.findMany({ where: { ...notWhere, ...textWhere, ...filter } })
+    const select = selectSearchFields.reduce((acc, field) => {
+      acc[field] = true
+      return acc
+    }, {})
+
+    const users = await prisma.user.findMany({
+      where: { ...notWhere, ...textWhere, ...filter },
+      select: { ...select, _count: { select: { subscriptions: true } } }
+    })
+
     return users
   }
   return []
